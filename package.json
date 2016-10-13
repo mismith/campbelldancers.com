@@ -1,0 +1,19 @@
+{
+  "name": "campbelldancers.com",
+  "version": "1.0.0",
+  "description": "Website for Campbell School of Highland Dancers.",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "css": "./node_modules/postcss-cli/bin/postcss --use postcss-cssnext -w -o style.css style.pcss",
+    "live": "browser-sync start --no-ui --no-notify --no-ghost-mode  --server --files \"*.html,*.css\"",
+    "dev": "npm run css & npm run live"
+  },
+  "author": "Murray Smith <murray@mismith.info>",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.17.3",
+    "postcss-cli": "^2.6.0",
+    "postcss-cssnext": "^2.8.0"
+  }
+}
