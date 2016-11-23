@@ -30,9 +30,15 @@
 .flex-cols {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-between;
+	justify-content: center;
 	width: 100%;
 	max-width: 800px;
+	margin-top: -20px;
+	margin-bottom: -20px;
+
+	& > * {
+		margin: 20px;
+	}
 }
 .two-inputs {
 	display: flex;
@@ -141,14 +147,18 @@ button {
 	}
 }
 table {
+	display: inline-table;
 	border: 0;
-	border-spacing: 10px;
 	
-	& td:first-child {
-		vertical-align: top;
-		text-align: right;
-		font-weight: bold;
-		padding-right: 10px;
+	& td {
+		padding: 10px 0;
+
+		&:first-child {
+			vertical-align: top;
+			text-align: right;
+			font-weight: bold;
+			padding-right: 10px;
+		}
 	}
 	& ul {
 		padding-left: 20px;

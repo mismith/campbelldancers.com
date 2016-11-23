@@ -21,11 +21,16 @@
 	display: flex;
 	-ms-flex-wrap: wrap;
 	    flex-wrap: wrap;
-	-webkit-box-pack: justify;
-	    -ms-flex-pack: justify;
-	        justify-content: space-between;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
 	width: 100%;
 	max-width: 800px;
+	margin-top: -20px;
+	margin-bottom: -20px
+}
+.flex-cols > *{
+	margin: 20px;
 }
 .two-inputs {
 	display: -webkit-box;
@@ -149,8 +154,11 @@ button:hover{
 	border-color: #50c5d8;
 }
 table {
-	border: 0;
-	border-spacing: 10px
+	display: inline-table;
+	border: 0
+}
+table td{
+	padding: 10px 0;
 }
 table td:first-child{
 	vertical-align: top;
