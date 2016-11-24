@@ -134,7 +134,9 @@ figure {
 }
 input,
 textarea,
-button {
+button,
+select {
+	appearance: none;
 	padding: 5px 8px;
 	border: solid 1px var(--light);
 	border-radius: 3px;
@@ -175,7 +177,8 @@ table {
 }
 form {
 	& input,
-	& textarea {
+	& textarea,
+	& select {
 		width: 100%;
 	}
 	& table td:first-child {

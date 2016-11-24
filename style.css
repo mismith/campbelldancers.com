@@ -140,7 +140,11 @@ figure {
 }
 input,
 textarea,
-button {
+button,
+select {
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
 	padding: 5px 8px;
 	border: solid 1px #c4c4c4;
 	border-radius: 3px;
@@ -181,7 +185,8 @@ table ul{
 form {
 }
 form input,
-	form textarea{
+	form textarea,
+	form select{
 	width: 100%;
 }
 form table td:first-child{
