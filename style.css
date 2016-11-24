@@ -234,9 +234,17 @@ iframe {
 	margin-top: 0;
 }
 
-@media (min-width: 600px) {
-	#instructors {
-	}
+#instructors {
+}
+
+#instructors article{
+}
+
+#instructors article h3{
+	margin-top: 5px;
+}
+
+@media (min-width: 600px){
 	#instructors article{
 		display: -webkit-box;
 		display: -ms-flexbox;

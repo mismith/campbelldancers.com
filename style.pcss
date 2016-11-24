@@ -219,9 +219,13 @@ iframe {
 	}
 }
 
-@media (min-width: 600px) {
-	#instructors {
-		& article {
+#instructors {
+	& article {
+		& h3 {
+			margin-top: 5px;
+		}
+
+		@media (min-width: 600px) {
 			display: flex;
 
 			& figure {
