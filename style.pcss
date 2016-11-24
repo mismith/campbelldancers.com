@@ -27,6 +27,9 @@
 .align-center {
 	text-align: center;
 }
+.align-left {
+	text-align: left;
+}
 .flex-cols {
 	display: flex;
 	flex-wrap: wrap;
@@ -88,6 +91,12 @@ h3 + h4 {
 }
 h6 {
 	margin: 0;
+}
+hr {
+	max-width: 100px;
+	border: 0;
+	border-bottom: double 3px var(--accent);
+	margin: 40px auto;
 }
 nav {
 	@apply --heading;
@@ -186,6 +195,24 @@ iframe {
 	}
 	& img {
 		width: 100%;
+	}
+}
+#classes {
+	& .classes {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+
+		& article {
+			margin-bottom: 40px;
+
+			@media (min-width: 640px) {
+				flex-basis: 48%;
+			}
+		}
+	}
+	& hr {
+		margin-top: 0;
 	}
 }
 
