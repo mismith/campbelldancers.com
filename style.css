@@ -97,6 +97,14 @@ nav {
 	font-family: 'novecento_sans_widebook', 'Nova Cento Sans Wide', sans-serif;
 	text-transform: uppercase;
 	letter-spacing: .25em;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
 	max-width: none;
 	line-height: 2;
 	margin-top: 60px
@@ -104,8 +112,11 @@ nav {
 nav a{
 	margin: 5px;
 }
-nav span{
+nav a:not(:last-child):after{
+	content: "•";
+	display: inline-block;
 	color: #50c5d8;
+	margin-left: .5em;
 }
 section,
 footer {

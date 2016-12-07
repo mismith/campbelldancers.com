@@ -100,15 +100,22 @@ hr {
 }
 nav {
 	@apply --heading;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 	max-width: none;
 	line-height: 2;
 	margin-top: 60px;
 
 	& a {
 		margin: 5px;
-	}
-	& span {
-		color: var(--accent);
+
+		&:not(:last-child):after {
+			content: "•";
+			display: inline-block;
+			color: var(--accent);
+			margin-left: .5em;
+		}
 	}
 }
 section,
