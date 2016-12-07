@@ -264,3 +264,32 @@ iframe {
 		padding-left: 40px;
 	}
 }
+
+.photos-loading {
+	display: none;
+}
+#instafeed {
+}
+#instafeed > *{
+}
+#instafeed > * img{
+	width: 100%;
+	height: auto;
+	vertical-align: middle;
+}
+#instafeed > * a{
+	display: inline-block;
+	border: solid 1px #c4c4c4;
+	border-radius: 3px;
+	overflow: hidden;
+}
+#instafeed > * figcaption{
+	font-size: 13px;
+	margin-top: 10px;
+}
+@media (min-width: 600px){
+	#instafeed > *{
+		-ms-flex-preferred-size: calc(50% - 40px);
+		    flex-basis: calc(50% - 40px);
+	}
+}

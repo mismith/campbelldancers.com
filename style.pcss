@@ -243,3 +243,31 @@ iframe {
 		}
 	}
 }
+
+.photos-loading {
+	display: none;
+}
+#instafeed {
+	& > * {
+
+		& img {
+			width: 100%;
+			height: auto;
+			vertical-align: middle;
+		}
+		& a {
+			display: inline-block;
+			border: solid 1px var(--light);
+			border-radius: 3px;
+			overflow: hidden;
+		}
+		& figcaption {
+			font-size: 13px;
+			margin-top: 10px;
+		}
+
+		@media (min-width: 600px) {
+			flex-basis: calc(50% - 40px);
+		}
+	}
+}
