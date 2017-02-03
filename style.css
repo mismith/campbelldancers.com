@@ -219,6 +219,8 @@ form table td:first-child{
 }
 iframe {
 	max-width: 100%;
+	border: solid 1px #c4c4c4;
+	border-radius: 5px;
 }
 
 #top {
