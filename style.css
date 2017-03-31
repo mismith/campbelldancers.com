@@ -246,6 +246,7 @@ iframe {
 	-webkit-box-pack: justify;
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
+	width: 100%;
 }
 #classes .classes article{
 	margin-bottom: 40px;
