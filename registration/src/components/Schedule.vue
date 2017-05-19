@@ -2,14 +2,27 @@
   <table class="schedule">
     <thead>
       <tr>
-        <th>&nbsp;</th>
-        <th v-for="day of days" :class="`day-${day}`">{{ moment().days(day).format(dayFormat) }}</th>
+        <th></th>
+        <th v-for="day of days" :class="`day-${day.format('d')}`">{{ day.format(dayLabelFormat) }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="hour of hours" :class="`hour-${hour}`">
-        <th>{{ moment('0').add(hour, 'hours').format(hourFormat) }}</th>
-        <td v-for="day of days" :class="`day-${day}`"></td>
+      <tr v-for="time of times" :class="`time-${time.format('HHmm')}`">
+        <th>{{ time.format(timeLabelFormat) }}</th>
+        <td v-for="day of days" :class="`day-${day.format('d')}`">
+          <ul>
+            <li
+              v-for="event in filterEvents(day, time)"
+              @click="$emit('event-click', $event, event)"
+              class="event"
+              :class="event.props"
+              :style="{top: calculateDimension(moment(event.startTime, 'HH:mm').valueOf(), time), height: calculateDimension(moment(event.endTime, 'HH:mm').valueOf() - moment(event.startTime, 'HH:mm').valueOf() + time.valueOf(), time)}"
+            >
+              <small>{{ event.startTime }} &ndash; {{ event.endTime }}</small>
+              <div v-html="event.name"></div>
+            </li>
+          </ul>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -21,7 +34,7 @@ import moment from 'moment';
 export default {
   name: 'schedule',
   props: {
-    dayFormat: {
+    dayLabelFormat: {
       type: String,
       default: 'dddd',
     },
@@ -34,21 +47,25 @@ export default {
       default: 6,
     },
 
-    hourFormat: {
+    timeLabelFormat: {
       type: String,
       default: 'h a',
     },
-    startHour: {
-      type: Number,
-      default: 0,
+    timeInterval: {
+      type: String,
+      default: '01:00',
     },
-    endHour: {
-      type: Number,
-      default: 24,
+    startTime: {
+      type: String,
+      default: '00:00',
     },
-    gridInterval: {
-      type: Number,
-      default: 1,
+    endTime: {
+      type: String,
+      default: '24:00',
+    },
+
+    events: {
+      type: Array,
     },
   },
   data() {
@@ -56,30 +73,52 @@ export default {
     };
   },
   computed: {
+    interval() {
+      return moment.duration(this.timeInterval);
+    },
     days() {
       const days = [];
       for (let d = this.startDay; d <= this.endDay; d += 1) {
-        days.push(d);
+        days.push(moment().startOf('week').add(d, 'days'));
       }
       return days;
     },
-    hours() {
-      const hours = [];
-      for (let h = this.startHour; h <= this.endHour; h += this.gridInterval) {
-        hours.push(h);
+    times() {
+      const times = [];
+      const t = moment(this.startTime, 'HH:mm');
+      while (t.isSameOrBefore(moment(this.endTime, 'HH:mm'))) {
+        times.push(moment(t));
+        t.add(this.interval);
       }
-      return hours;
+      return times;
     },
   },
   methods: {
     moment,
+    filterEvents(day, time) {
+      return this.events.filter((event) => {
+        if (event.startDay === parseInt(day.format('d'), 10)) {
+          if (moment(event.startTime, 'HH:mm').isBetween(time, moment(time).add(this.interval), null, '[)')) {
+            return true;
+          }
+        }
+        return false;
+      });
+    },
+    calculateDimension(progress, time) {
+      const start = time.valueOf();
+      const mid = progress;
+      const end = time + this.interval.valueOf();
+
+      return `${((mid - start) / (end - start)) * 100}%`;
+    },
   },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 table {
-  width: 100%;
+  height: 100%;
   border-spacing: 0;
 
   th {
@@ -91,36 +130,46 @@ table {
     padding: 5px;
     opacity: .5;
   }
-  thead {
-    th {
-      padding-bottom: 1em;
-    }
-  }
   tbody {
     th {
+      width: 1%;
       text-align: right;
       white-space: nowrap;
       transform: translateY(-50%);
     }
-  }
-  td {
-    width: 1/7*100%;
-    border-top: 1px solid rgba(0,0,0,.1);
-
-    &.day-0,
-    &.day-6 {
-      background-color: rgba(0,0,0,.05);
-    }
-    &.day-2,
-    &.day-3,
-    &.day-4,
-    &.day-5 {
+    td + td {
       border-left: 1px solid rgba(0,0,0,.1);
     }
   }
+  td {
+    width: 1/7*100%;
+    vertical-align: top;
+    padding: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+
+    ul {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border: 1px solid rgba(0,0,0,.5);
+        overflow: hidden;
+        z-index: 2;
+      }
+    }
+  }
   tr:last-child {
+    height: 1px;
+
     td {
-      // display: none;
       background: none;
       border-left: none;
     }
