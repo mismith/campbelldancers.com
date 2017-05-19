@@ -1,12 +1,12 @@
 <template>
-  <form class="enrollment">
+  <form class="enrollment" @submit.prevent="handleSubmit">
     <div class="flex-cols" style="max-width: none;">
       <div>
         <header>
           <h3>Dancers</h3>
         </header>
         <div class="flex-rows">
-          <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan" :class="{active: dancer.$pickingClasses}">
+          <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
             <table>
               <tbody>
                 <tr>
@@ -45,7 +45,7 @@
                 <tr>
                   <td>Classes</td>
                   <td>
-                    <button @click.prevent="dancer.$pickingClasses = true" title="Pick classes" class="input">0 selected<i>&hellip;</i></button>
+                    <input @click.prevent="pickClasses(dancerIndex)" title="Pick classes" placeholder="0 selected" :value="dancer.events.length ? `${dancer.events.length} selected` : null" @keydown.prevent required />
                   </td>
                 </tr>
                 <tr>
@@ -59,7 +59,6 @@
             <aside v-if="dancerIndex || dancers.length > 1">
               <button @click.prevent="removeDancer(dancerIndex)" title="Remove dancer" class="btn-close">&times;</button>
             </aside>
-            <schedule-picker :events="events" @click.prevent="dancer.$pickingClasses = false" />
           </article>
         </div>
         <footer>
@@ -67,6 +66,9 @@
             <big>&plus;</big> Add dancer
           </a>
         </footer>
+        <aside v-if="dancerPickingClasses !== null" class="schedule-picker-container">
+          <schedule-picker :events="dancerEvents" @click.stop @select="pickClass" @done="pickClasses()" />
+        </aside>
       </div>
 
       <div>
@@ -116,21 +118,24 @@
       </div>
     </div>
 
-    <footer class="align-center">
+    <footer class="call-to-action align-center">
       <button type="submit" class="btn">Enroll</button>
     </footer>
+    <pre>{{ enrollment }}</pre>
   </form>
 </template>
 
 <script>
+import moment from 'moment';
 import SchedulePicker from './SchedulePicker';
 
 export default {
   name: 'enrollment',
   data() {
     return {
-      dancers: [{}],
+      dancers: [{ events: [] }],
       contacts: [{}],
+      dancerPickingClasses: null, // @TODO: improve modal behaviour
       classes: [
         {
           name: 'Private',
@@ -312,28 +317,65 @@ export default {
           endTime: '19:00',
         },
       ],
+      enrollment: undefined,
     };
   },
   computed: {
     events() {
-      return this.eventData.map((eventData) => {
+      return this.eventData.map((eventData, eventIndex) => {
+        // normalize for consumption by Schedule
         const event = { ...eventData };
+
+        event.id = eventIndex; // @TEMP
 
         event.classes = event.classes || [];
         event.name = event.classes.map(classIndex => this.classes[classIndex].name).join(' / ');
 
         event.props = event.props || {};
-        if (event.classes.includes(0)) {
-          event.props.disabled = true;
-        }
+        event.props.active = false;
+        event.props.disabled = false;
 
         return event;
+      });
+    },
+    dancer() {
+      if (this.dancerPickingClasses !== null) {
+        return this.dancers[this.dancerPickingClasses];
+      }
+      return undefined;
+    },
+    dancerEvents() {
+      if (!this.dancer) return this.events;
+
+      const age = moment().diff(this.dancer.birthday, 'years');
+
+      return this.events.map((event) => {
+        /* eslint-disable no-param-reassign */
+        // selected
+        event.props.active = false;
+        if (this.dancer.events && this.dancer.events.includes(event.id)) {
+          event.props.active = true;
+        }
+
+        // unavailable
+        if (age) {
+          const classes = event.classes.map(classId => this.classes[classId]);
+          event.props.disabled = !classes.reduce((disabled, c) => {
+            const ageInRange = (!c.minAge || (c.minAge && age >= c.minAge)) &&
+              (!c.maxAge || (c.maxAge && age <= c.maxAge));
+            return disabled || ageInRange;
+          }, event.props.active);
+        }
+        // @TODO: disable 'claimed' Privates by adding 'capacity' prop to classes
+
+        return event;
+        /* eslint-enable no-param-reassign */
       });
     },
   },
   methods: {
     addDancer() {
-      this.dancers.push({});
+      this.dancers.push({ events: [] });
     },
     removeDancer(dancerIndex) {
       this.dancers.splice(dancerIndex, 1);
@@ -344,6 +386,29 @@ export default {
     },
     removeContact(contactIndex) {
       this.contacts.splice(contactIndex, 1);
+    },
+
+    pickClasses(dancerId = null) {
+      this.dancerPickingClasses = dancerId;
+    },
+    pickClass(e, event) {
+      if (this.dancer) {
+        if (event && event.props && !event.props.disabled) {
+          if (this.dancer.events.includes(event.id)) {
+            this.dancer.events.splice(this.dancer.events.indexOf(event.id), 1);
+          } else {
+            this.dancer.events.push(event.id);
+          }
+        }
+      }
+    },
+
+    handleSubmit() {
+      const json = {
+        dancers: this.dancers,
+        contacts: this.contacts,
+      };
+      this.enrollment = JSON.stringify(json, null, 2);
     },
   },
   components: {
@@ -356,23 +421,24 @@ export default {
 @import url(../../../style.css);
 
 .card {
+  // for close button
   display: flex;
   flex-wrap: nowrap;
-  padding: 5px 10px;
+}
+.schedule-picker-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,.75);
+  padding: 20px;
+  z-index: 101;
 
   .schedule-picker {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    height: 100%;
+    background-color: #FFF;
     padding: 20px;
-  }
-
-  &:not(.active) {
-    .schedule-picker {
-      display: none;
-    }
   }
 }
 </style>

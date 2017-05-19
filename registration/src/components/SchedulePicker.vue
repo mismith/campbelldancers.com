@@ -1,6 +1,6 @@
 <template>
   <div class="schedule-picker">
-    <div style="display: flex; flex-direction: row; padding: 0; height: 70vh;">
+    <div>
       <schedule
         start-time="16:00"
         end-time="20:00"
@@ -31,7 +31,7 @@
         <div class="event active">Selected</div>
       </aside>
       <div>
-        <button class="btn">Done</button>
+        <button @click.prevent="$emit('done', $event)" class="btn">Done</button>
       </div>
     </footer>
   </div>
@@ -54,19 +54,7 @@ export default {
   },
   methods: {
     handleEventClick(e, event) {
-      const index = this.events.indexOf(event);
-      if (this.events[index]) {
-        if (!this.events[index].props.disabled) {
-          console.log(index);
-          const ev = { ...event };
-          if (ev.props.active) {
-            delete ev.props.active;
-          } else {
-            ev.props.active = true;
-          }
-          this.events.splice(index, 1, ev);
-        }
-      }
+      this.$emit('select', e, event);
     },
   },
   components: {
@@ -78,13 +66,21 @@ export default {
 <style lang="scss">
 $accent: #50c5d8;
 
-table.schedule {
-  tbody {
-    tr:nth-child(2n) {
-      th {
-        visibility: hidden;
-      }
-    }
+.schedule-picker {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  > div {
+    display: flex;
+    flex: 1;
+    padding: 0;
+  }
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
   }
 }
 .event {
@@ -110,15 +106,13 @@ table.schedule {
     background: rgba($accent, .666);
   }
 }
-
-.schedule-picker {
-  padding: 10px;
-
-  footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    text-align: center;
+table.schedule {
+  tbody {
+    tr:nth-child(2n) {
+      th {
+        visibility: hidden;
+      }
+    }
   }
 }
 </style>

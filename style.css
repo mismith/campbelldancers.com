@@ -12,6 +12,10 @@
 	border-bottom: double 3px #50c5d8;
 	background-image: url(images/bg-tartan.jpg);
 }
+.card {
+	padding: 5px 10px;
+	border-radius: 3px;
+}
 .align-center {
 	text-align: center;
 }
