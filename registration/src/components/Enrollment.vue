@@ -129,6 +129,7 @@
 import moment from 'moment';
 import SchedulePicker from './SchedulePicker';
 
+/* eslint-disable no-param-reassign */
 export default {
   name: 'enrollment',
   data() {
@@ -139,6 +140,7 @@ export default {
       classes: [
         {
           name: 'Private',
+          capacity: 1,
         },
         {
           name: 'Little Leapers',
@@ -276,27 +278,21 @@ export default {
         //   startDay: 4,
         //   startTime: '16:15',
         //   endTime: '16:30',
-        //   props: {
-        //     disabled: true,
-        //   },
+        //   enrolled: 1,
         // },
         {
           classes: [0],
           startDay: 4,
           startTime: '16:30',
           endTime: '17:00',
-          props: {
-            disabled: true,
-          },
+          enrolled: 1,
         },
         {
           classes: [0],
           startDay: 4,
           startTime: '17:00',
           endTime: '17:30',
-          props: {
-            disabled: true,
-          },
+          enrolled: 1,
         },
         {
           classes: [0],
@@ -332,8 +328,10 @@ export default {
         event.name = event.classes.map(classIndex => this.classes[classIndex].name).join(' / ');
 
         event.props = event.props || {};
-        event.props.active = false;
-        event.props.disabled = false;
+        event.props.active = event.props.active || false;
+        event.props.disabled = event.props.disabled || false;
+
+        event.enrolled = event.enrolled || 0;
 
         return event;
       });
@@ -350,7 +348,6 @@ export default {
       const age = moment().diff(this.dancer.birthday, 'years');
 
       return this.events.map((event) => {
-        /* eslint-disable no-param-reassign */
         // selected
         event.props.active = false;
         if (this.dancer.events && this.dancer.events.includes(event.id)) {
@@ -358,18 +355,19 @@ export default {
         }
 
         // unavailable
-        if (age) {
-          const classes = event.classes.map(classId => this.classes[classId]);
-          event.props.disabled = !classes.reduce((disabled, c) => {
-            const ageInRange = (!c.minAge || (c.minAge && age >= c.minAge)) &&
-              (!c.maxAge || (c.maxAge && age <= c.maxAge));
-            return disabled || ageInRange;
-          }, event.props.active);
-        }
+        const classes = event.classes.map(classId => this.classes[classId]);
+        event.props.disabled = !classes.reduce((enabled, c) => {
+          if (enabled) return true;
+          if (event.enrolled >= c.capacity) return false;
+
+          return !age || (age &&
+            (!c.minAge || (c.minAge && age >= c.minAge)) &&
+            (!c.maxAge || (c.maxAge && age <= c.maxAge))
+          );
+        }, event.props.active);
         // @TODO: disable 'claimed' Privates by adding 'capacity' prop to classes
 
         return event;
-        /* eslint-enable no-param-reassign */
       });
     },
   },
@@ -396,8 +394,10 @@ export default {
         if (event && event.props && !event.props.disabled) {
           if (this.dancer.events.includes(event.id)) {
             this.dancer.events.splice(this.dancer.events.indexOf(event.id), 1);
+            event.enrolled -= 1;
           } else {
             this.dancer.events.push(event.id);
+            event.enrolled += 1;
           }
         }
       }
