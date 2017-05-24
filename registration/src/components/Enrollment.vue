@@ -1,132 +1,171 @@
 <template>
-  <form class="enrollment" @submit.prevent="handleSubmit">
-    <div class="flex-cols" style="max-width: none;">
-      <div>
-        <header>
-          <h3>Dancers</h3>
-        </header>
-        <div class="flex-rows">
-          <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
-            <table>
-              <tbody>
-                <tr>
-                  <td>Name</td>
-                  <td>
-                    <input type="text" v-model="dancer.name" name="name" placeholder="First Last" required />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Birthday</td>
-                  <td>
-                    <input type="date" v-model="dancer.birthday" name="birthday" required />
-                  </td>
-                </tr>
-    <!--             <tr>
-                  <td>Competitive level</td>
-                  <td>
-                    <select name="ability" v-model="dancer.ability" required>
-                      <optgroup>
-                        <option>Non-competitive</option>
-                      </optgroup>
-                      <optgroup>
-                        <option>New</option>
-                        <option>Beginner</option>
-                        <option>Novice</option>
-                        <option>Intermediate</option>
-                        <option>Premier</option>
-                      </optgroup>
-                      <optgroup>
-                        <option>New Adult</option>
-                        <option>Returning/Experienced Adult</option>
-                      </optgroup>
-                    </select>
-                  </td>
-                </tr> -->
-                <tr>
-                  <td>Classes</td>
-                  <td>
-                    <input @click.prevent="pickClasses(dancerIndex)" title="Pick classes" placeholder="0 selected" :value="dancer.events.length ? `${dancer.events.length} selected` : null" @keydown.prevent required />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Allergies / <br />Medical <br />concerns</td>
-                  <td>
-                    <textarea name="medical" v-model="dancer.medical" placeholder="(optional)"></textarea>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <aside v-if="dancerIndex || dancers.length > 1">
-              <button @click.prevent="removeDancer(dancerIndex)" title="Remove dancer" class="btn-close">&times;</button>
-            </aside>
-          </article>
-        </div>
-        <footer>
-          <a class="btn-add" @click.prevent="addDancer">
-            <big>&plus;</big> Add dancer
-          </a>
-        </footer>
-        <aside v-if="dancerPickingClasses !== null" class="schedule-picker-container">
-          <schedule-picker :events="dancerEvents" @click.stop @select="pickClass" @done="pickClasses()" />
+  <form class="enrollment align-center" @submit.prevent="handleSubmit">
+    <header>
+      <ol class="breadcrumbs">
+        <li v-for="(step, i) in steps">
+          <button @click.prevent="stepIndex = i" :class="{breadcrumb: true, active: i === stepIndex}" :disabled="i > stepIndex">{{ step.name }}</button>
+        </li>
+      </ol>
+    </header>
+
+    <div v-if="stepIndex === 0">
+      <header>
+        <p>Save yourself some time by linking an account below; if you do, <br />next season we'll have all your info stored and ready to go.</p>
+      </header>
+      <div class="flex-rows">
+        <auth v-if="!user" />
+        <aside v-if="user" class="card bg-tartan">
+          <p>Already logged in.</p>
+          <p><button v-if="user" @click.prevent="logout" class="btn">Log Out</button></p>
         </aside>
       </div>
+      <footer v-if="!user">
+        <a class="btn-add" @click.prevent="skipLogin">
+          <big style="margin-top: -7px;">&raquo;</big> Skip <small>(and don't save info for next time)</small>
+        </a>
+      </footer>
+    </div>
 
+    <div v-if="stepIndex === 1">
+      <header>
+        <p>Who will be dancing with us?</p>
+        <p><small>For private lesson slots, we ask that you please pick the earliest one available<br/> on that day—that way we won't have gaps between classes.</small></p>
+      </header>
+      <div class="flex-rows">
+        <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
+          <table>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td>
+                  <input type="text" v-model="dancer.name" placeholder="First Last" required autofocus />
+                </td>
+              </tr>
+              <tr>
+                <td>Birthday</td>
+                <td>
+                  <input type="date" v-model="dancer.birthday" required />
+                </td>
+              </tr>
+  <!--             <tr>
+                <td>Competitive level</td>
+                <td>
+                  <select v-model="dancer.ability" required>
+                    <optgroup>
+                      <option>Non-competitive</option>
+                    </optgroup>
+                    <optgroup>
+                      <option>New</option>
+                      <option>Beginner</option>
+                      <option>Novice</option>
+                      <option>Intermediate</option>
+                      <option>Premier</option>
+                    </optgroup>
+                    <optgroup>
+                      <option>New Adult</option>
+                      <option>Returning/Experienced Adult</option>
+                    </optgroup>
+                  </select>
+                </td>
+              </tr> -->
+              <tr>
+                <td>Classes</td>
+                <td>
+                  <label title="Pick classes" class="selectable">
+                    <input @focus="pickClasses(dancerIndex)" @keydown.prevent placeholder="0 selected" :value="dancer.events.length ? `${dancer.events.length} selected` : null" required />
+                  </label>
+                </td>
+              </tr>
+              <tr>
+                <td>Allergies / <br />Medical <br />concerns</td>
+                <td>
+                  <textarea v-model="dancer.medical" placeholder="(optional)"></textarea>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <aside v-if="dancerIndex || dancers.length > 1">
+            <button @click.prevent="removeDancer(dancerIndex)" title="Remove dancer" class="btn-close">&times;</button>
+          </aside>
+        </article>
+      </div>
+      <footer>
+        <a class="btn-add" @click.prevent="addDancer">
+          <big>&plus;</big> Add another dancer
+        </a>
+      </footer>
+      <aside v-if="dancerPickingClasses !== null" @click="$event.target === $event.currentTarget && pickClasses()" class="schedule-picker-container">
+        <schedule-picker :events="dancerEvents" @select="pickClass" @done="pickClasses()" />
+      </aside>
+    </div>
+
+    <div v-if="stepIndex === 2">
+      <header>
+        <p>Who should we contact if something goes awry?</p>
+        <p><small>We suggest you add at least 2 people—always better to be prepared!</small></p>
+      </header>
+      <div class="flex-rows">
+        <article v-for="(contact, contactIndex) of contacts" class="card bg-tartan">
+          <table>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td>
+                  <input type="text" v-model="contact.name" placeholder="First Last" required autofocus />
+                </td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td>
+                  <input type="email" v-model="contact.email" required />
+                </td>
+              </tr>
+              <tr>
+                <td>Primary phone</td>
+                <td>
+                  <input type="tel" v-model="contact.phone" required />
+                </td>
+              </tr>
+              <tr>
+                <td>Secondary phone</td>
+                <td>
+                  <input type="tel" v-model="contact.phone2" placeholder="(optional)" />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <aside v-if="contactIndex || contacts.length > 1">
+            <button @click.prevent="removeContact(contactIndex)" title="Remove emergency contact" class="btn-close">&times;</button>
+          </aside>
+        </article>
+      </div>
+      <footer>
+        <a class="btn-add" @click.prevent="addContact">
+          <big>&plus;</big> Add another emergency contact
+        </a>
+      </footer>
+    </div>
+
+    <div v-if="stepIndex === steps.length - 1">
+      <header>
+        <h2>All done</h2>
+      </header>
       <div>
-        <header>
-          <h3>Emergency Contacts</h3>
-        </header>
-        <div class="flex-rows">
-          <article v-for="(contact, contactIndex) of contacts" class="card bg-tartan">
-            <table>
-              <tbody>
-                <tr>
-                  <td>Name</td>
-                  <td>
-                    <input type="text" v-model="contact.name" name="name" placeholder="First Last" required />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Email</td>
-                  <td>
-                    <input type="email" v-model="contact.email" name="email" required />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Primary phone</td>
-                  <td>
-                    <input type="tel" v-model="contact.phone" name="phone" required />
-                  </td>
-                </tr>
-                <tr>
-                  <td>Secondary phone</td>
-                  <td>
-                    <input type="tel" v-model="contact.altPhone" name="altPhone" placeholder="(optional)" />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <aside v-if="contactIndex || contacts.length > 1">
-              <button @click.prevent="removeContact(contactIndex)" title="Remove emergency contact" class="btn-close">&times;</button>
-            </aside>
-          </article>
-        </div>
-        <footer>
-          <a class="btn-add" @click.prevent="addContact">
-            <big>&plus;</big> Add emergency contact
-          </a>
-        </footer>
+        <p>Thanks for enrolling with us this season! :)</p>
+        <pre>{{ enrollment }}</pre>
       </div>
     </div>
 
-    <footer class="call-to-action align-center">
-      <button type="submit" class="btn">Enroll</button>
+    <footer v-if="user" class="call-to-action align-center">
+      <button type="submit" class="btn">{{ stepIndex === steps.length - 1 ? 'Home' : 'Next' }}</button>
     </footer>
-    <pre>{{ enrollment }}</pre>
   </form>
 </template>
 
 <script>
 import moment from 'moment';
+import { firebase } from '../helpers/firebase';
+import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
 
 /* eslint-disable no-param-reassign */
@@ -134,9 +173,26 @@ export default {
   name: 'enrollment',
   data() {
     return {
+      user: firebase.auth().currentUser,
+
+      stepIndex: 0,
+      steps: [
+        {
+          name: 'Account',
+        },
+        {
+          name: 'Dancers',
+        },
+        {
+          name: 'Emergency Contacts',
+        },
+        {}, // Done
+      ],
+
       dancers: [{ events: [] }],
       contacts: [{}],
       dancerPickingClasses: null, // @TODO: improve modal behaviour
+
       classes: [
         {
           name: 'Private',
@@ -313,6 +369,7 @@ export default {
           endTime: '19:00',
         },
       ],
+
       enrollment: undefined,
     };
   },
@@ -399,19 +456,49 @@ export default {
             this.dancer.events.push(event.id);
             event.enrolled += 1;
           }
+          e.stopPropagation();
         }
       }
     },
 
     handleSubmit() {
-      const json = {
-        dancers: this.dancers,
-        contacts: this.contacts,
-      };
-      this.enrollment = JSON.stringify(json, null, 2);
+      if (this.stepIndex === this.steps.length - 2) {
+        const json = {
+          dancers: this.dancers,
+          contacts: this.contacts,
+        };
+        this.enrollment = JSON.stringify(json, null, 2);
+      } else if (this.stepIndex === this.steps.length - 1) {
+        window.location.href = '//campbelldancers.com';
+      }
+
+      this.stepIndex += 1;
+    },
+    skipLogin() {
+      return firebase.auth().signInAnonymously();
+    },
+    logout() {
+      return firebase.auth().signOut();
     },
   },
+  created() {
+    firebase.auth().onAuthStateChanged((user) => {
+      this.user = user;
+      console.log(user);
+
+      if (user) {
+        // skip login step if already logged in (e.g. on page reload)
+        if (this.stepIndex === 0) {
+          this.stepIndex += 1;
+        }
+      } else {
+        // force back to login step if logged out
+        this.stepIndex = 0;
+      }
+    });
+  },
   components: {
+    Auth,
     SchedulePicker,
   },
 };
@@ -420,11 +507,67 @@ export default {
 <style lang="scss">
 @import url(../../../style.css);
 
-.card {
-  // for close button
+$accent: #50c5d8;
+
+.enrollment {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.breadcrumbs {
   display: flex;
   flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  list-style: none;
+  padding: 0;
+  margin: 20px;
+  counter-reset: breadcrumbs;
+
+  .breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    background: none;
+    padding: 10px 30px;
+    border: 0;
+    margin: 0;
+    cursor: pointer;
+    text-decoration: none;
+    counter-increment: breadcrumbs;
+
+    &:before {
+      content: counter(breadcrumbs);
+      border: double 3px $accent;
+      border-radius: 50%;
+      padding: 5px 10px;
+      margin-right: 10px;
+    }
+    &.active {
+      font-weight: bold;
+
+      &:before {
+        background-color: $accent;
+        color: #fff;
+        border-color: #fff;
+      }
+    }
+  }
 }
+
+article {
+  // for close button
+  display: inline-flex;
+  flex-wrap: nowrap;
+  text-align: left;
+}
+
 .schedule-picker-container {
   position: fixed;
   top: 0;
@@ -432,13 +575,25 @@ export default {
   right: 0;
   bottom: 0;
   background-color: rgba(0,0,0,.75);
-  padding: 20px;
+  padding: 30px;
   z-index: 101;
 
   .schedule-picker {
     height: 100%;
     background-color: #FFF;
     padding: 20px;
+  }
+  &:after {
+    content: '×';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: rgba(255,255,255,1);
+    font-size: 40px;
+    line-height: 20px;
+    vertical-align: top;
+    cursor: pointer;
+    opacity: .75;
   }
 }
 </style>

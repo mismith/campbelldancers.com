@@ -163,6 +163,24 @@ section,
 figure {
 	margin: 0;
 }
+
+label {
+	&.selectable {
+		display: inline-flex;
+		align-items: center;
+		width: 100%;
+
+		&:after {
+			content: '…';
+			width: 0;
+			height: 1em;
+			line-height: .45em;
+			font-size: 2em;
+			margin-left: -1em;
+			cursor: pointer;
+		}
+	}
+}
 .input,
 input,
 textarea,
@@ -174,6 +192,11 @@ select {
 	padding: 5px 8px;
 	border: solid 1px var(--light);
 	border-radius: 3px;
+
+	&:disabled {
+		opacity: .5;
+		cursor: not-allowed;
+	}
 }
 textarea {
 	min-height: 80px;
@@ -194,10 +217,6 @@ button {
 	padding: 10px 20px;
 	cursor: pointer;
 
-	&:disabled {
-		opacity: .5;
-		cursor: not-allowed;
-	}
 	&:not(:disabled) {
 		&:hover {
 			color: var(--accent);
@@ -229,6 +248,7 @@ button {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	flex-wrap: wrap;
 	opacity: .75;
 	cursor: pointer;
 
@@ -236,6 +256,12 @@ button {
 		font-size: 40px;
 		line-height: 1;
 		margin: -3px 20px 0 0;
+	}
+	& small {
+		width: 100%;
+		font-size: 10px;
+		text-align: center;
+		margin: 3px auto;
 	}
 	&:hover {
 		opacity: 1;
