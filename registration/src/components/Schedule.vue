@@ -12,14 +12,14 @@
         <td v-for="day of days" :class="`day-${day.format('d')}`">
           <ul>
             <li
-              v-for="event in filterEvents(day, time)"
-              @click="$emit('event-click', $event, event)"
-              class="event"
-              :class="event.props"
-              :style="{top: calculateDimension(moment(event.startTime, 'HH:mm').valueOf(), time), height: calculateDimension(moment(event.endTime, 'HH:mm').valueOf() - moment(event.startTime, 'HH:mm').valueOf() + time.valueOf(), time)}"
+              v-for="timeslot in filterTimeslots(day, time)"
+              @click="$emit('timeslot-click', $event, timeslot)"
+              class="timeslot"
+              :class="timeslot.props"
+              :style="{top: calculateDimension(moment(timeslot.startTime, 'HH:mm').valueOf(), time), height: calculateDimension(moment(timeslot.endTime, 'HH:mm').valueOf() - moment(timeslot.startTime, 'HH:mm').valueOf() + time.valueOf(), time)}"
             >
-              <small>{{ event.startTime }} &ndash; {{ event.endTime }}</small>
-              <div v-html="event.name"></div>
+              <small>{{ timeslot.startTime }} &ndash; {{ timeslot.endTime }}</small>
+              <div v-html="timeslot.name"></div>
             </li>
           </ul>
         </td>
@@ -64,7 +64,7 @@ export default {
       default: '24:00',
     },
 
-    events: {
+    timeslots: {
       type: Array,
     },
   },
@@ -95,10 +95,10 @@ export default {
   },
   methods: {
     moment,
-    filterEvents(day, time) {
-      return this.events.filter((event) => {
-        if (event.startDay === parseInt(day.format('d'), 10)) {
-          if (moment(event.startTime, 'HH:mm').isBetween(time, moment(time).add(this.interval), null, '[)')) {
+    filterTimeslots(day, time) {
+      return this.timeslots.filter((timeslot) => {
+        if (timeslot.startDay === parseInt(day.format('d'), 10)) {
+          if (moment(timeslot.startTime, 'HH:mm').isBetween(time, moment(time).add(this.interval), null, '[)')) {
             return true;
           }
         }

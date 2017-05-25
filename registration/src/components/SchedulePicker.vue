@@ -7,8 +7,8 @@
         :start-day="1"
         :end-day="4"
         time-interval="00:30"
-        :events="events"
-        @event-click="handleEventClick"
+        :timeslots="timeslots"
+        @timeslot-click="handleTimeslotClick"
         style="width: 75%;"
       />
       <schedule
@@ -16,8 +16,8 @@
         end-time="14:00"
         :start-day="6"
         time-interval="00:30"
-        :events="events"
-        @event-click="handleEventClick"
+        :timeslots="timeslots"
+        @timeslot-click="handleTimeslotClick"
         style="width: 22.5%; margin-left: 2.5%"
       />
     </div>
@@ -26,9 +26,9 @@
         <strong>{{ selected.length || 0 }} class{{ selected.length === 1 ? '' : 'es' }} selected</strong>
       </div>
       <aside class="two-inputs">
-        <div class="event disabled">Unavailable</div>
-        <div class="event">Available</div>
-        <div class="event active">Selected</div>
+        <div class="timeslot disabled">Unavailable</div>
+        <div class="timeslot">Available</div>
+        <div class="timeslot active">Selected</div>
       </aside>
       <div>
         <button @click.prevent="$emit('done', $event)" class="btn">Done</button>
@@ -43,18 +43,18 @@ import Schedule from './Schedule';
 export default {
   name: 'schedule-picker',
   props: {
-    events: {
+    timeslots: {
       type: Array,
     },
   },
   computed: {
     selected() {
-      return this.events.filter(event => event.props.active);
+      return this.timeslots.filter(timeslot => timeslot.props.active);
     },
   },
   methods: {
-    handleEventClick(e, event) {
-      this.$emit('select', e, event);
+    handleTimeslotClick(e, timeslot) {
+      this.$emit('select', e, timeslot);
     },
   },
   components: {
@@ -83,7 +83,7 @@ $accent: #50c5d8;
     text-align: center;
   }
 }
-.event {
+.timeslot {
   background: rgba($accent, .15);
   padding: 0 3px;
   border: 1px solid $accent !important;

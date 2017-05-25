@@ -72,7 +72,7 @@
                 <td>Classes</td>
                 <td>
                   <label title="Pick classes" class="selectable">
-                    <input @focus="pickClasses(dancerIndex)" @keydown.prevent placeholder="0 selected" :value="dancer.events.length ? `${dancer.events.length} selected` : null" required />
+                    <input @focus="pickClasses(dancerIndex)" @keydown.prevent placeholder="0 selected" :value="dancer.timeslots.length ? `${dancer.timeslots.length} selected` : null" required />
                   </label>
                 </td>
               </tr>
@@ -95,7 +95,7 @@
         </a>
       </footer>
       <aside v-if="dancerPickingClasses !== null" @click="$event.target === $event.currentTarget && pickClasses()" class="schedule-picker-container">
-        <schedule-picker :events="dancerEvents" @select="pickClass" @done="pickClasses()" />
+        <schedule-picker :timeslots="dancerTimeslots" @select="pickClass" @done="pickClasses()" />
       </aside>
     </div>
 
@@ -152,7 +152,6 @@
       </header>
       <div>
         <p>Thanks for enrolling with us this season! :)</p>
-        <pre>{{ enrollment }}</pre>
       </div>
     </div>
 
@@ -189,9 +188,9 @@ export default {
         {}, // Done
       ],
 
-      dancers: [{ events: [] }],
+      dancers: [{ timeslots: [] }],
       contacts: [{}],
-      dancerPickingClasses: null, // @TODO: improve modal behaviour
+      dancerPickingClasses: null,
 
       classes: [
         {
@@ -234,7 +233,7 @@ export default {
           minAge: 15,
         },
       ],
-      eventData: [
+      timeslotData: [
         {
           classes: [3],
           startDay: 1,
@@ -369,28 +368,26 @@ export default {
           endTime: '19:00',
         },
       ],
-
-      enrollment: undefined,
     };
   },
   computed: {
-    events() {
-      return this.eventData.map((eventData, eventIndex) => {
+    timeslots() {
+      return this.timeslotData.map((timeslotData, timeslotIndex) => {
         // normalize for consumption by Schedule
-        const event = { ...eventData };
+        const timeslot = { ...timeslotData };
 
-        event.id = eventIndex; // @TEMP
+        timeslot.id = timeslotIndex; // @TEMP
 
-        event.classes = event.classes || [];
-        event.name = event.classes.map(classIndex => this.classes[classIndex].name).join(' / ');
+        timeslot.classes = timeslot.classes || [];
+        timeslot.name = timeslot.classes.map(classIndex => this.classes[classIndex].name).join(' / ');
 
-        event.props = event.props || {};
-        event.props.active = event.props.active || false;
-        event.props.disabled = event.props.disabled || false;
+        timeslot.props = timeslot.props || {};
+        timeslot.props.active = timeslot.props.active || false;
+        timeslot.props.disabled = timeslot.props.disabled || false;
 
-        event.enrolled = event.enrolled || 0;
+        timeslot.enrolled = timeslot.enrolled || 0;
 
-        return event;
+        return timeslot;
       });
     },
     dancer() {
@@ -399,38 +396,38 @@ export default {
       }
       return undefined;
     },
-    dancerEvents() {
-      if (!this.dancer) return this.events;
+    dancerTimeslots() {
+      if (!this.dancer) return this.timeslots;
 
       const age = moment().diff(this.dancer.birthday, 'years');
 
-      return this.events.map((event) => {
+      return this.timeslots.map((timeslot) => {
         // selected
-        event.props.active = false;
-        if (this.dancer.events && this.dancer.events.includes(event.id)) {
-          event.props.active = true;
+        timeslot.props.active = false;
+        if (this.dancer.timeslots && this.dancer.timeslots.includes(timeslot.id)) {
+          timeslot.props.active = true;
         }
 
         // unavailable
-        const classes = event.classes.map(classId => this.classes[classId]);
-        event.props.disabled = !classes.reduce((enabled, c) => {
+        const classes = timeslot.classes.map(classId => this.classes[classId]);
+        timeslot.props.disabled = !classes.reduce((enabled, c) => {
           if (enabled) return true;
-          if (event.enrolled >= c.capacity) return false;
+          if (timeslot.enrolled >= c.capacity) return false;
 
           return !age || (age &&
             (!c.minAge || (c.minAge && age >= c.minAge)) &&
             (!c.maxAge || (c.maxAge && age <= c.maxAge))
           );
-        }, event.props.active);
+        }, timeslot.props.active);
         // @TODO: disable 'claimed' Privates by adding 'capacity' prop to classes
 
-        return event;
+        return timeslot;
       });
     },
   },
   methods: {
     addDancer() {
-      this.dancers.push({ events: [] });
+      this.dancers.push({ timeslots: [] });
     },
     removeDancer(dancerIndex) {
       this.dancers.splice(dancerIndex, 1);
@@ -446,15 +443,15 @@ export default {
     pickClasses(dancerId = null) {
       this.dancerPickingClasses = dancerId;
     },
-    pickClass(e, event) {
+    pickClass(e, timeslot) {
       if (this.dancer) {
-        if (event && event.props && !event.props.disabled) {
-          if (this.dancer.events.includes(event.id)) {
-            this.dancer.events.splice(this.dancer.events.indexOf(event.id), 1);
-            event.enrolled -= 1;
+        if (timeslot && timeslot.props && !timeslot.props.disabled) {
+          if (this.dancer.timeslots.includes(timeslot.id)) {
+            this.dancer.timeslots.splice(this.dancer.timeslots.indexOf(timeslot.id), 1);
+            timeslot.enrolled -= 1;
           } else {
-            this.dancer.events.push(event.id);
-            event.enrolled += 1;
+            this.dancer.timeslots.push(timeslot.id);
+            timeslot.enrolled += 1;
           }
           e.stopPropagation();
         }
@@ -467,7 +464,7 @@ export default {
           dancers: this.dancers,
           contacts: this.contacts,
         };
-        this.enrollment = JSON.stringify(json, null, 2);
+        console.log(json); // @TEMP
       } else if (this.stepIndex === this.steps.length - 1) {
         window.location.href = '//campbelldancers.com';
       }
