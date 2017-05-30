@@ -20,7 +20,7 @@
         </aside>
       </div>
       <footer v-if="!user">
-        <a class="btn-add" @click.prevent="skipLogin">
+        <a class="btn-add" @click.prevent="loginAnonymously">
           <big style="margin-top: -7px;">&raquo;</big> Skip <small>(and don't save info for next time)</small>
         </a>
       </footer>
@@ -72,7 +72,7 @@
                 <td>Classes</td>
                 <td>
                   <label title="Pick classes" class="selectable">
-                    <input @focus="pickClasses(dancerIndex)" @keydown.prevent placeholder="0 selected" :value="dancer.timeslots.length ? `${dancer.timeslots.length} selected` : null" required />
+                    <input @click="schedulePickerDancerId = dancer[idKey]" placeholder="0 selected" :value="dancer.timeslotIds && Object.keys(dancer.timeslotIds).length ? `${Object.keys(dancer.timeslotIds).length} selected` : null" required />
                   </label>
                 </td>
               </tr>
@@ -94,8 +94,8 @@
           <big>&plus;</big> Add another dancer
         </a>
       </footer>
-      <aside v-if="dancerPickingClasses !== null" @click="$event.target === $event.currentTarget && pickClasses()" class="schedule-picker-container">
-        <schedule-picker :timeslots="dancerTimeslots" @select="pickClass" @done="pickClasses()" />
+      <aside v-if="schedulePickerDancerId !== null" @click.self="schedulePickerDancerId = null" class="schedule-picker-container align-left">
+        <schedule-picker :timeslots="schedulePickerDancerTimeslots" @select="pickClass" @done="schedulePickerDancerId = null" />
       </aside>
     </div>
 
@@ -163,16 +163,21 @@
 
 <script>
 import moment from 'moment';
-import { firebase } from '../helpers/firebase';
+import {
+  firebase,
+  idKey,
+  loadUserCollectionItems,
+  createOrUpdateUserCollectionItems,
+} from '../helpers/firebase';
 import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
 
-/* eslint-disable no-param-reassign */
 export default {
   name: 'enrollment',
   data() {
     return {
       user: firebase.auth().currentUser,
+      idKey,
 
       stepIndex: 0,
       steps: [
@@ -188,290 +193,180 @@ export default {
         {}, // Done
       ],
 
-      dancers: [{ timeslots: [] }],
-      contacts: [{}],
-      dancerPickingClasses: null,
+      dancersData: [],
+      contactsData: [],
 
-      classes: [
-        {
-          name: 'Private',
-          capacity: 1,
-        },
-        {
-          name: 'Little Leapers',
-          description: 'The perfect way for little ones to learn how to move and work their muscles! This play based class introduces the kids to the basics of Highland dance through games, activities, and fun in an easy, low pressure environment.',
-          minAge: 2,
-          maxAge: 4,
-        },
-        {
-          name: 'Ages 5-7',
-          description: 'New dancers or graduates of Tiny Stars. Primaries learn Highland technique and dances through a combination of traditional dance teaching, cross training, and movement based activities. Primaries are eligible to compete at sanctioned competitions if they so choose. We also foster and encourage dance friendships and bonds to begin building a sense of family.',
-          minAge: 5,
-          maxAge: 7,
-        },
-        {
-          name: 'Ages 7-9',
-          description: 'New dancers, graduates from Primary and those competing at a Beginner level. Beginners develop a high level of technique while learning the 5 basic Highland and National dances. Dancers have a strong focus on building muscle and endurance stamina through cross training, stretching, and activities designed for Highland dancers. Introduction of our core values: athleticism, community, and mindfulness.',
-          minAge: 7,
-          maxAge: 9,
-        },
-        {
-          name: 'Ages 8-11',
-          description: 'Novice dancers continue building technique and strive to compete with a high level of precision at a novice level. Cross training and strength training help to develop the whole dancer into a strong, well balanced contender. Dancers continue to develop our core values: athleticism, community, and mindfulness.',
-          minAge: 8,
-          maxAge: 11,
-        },
-        {
-          name: 'Ages 10-15',
-          description: 'Classes focus heavily on technique, precision, and strength as we prepare the dancers for championships and competitions at the intermediate and premier level. Graceful embodiment of our core values of athleticism, community, and mindfulness.',
-          minAge: 10,
-          maxAge: 15,
-        },
-        {
-          name: 'Adult',
-          description: 'A recreational class for new and returning dancers. New dancers learn technique and all traditional dances while returning/competitive dancers hone skills. A welcoming atmosphere for any age and ability level!',
-          minAge: 15,
-        },
-      ],
-      timeslotData: [
-        {
-          classes: [3],
-          startDay: 1,
-          startTime: '16:30',
-          endTime: '17:15',
-        },
-        {
-          classes: [4],
-          startDay: 1,
-          startTime: '17:15',
-          endTime: '18:15',
-        },
-        {
-          classes: [5],
-          startDay: 1,
-          startTime: '18:15',
-          endTime: '19:15',
-        },
-
-        {
-          classes: [4],
-          startDay: 3,
-          startTime: '16:30',
-          endTime: '17:30',
-        },
-        {
-          classes: [5],
-          startDay: 3,
-          startTime: '17:30',
-          endTime: '18:30',
-        },
-        {
-          classes: [6],
-          startDay: 3,
-          startTime: '18:30',
-          endTime: '19:30',
-        },
-
-        {
-          classes: [1],
-          startDay: 6,
-          startTime: '10:00',
-          endTime: '10:30',
-        },
-        {
-          classes: [2, 3],
-          startDay: 6,
-          startTime: '10:30',
-          endTime: '11:15',
-        },
-        {
-          classes: [4, 5],
-          startDay: 6,
-          startTime: '11:15',
-          endTime: '12:15',
-        },
-        {
-          classes: [6],
-          startDay: 6,
-          startTime: '12:15',
-          endTime: '13:15',
-        },
-
-        {
-          classes: [0],
-          startDay: 2,
-          startTime: '16:30',
-          endTime: '17:00',
-        },
-        {
-          classes: [0],
-          startDay: 2,
-          startTime: '17:00',
-          endTime: '17:30',
-        },
-        {
-          classes: [0],
-          startDay: 2,
-          startTime: '17:30',
-          endTime: '18:00',
-        },
-        {
-          classes: [0],
-          startDay: 2,
-          startTime: '18:00',
-          endTime: '18:30',
-        },
-        {
-          classes: [0],
-          startDay: 2,
-          startTime: '18:30',
-          endTime: '19:00',
-        },
-
-        // {
-        //   classes: [0],
-        //   startDay: 4,
-        //   startTime: '16:15',
-        //   endTime: '16:30',
-        //   enrolled: 1,
-        // },
-        {
-          classes: [0],
-          startDay: 4,
-          startTime: '16:30',
-          endTime: '17:00',
-          enrolled: 1,
-        },
-        {
-          classes: [0],
-          startDay: 4,
-          startTime: '17:00',
-          endTime: '17:30',
-          enrolled: 1,
-        },
-        {
-          classes: [0],
-          startDay: 4,
-          startTime: '17:30',
-          endTime: '18:00',
-        },
-        {
-          classes: [0],
-          startDay: 4,
-          startTime: '18:00',
-          endTime: '18:30',
-        },
-        {
-          classes: [0],
-          startDay: 4,
-          startTime: '18:30',
-          endTime: '19:00',
-        },
-      ],
+      schedulePickerDancerId: null,
     };
   },
+  firebase: {
+    classesData: firebase.database().ref('classes'),
+    timeslotsData: firebase.database().ref('timeslots'),
+  },
   computed: {
+    dancers() {
+      return this.dancersData.map((dancerData) => {
+        const dancer = {
+          timeslotIds: {},
+          ...dancerData,
+        };
+
+        return dancer;
+      });
+    },
+    contacts() {
+      return this.contactsData;
+    },
+    classes() {
+      return this.classesData;
+    },
     timeslots() {
-      return this.timeslotData.map((timeslotData, timeslotIndex) => {
+      return this.timeslotsData.map((timeslotsData) => {
         // normalize for consumption by Schedule
-        const timeslot = { ...timeslotData };
+        const timeslot = {
+          enrolled: 0, // @TODO
+          props: {
+            active: false,
+            disabled: false,
+          },
+          ...timeslotsData,
+        };
 
-        timeslot.id = timeslotIndex; // @TEMP
-
-        timeslot.classes = timeslot.classes || [];
-        timeslot.name = timeslot.classes.map(classIndex => this.classes[classIndex].name).join(' / ');
-
-        timeslot.props = timeslot.props || {};
-        timeslot.props.active = timeslot.props.active || false;
-        timeslot.props.disabled = timeslot.props.disabled || false;
-
-        timeslot.enrolled = timeslot.enrolled || 0;
+        timeslot.classes = this.classes
+          .filter(c => Object.keys(timeslot.classIds).includes(c[idKey]));
+        timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
 
         return timeslot;
       });
     },
-    dancer() {
-      if (this.dancerPickingClasses !== null) {
-        return this.dancers[this.dancerPickingClasses];
-      }
-      return undefined;
-    },
-    dancerTimeslots() {
-      if (!this.dancer) return this.timeslots;
 
-      const age = moment().diff(this.dancer.birthday, 'years');
+    schedulePickerDancer() {
+      try {
+        return this.dancers.find(d => d[idKey] === this.schedulePickerDancerId);
+      } catch (err) {
+        return null;
+      }
+    },
+    schedulePickerDancerTimeslots() {
+      const age = moment().diff(this.schedulePickerDancer.birthday, 'years'); // eslint-disable-line
 
       return this.timeslots.map((timeslot) => {
+        /* eslint-disable no-param-reassign */
+        const timeslotId = timeslot[idKey];
+
         // selected
         timeslot.props.active = false;
-        if (this.dancer.timeslots && this.dancer.timeslots.includes(timeslot.id)) {
+        if (this.schedulePickerDancer.timeslotIds[timeslotId]) {
           timeslot.props.active = true;
         }
 
         // unavailable
-        const classes = timeslot.classes.map(classId => this.classes[classId]);
-        timeslot.props.disabled = !classes.reduce((enabled, c) => {
+        timeslot.props.disabled = !timeslot.classes.reduce((enabled, c) => {
           if (enabled) return true;
-          if (timeslot.enrolled >= c.capacity) return false;
+          if (c.capacity && timeslot.enrolled >= c.capacity) return false;
 
           return !age || (age &&
             (!c.minAge || (c.minAge && age >= c.minAge)) &&
             (!c.maxAge || (c.maxAge && age <= c.maxAge))
           );
         }, timeslot.props.active);
-        // @TODO: disable 'claimed' Privates by adding 'capacity' prop to classes
 
         return timeslot;
+        /* eslint-enable no-param-reassign */
       });
     },
   },
   methods: {
     addDancer() {
-      this.dancers.push({ timeslots: [] });
+      this.dancersData.push({});
     },
     removeDancer(dancerIndex) {
-      this.dancers.splice(dancerIndex, 1);
+      this.dancersData.splice(dancerIndex, 1);
     },
 
     addContact() {
-      this.contacts.push({});
+      this.contactsData.push({});
     },
     removeContact(contactIndex) {
-      this.contacts.splice(contactIndex, 1);
+      this.contactsData.splice(contactIndex, 1);
     },
 
-    pickClasses(dancerId = null) {
-      this.dancerPickingClasses = dancerId;
-    },
-    pickClass(e, timeslot) {
-      if (this.dancer) {
-        if (timeslot && timeslot.props && !timeslot.props.disabled) {
-          if (this.dancer.timeslots.includes(timeslot.id)) {
-            this.dancer.timeslots.splice(this.dancer.timeslots.indexOf(timeslot.id), 1);
+    pickClass(e, timeslotData) {
+      if (this.schedulePickerDancer) {
+        if (timeslotData && timeslotData.props && !timeslotData.props.disabled) {
+          const timeslotId = timeslotData[idKey];
+          const timeslot = this.timeslots.find(t2 => t2[idKey] === timeslotId);
+
+          if (this.schedulePickerDancer.timeslotIds[timeslotId]) {
+            // unselect/remove
+            delete this.schedulePickerDancer.timeslotIds[timeslotId];
             timeslot.enrolled -= 1;
           } else {
-            this.dancer.timeslots.push(timeslot.id);
+            // select/add
+            this.schedulePickerDancer.timeslotIds[timeslotId] = timeslotId;
             timeslot.enrolled += 1;
           }
-          e.stopPropagation();
+          if (e) e.stopPropagation();
         }
       }
     },
 
     handleSubmit() {
-      if (this.stepIndex === this.steps.length - 2) {
-        const json = {
-          dancers: this.dancers,
-          contacts: this.contacts,
-        };
-        console.log(json); // @TEMP
-      } else if (this.stepIndex === this.steps.length - 1) {
-        window.location.href = '//campbelldancers.com';
-      }
+      const json = {
+        dancers: this.dancers,
+        contacts: this.contacts,
+      };
+      console.log(json); // @TEMP
 
-      this.stepIndex += 1;
+      switch (this.stepIndex) {
+        case this.steps.length - 1:
+          // redirect to home
+          window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
+          break;
+
+        case this.steps.length - 2:
+          // save form data
+          createOrUpdateUserCollectionItems(this.dancers, 'dancers');
+          createOrUpdateUserCollectionItems(this.contacts, 'contacts');
+
+        // esline-disable-next no-fallthrough
+        default:
+          this.stepIndex += 1;
+      }
     },
-    skipLogin() {
+
+    userLoaded(user = firebase.auth().currentUser) {
+      console.log('userLoaded', user); // @DEBUG
+
+      // initialize dancers and contacts (using stored values, if possible)
+      if (!this.dancersData.length) {
+        loadUserCollectionItems('dancers')
+          .then((dancers) => {
+            if (!dancers.length) {
+              // no saved dancers, add an empty one for the user to begin with
+              this.dancersData.push({});
+            } else {
+              dancers.forEach((dancer) => {
+                this.dancersData.push(dancer);
+              });
+            }
+          });
+      }
+      if (!this.contactsData.length) {
+        loadUserCollectionItems('contacts')
+          .then((contacts) => {
+            if (!contacts.length) {
+              // no saved contacts, add an empty one for the user to begin with
+              this.contactsData.push({});
+            } else {
+              contacts.forEach((contact) => {
+                this.contactsData.push(contact);
+              });
+            }
+          });
+      }
+    },
+    loginAnonymously() {
       return firebase.auth().signInAnonymously();
     },
     logout() {
@@ -481,13 +376,19 @@ export default {
   created() {
     firebase.auth().onAuthStateChanged((user) => {
       this.user = user;
-      console.log(user);
 
       if (user) {
         // skip login step if already logged in (e.g. on page reload)
         if (this.stepIndex === 0) {
           this.stepIndex += 1;
         }
+
+        // store/update user info
+        if (user.providerData && user.providerData.length) {
+          firebase.database().ref('users').child(user.uid).update(user.providerData[0]);
+        }
+
+        this.userLoaded();
       } else {
         // force back to login step if logged out
         this.stepIndex = 0;
