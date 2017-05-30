@@ -116,12 +116,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-table {
+<style lang="postcss">
+table.schedule {
   height: 100%;
   border-spacing: 0;
 
-  th {
+  & th {
     font-size: small;
     font-weight: normal;
     text-align: center;
@@ -130,24 +130,24 @@ table {
     padding: 5px;
     opacity: .5;
   }
-  tbody {
-    th {
+  & tbody {
+    & th {
       width: 1%;
       text-align: right;
       white-space: nowrap;
       transform: translateY(-50%);
     }
-    td + td {
+    & td + td {
       border-left: 1px solid rgba(0,0,0,.1);
     }
   }
-  td {
+  & td {
     width: 1/7*100%;
     vertical-align: top;
     padding: 0;
     border-top: 1px solid rgba(0,0,0,.1);
 
-    ul {
+    & ul {
       position: relative;
       width: 100%;
       height: 100%;
@@ -155,7 +155,7 @@ table {
       padding: 0;
       margin: 0;
 
-      li {
+      & li {
         position: absolute;
         top: 0;
         left: 0;
@@ -166,10 +166,10 @@ table {
       }
     }
   }
-  tr:last-child {
+  & tr:last-child {
     height: 1px;
 
-    td {
+    & td {
       background: none;
       border-left: none;
     }

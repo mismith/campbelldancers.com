@@ -63,20 +63,20 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$accent: #50c5d8;
+<style lang="postcss">
+@import '../variables.css';
 
 .schedule-picker {
   display: flex;
   flex-direction: column;
   padding: 10px;
 
-  > div {
+  & > div {
     display: flex;
     flex: 1;
     padding: 0;
   }
-  footer {
+  & footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -84,18 +84,18 @@ $accent: #50c5d8;
   }
 }
 .timeslot {
-  background: rgba($accent, .15);
+  background: rgba(var(--accent-rgb), .15);
   padding: 0 3px;
-  border: 1px solid $accent !important;
+  border: 1px solid var(--accent) !important;
   border-radius: 3px;
   cursor: pointer;
 
-  small {
+  & small {
     font-size: 12px;
   }
-  &:not(.disabled):not(.active) {
+  &:not(.disabled, .active) {
     &:hover {
-      background-color: rgba($accent, .333);
+      background-color: rgba(var(--accent-rgb), .333);
     }
   }
   &.disabled {
@@ -103,13 +103,13 @@ $accent: #50c5d8;
     cursor: not-allowed;
   }
   &.active {
-    background: rgba($accent, .666);
+    background: rgba(var(--accent-rgb), .666);
   }
 }
 table.schedule {
-  tbody {
-    tr:nth-child(2n) {
-      th {
+  & tbody {
+    & tr:nth-child(2n) {
+      & th {
         visibility: hidden;
       }
     }

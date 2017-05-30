@@ -402,17 +402,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
-@import url(../../../style.css);
-
-$accent: #50c5d8;
+<style lang="postcss">
+@import '../variables.css';
 
 .enrollment {
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  > div {
+  & > div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -429,7 +427,7 @@ $accent: #50c5d8;
   margin: 20px;
   counter-reset: breadcrumbs;
 
-  .breadcrumb {
+  & .breadcrumb {
     display: inline-flex;
     align-items: center;
     background: none;
@@ -442,7 +440,7 @@ $accent: #50c5d8;
 
     &:before {
       content: counter(breadcrumbs);
-      border: double 3px $accent;
+      border: double 3px var(--accent);
       border-radius: 50%;
       padding: 5px 10px;
       margin-right: 10px;
@@ -451,15 +449,15 @@ $accent: #50c5d8;
       font-weight: bold;
 
       &:before {
-        background-color: $accent;
-        color: #fff;
-        border-color: #fff;
+        background-color: var(--accent);
+        color: var(--lightest);
+        border-color: var(--lightest);
       }
     }
   }
 }
 
-article {
+article.card {
   // for close button
   display: inline-flex;
   flex-wrap: nowrap;
@@ -476,9 +474,9 @@ article {
   padding: 30px;
   z-index: 101;
 
-  .schedule-picker {
+  & .schedule-picker {
     height: 100%;
-    background-color: #FFF;
+    background-color: var(--lightest);
     padding: 20px;
   }
   &:after {
