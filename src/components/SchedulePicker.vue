@@ -69,18 +69,28 @@ export default {
 .schedule-picker {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  overflow: hidden;
 
+  & table.schedule {
+    & tbody {
+      & tr:nth-child(2n) {
+        & th {
+          visibility: hidden;
+        }
+      }
+    }
+  }
   & > div {
     display: flex;
-    flex: 1;
-    padding: 0;
+    flex-grow: 1;
+    height: calc(100% - 40px); /* @HACK */
   }
-  & footer {
+  & > footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     text-align: center;
+    z-index: 2;
   }
 }
 .timeslot {
@@ -104,15 +114,6 @@ export default {
   }
   &.active {
     background: rgba(var(--accent-rgb), .666);
-  }
-}
-table.schedule {
-  & tbody {
-    & tr:nth-child(2n) {
-      & th {
-        visibility: hidden;
-      }
-    }
   }
 }
 </style>

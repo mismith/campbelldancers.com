@@ -1,18 +1,5 @@
 <template>
   <div class="home">
-    <section id="top" class="align-center">
-      <header>
-        <h1><a href="#top"><img src="/static/images/logo.svg" alt="Campbell School of Highland Dance" /></a></h1>
-      </header>
-      <nav class="font">
-        <a href="/#about">About</a>
-        <a href="/#instructors">Instructors</a>
-        <a href="/#classes">Classes</a>
-        <a href="/#contact">Contact</a>
-        <a href="/#photos" class="photos-loading">Photos</a>
-        <a href="/#calendar">Calendar</a>
-      </nav>
-    </section>
     <section id="about" class="bg-tartan align-center">
       <header>
         <h2><a href="#about">About</a></h2>
@@ -23,7 +10,7 @@
         <p><strong>Registration</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
       </div>
       <footer class="call-to-action align-center">
-        <a href="/register.html#register" class="btn">Register</a>
+        <router-link to="/register" class="btn">Register</router-link>
       </footer>
     </section>
     <section id="instructors">
@@ -33,7 +20,7 @@
       <div>
         <article id="alexandra" class="right">
           <figure>
-            <img src="images/alexandra.jpg?v=1" alt="Alexandra Campbell" width="200" height="274" />
+            <img src="/static/images/alexandra.jpg?v=1" alt="Alexandra Campbell" width="200" height="274" />
           </figure>
           <div>
             <header>
@@ -49,7 +36,7 @@
         <br />
         <article id="elayna">
           <figure>
-            <img src="images/elayna.jpg?v=1" alt="Elayna Campbell" width="200" height="274" />
+            <img src="/static/images/elayna.jpg?v=1" alt="Elayna Campbell" width="200" height="274" />
           </figure>
           <div>
             <header>
@@ -173,7 +160,7 @@
           </table>
         </article>
         <footer class="call-to-action align-center">
-          <a href="/register.html#register" class="btn">Register</a>
+          <router-link to="/register" class="btn">Register</router-link>
         </footer>
       </div>
     </section>
@@ -247,30 +234,11 @@
         </form>
       </div>
     </section>
-    <section id="photos" class="photos-loading">
+    <section id="photos">
       <header>
         <h2><a href="#photos">Photos</a></h2>
       </header>
       <div id="instafeed" class="flex-cols"></div>
-      <script src="https://cdn.rawgit.com/stevenschobert/instafeed.js/v1.4.1/instafeed.min.js"></script>
-      <script>
-        try {
-          new Instafeed({
-            clientId: 'c4d7db79bf68469ba1b71aebf43bc8df',
-            accessToken: '3519946526.c4d7db7.797de8ffa53b4185abc0e877ba80b847',
-            get: 'user',
-            userId: 'self',
-            limit: 4,
-            resolution: 'standard_resolution',
-            template: '<figure><a href="{{link}}"><img src="{{image}}" width="{{width}}" height="{{height}}" /></a><figcaption>{{caption}}</figcaption></figure>',
-            success: function (data) {
-              Array.from(document.querySelectorAll('.photos-loading')).map(el => el.classList.remove('photos-loading'));
-            },
-          }).run();
-        } catch (err) {
-          console.error(err);
-        }
-      </script>
     </section>
     <section id="calendar" class="bg-tartan">
       <header>
@@ -280,19 +248,108 @@
         <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&showPrint=0&showCalendars=0&showTz=0&height=600&wkst=1&src=campbelldancers.com_6jebcm7ue9tfu0ivbfndqooatk%40group.calendar.google.com&color=%232952A3&ctz=America%2FEdmonton" width="600" height="600" frameborder="0" scrolling="no"></iframe>
       </div>
       <footer class="call-to-action align-center">
-        <a href="/register.html#register" class="btn">Register</a>
+        <router-link to="/register" class="btn">Register</router-link>
       </footer>
     </section>
   </div>
 </template>
 
 <script>
+import Instafeed from 'instafeed.js';
+
 export default {
   name: 'home',
+  mounted() {
+    try {
+      new Instafeed({
+        clientId: 'c4d7db79bf68469ba1b71aebf43bc8df',
+        accessToken: '3519946526.c4d7db7.797de8ffa53b4185abc0e877ba80b847',
+        get: 'user',
+        userId: 'self',
+        limit: 4,
+        resolution: 'standard_resolution',
+        template: '<figure><a href="{{link}}"><img src="{{image}}" width="{{width}}" height="{{height}}" /></a><figcaption>{{caption}}</figcaption></figure>',
+      }).run();
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };
 </script>
 
 <style lang="postcss">
 @import '../variables.css';
 
+#classes {
+  & .classes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+
+    & article {
+      margin-bottom: 40px;
+
+      @media (min-width: 640px) {
+        flex-basis: 48%;
+      }
+    }
+  }
+  & hr {
+    margin-top: 0;
+  }
+}
+
+#instructors {
+  & article {
+    & h3 {
+      margin-top: 5px;
+    }
+
+    @media (min-width: 600px) {
+      display: flex;
+
+      & figure {
+        padding-right: 40px;
+      }
+      & div {
+        flex-shrink: 1;
+      }
+      &.right {
+        text-align: right;
+
+        & figure {
+          order: 2;
+          padding-right: 0;
+          padding-left: 40px;
+        }
+      }
+    }
+  }
+}
+
+
+#instafeed {
+  & > * {
+    & img {
+      width: 100%;
+      height: auto;
+      vertical-align: middle;
+    }
+    & a {
+      display: inline-block;
+      border: solid 1px var(--light);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    & figcaption {
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 600px) {
+      flex-basis: calc(50% - 40px);
+    }
+  }
+}
 </style>

@@ -1,9 +1,9 @@
 <template>
-  <form class="enrollment align-center" @submit.prevent="handleSubmit">
+  <form class="enroll align-center" @submit.prevent="handleSubmit">
     <header>
       <ol class="breadcrumbs">
-        <li v-for="(step, i) in steps">
-          <button @click.prevent="stepIndex = i" :class="{breadcrumb: true, active: i === stepIndex}" :disabled="i > stepIndex">{{ step.name }}</button>
+        <li v-for="(step, i) in steps" @click.prevent="i < stepIndex && (stepIndex = i)" :class="{breadcrumb: true, active: i === stepIndex, disabled: i > stepIndex}">
+          {{ step.name }}
         </li>
       </ol>
     </header>
@@ -29,7 +29,7 @@
     <div v-if="stepIndex === 1">
       <header>
         <p>Who will be dancing with us?</p>
-        <p><small>For private lesson slots, we ask that you please pick the earliest one available<br/> on that day—that way we won't have gaps between classes.</small></p>
+        <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
         <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
@@ -44,30 +44,30 @@
               <tr>
                 <td>Birthday</td>
                 <td>
-                  <input type="date" v-model="dancer.birthday" required />
+                  <input type="date" v-model="dancer.birthday" placeholder="YYYY-MM-DD" required />
                 </td>
               </tr>
-  <!--             <tr>
-                <td>Competitive level</td>
+              <tr>
+                <td>Competing</td>
                 <td>
-                  <select v-model="dancer.ability" required>
-                    <optgroup>
-                      <option>Non-competitive</option>
-                    </optgroup>
-                    <optgroup>
-                      <option>New</option>
-                      <option>Beginner</option>
-                      <option>Novice</option>
-                      <option>Intermediate</option>
-                      <option>Premier</option>
-                    </optgroup>
-                    <optgroup>
-                      <option>New Adult</option>
-                      <option>Returning/Experienced Adult</option>
-                    </optgroup>
-                  </select>
+                  <label class="selectable">
+                    <select v-model="dancer.ability" required>
+                      <optgroup>
+                        <option>New / Unsure</option>
+                      </optgroup>
+                      <optgroup>
+                        <option>Beginner</option>
+                        <option>Novice</option>
+                        <option>Intermediate</option>
+                        <option>Premier</option>
+                      </optgroup>
+                      <optgroup>
+                        <option>Non-competitive</option>
+                      </optgroup>
+                    </select>
+                  </label>
                 </td>
-              </tr> -->
+              </tr>
               <tr>
                 <td>Classes</td>
                 <td>
@@ -148,10 +148,10 @@
 
     <div v-if="stepIndex === steps.length - 1">
       <header>
-        <h2>All done</h2>
+        <h2>Enrolled!</h2>
       </header>
       <div>
-        <p>Thanks for enrolling with us this season! :)</p>
+        <p>We can't wait to dance together :)</p>
       </div>
     </div>
 
@@ -173,7 +173,7 @@ import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
 
 export default {
-  name: 'enrollment',
+  name: 'enroll',
   data() {
     return {
       user: firebase.auth().currentUser,
@@ -372,6 +372,12 @@ export default {
     logout() {
       return firebase.auth().signOut();
     },
+
+    closeSchedulePicker(e) {
+      if (e.key === 'Escape') {
+        this.schedulePickerDancerId = null;
+      }
+    },
   },
   created() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -395,6 +401,12 @@ export default {
       }
     });
   },
+  mounted() {
+    document.addEventListener('keydown', this.closeSchedulePicker);
+  },
+  beforeDestroy() {
+    document.removeEventListener('keydown', this.closeSchedulePicker);
+  },
   components: {
     Auth,
     SchedulePicker,
@@ -405,7 +417,7 @@ export default {
 <style lang="postcss">
 @import '../variables.css';
 
-.enrollment {
+.enroll {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -418,10 +430,12 @@ export default {
 }
 
 .breadcrumbs {
+  @apply --heading;
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
+  font-size: 12px;
   list-style: none;
   padding: 0;
   margin: 20px;
@@ -440,13 +454,14 @@ export default {
 
     &:before {
       content: counter(breadcrumbs);
+      letter-spacing: 0;
       border: double 3px var(--accent);
       border-radius: 50%;
       padding: 5px 10px;
       margin-right: 10px;
     }
     &.active {
-      font-weight: bold;
+      color: var(--accent);
 
       &:before {
         background-color: var(--accent);
@@ -454,17 +469,26 @@ export default {
         border-color: var(--lightest);
       }
     }
+    &.disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
   }
 }
 
 article.card {
-  // for close button
+  /* for close button */
   display: inline-flex;
   flex-wrap: nowrap;
   text-align: left;
 }
+aside.card {
+  min-width: 200px;
+}
 
 .schedule-picker-container {
+  display: flex;
+  flex-direction: column;
   position: fixed;
   top: 0;
   left: 0;
@@ -475,6 +499,7 @@ article.card {
   z-index: 101;
 
   & .schedule-picker {
+    display: flex;
     height: 100%;
     background-color: var(--lightest);
     padding: 20px;

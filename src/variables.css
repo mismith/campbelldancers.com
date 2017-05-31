@@ -5,6 +5,10 @@
   --accent:     #50c5d8;
   --accent-rgb: 80, 197, 216;
 
+  --small:      600px;
+  --medium:     800px;
+  --header-height: 48px;
+
   --heading: {
     font-family: 'novecento_sans_widebook', 'Nova Cento Sans Wide', sans-serif;
     text-transform: uppercase;
