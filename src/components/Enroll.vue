@@ -32,7 +32,7 @@
         <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
+        <article v-for="(dancer, dancerIndex) of dancers" v-if="!dancer.archivedAt" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -72,7 +72,7 @@
                 <td>Classes</td>
                 <td>
                   <label title="Pick classes" class="selectable">
-                    <input @click="schedulePickerDancerId = dancer[idKey]" placeholder="0 selected" :value="dancer.timeslotIds && Object.keys(dancer.timeslotIds).length ? `${Object.keys(dancer.timeslotIds).length} selected` : null" required />
+                    <input @click.prevent="schedulePickerDancerIndex = dancerIndex" placeholder="0 selected" :value="dancer.timeslotIds && Object.keys(dancer.timeslotIds).length ? `${Object.keys(dancer.timeslotIds).length} selected` : null" required />
                   </label>
                 </td>
               </tr>
@@ -84,7 +84,7 @@
               </tr>
             </tbody>
           </table>
-          <aside v-if="dancerIndex || dancers.length > 1">
+          <aside v-if="dancerIndex > 0 || dancers.filter(filterArchived).length > 1">
             <button @click.prevent="removeDancer(dancerIndex)" title="Remove dancer" class="btn-close">&times;</button>
           </aside>
         </article>
@@ -94,8 +94,8 @@
           <big>&plus;</big> Add another dancer
         </a>
       </footer>
-      <aside v-if="schedulePickerDancerId !== null" @click.self="schedulePickerDancerId = null" class="schedule-picker-container align-left">
-        <schedule-picker :timeslots="schedulePickerDancerTimeslots" @select="pickClass" @done="schedulePickerDancerId = null" />
+      <aside v-if="schedulePickerDancerIndex !== null" @click.self="schedulePickerDancerIndex = null" class="schedule-picker-container align-left">
+        <schedule-picker :timeslots="schedulePickerDancerTimeslots" @select="pickClass" @done="schedulePickerDancerIndex = null" />
       </aside>
     </div>
 
@@ -105,7 +105,7 @@
         <p><small>We suggest you add at least 2 people—always better to be prepared!</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(contact, contactIndex) of contacts" class="card bg-tartan">
+        <article v-for="(contact, contactIndex) of contacts" v-if="!contact.archivedAt" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -134,7 +134,7 @@
               </tr>
             </tbody>
           </table>
-          <aside v-if="contactIndex || contacts.length > 1">
+          <aside v-if="contactIndex > 0 || contacts.filter(filterArchived).length > 1">
             <button @click.prevent="removeContact(contactIndex)" title="Remove emergency contact" class="btn-close">&times;</button>
           </aside>
         </article>
@@ -166,6 +166,7 @@ import moment from 'moment';
 import {
   firebase,
   idKey,
+  loadCollectionItems,
   loadUserCollectionItems,
   createOrUpdateUserCollectionItems,
 } from '../helpers/firebase';
@@ -193,70 +194,27 @@ export default {
         {}, // Done
       ],
 
-      dancersData: [],
-      contactsData: [],
+      dancers: [],
+      contacts: [],
+      classes: [],
+      timeslots: [],
 
-      schedulePickerDancerId: null,
+      schedulePickerDancerIndex: null,
     };
   },
-  firebase: {
-    classesData: firebase.database().ref('classes'),
-    timeslotsData: firebase.database().ref('timeslots'),
-  },
   computed: {
-    dancers() {
-      return this.dancersData.map((dancerData) => {
-        const dancer = {
-          timeslotIds: {},
-          ...dancerData,
-        };
-
-        return dancer;
-      });
-    },
-    contacts() {
-      return this.contactsData;
-    },
-    classes() {
-      return this.classesData;
-    },
-    timeslots() {
-      return this.timeslotsData.map((timeslotsData) => {
-        // normalize for consumption by Schedule
-        const timeslot = {
-          enrolled: 0, // @TODO
-          props: {
-            active: false,
-            disabled: false,
-          },
-          ...timeslotsData,
-        };
-
-        timeslot.classes = this.classes
-          .filter(c => Object.keys(timeslot.classIds).includes(c[idKey]));
-        timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
-
-        return timeslot;
-      });
-    },
-
-    schedulePickerDancer() {
-      try {
-        return this.dancers.find(d => d[idKey] === this.schedulePickerDancerId);
-      } catch (err) {
-        return null;
-      }
-    },
     schedulePickerDancerTimeslots() {
-      const age = moment().diff(this.schedulePickerDancer.birthday, 'years'); // eslint-disable-line
+      const dancer = this.dancers[this.schedulePickerDancerIndex];
+      console.log(dancer);
+      const age = moment().diff(dancer.birthday, 'years');
 
-      return this.timeslots.map((timeslot) => {
-        /* eslint-disable no-param-reassign */
+      return this.timeslots.map((t) => {
+        const timeslot = { ...t };
         const timeslotId = timeslot[idKey];
 
         // selected
         timeslot.props.active = false;
-        if (this.schedulePickerDancer.timeslotIds[timeslotId]) {
+        if (dancer.timeslotIds[timeslotId]) {
           timeslot.props.active = true;
         }
 
@@ -272,45 +230,92 @@ export default {
         }, timeslot.props.active);
 
         return timeslot;
-        /* eslint-enable no-param-reassign */
       });
     },
   },
   methods: {
-    addDancer() {
-      this.dancersData.push({});
-    },
-    removeDancer(dancerIndex) {
-      this.dancersData.splice(dancerIndex, 1);
-    },
+    // schedule picker
+    pickClass(e, timeslot) {
+      if (timeslot && timeslot.props && !timeslot.props.disabled) { // make sure it's selectable
+        const timeslotId = timeslot[idKey];
+        const timeslotData = this.timeslots.find(t => t[idKey] === timeslotId);
+        const dancerData = this.dancers[this.schedulePickerDancerIndex];
 
-    addContact() {
-      this.contactsData.push({});
-    },
-    removeContact(contactIndex) {
-      this.contactsData.splice(contactIndex, 1);
-    },
-
-    pickClass(e, timeslotData) {
-      if (this.schedulePickerDancer) {
-        if (timeslotData && timeslotData.props && !timeslotData.props.disabled) {
-          const timeslotId = timeslotData[idKey];
-          const timeslot = this.timeslots.find(t2 => t2[idKey] === timeslotId);
-
-          if (this.schedulePickerDancer.timeslotIds[timeslotId]) {
-            // unselect/remove
-            delete this.schedulePickerDancer.timeslotIds[timeslotId];
-            timeslot.enrolled -= 1;
-          } else {
-            // select/add
-            this.schedulePickerDancer.timeslotIds[timeslotId] = timeslotId;
-            timeslot.enrolled += 1;
-          }
-          if (e) e.stopPropagation();
+        if (dancerData.timeslotIds[timeslotId]) {
+          // unselect/remove
+          this.$delete(dancerData.timeslotIds, timeslotId);
+          timeslotData.enrolled -= 1;
+        } else {
+          // select/add
+          this.$set(dancerData.timeslotIds, timeslotId, timeslotId);
+          timeslotData.enrolled += 1;
         }
+        if (e) e.stopPropagation();
+      }
+    },
+    closeSchedulePicker(e) {
+      if (e.key === 'Escape') {
+        this.schedulePickerDancerIndex = null;
       }
     },
 
+    // data-processing layers
+    formatItem(collection, item = {}) {
+      switch (collection) {
+        default:
+          return {
+            ...item,
+          };
+        case 'dancers':
+          return {
+            timeslotIds: {},
+            ...item,
+          };
+        case 'timeslots': // eslint-disable-line no-case-declarations
+          const timeslot = {
+            enrolled: 0, // @TODO
+            props: {
+              active: false,
+              disabled: false,
+            },
+            ...item,
+          };
+
+          timeslot.classes = this.classes
+            .filter(c => Object.keys(timeslot.classIds).includes(c[idKey]));
+          timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
+
+          return timeslot;
+      }
+    },
+    filterArchived(item) {
+      return !item.archivedAt;
+    },
+
+    // data manipulation
+    addDancer() {
+      this.dancers.push(this.formatItem('dancers'));
+    },
+    removeDancer(dancerIndex) {
+      if (this.dancers[dancerIndex][idKey]) {
+        this.$set(this.dancers[dancerIndex], 'archivedAt', moment().format());
+      } else {
+        this.dancers.splice(dancerIndex, 1);
+      }
+    },
+
+    addContact() {
+      this.contacts.push(this.formatItem('contacts'));
+    },
+    removeContact(contactIndex) {
+      if (this.contacts[contactIndex][idKey]) {
+        this.$set(this.contacts[contactIndex], 'archivedAt', moment().format());
+      } else {
+        this.contacts.splice(contactIndex, 1);
+      }
+    },
+
+    // data storage
     handleSubmit() {
       const json = {
         dancers: this.dancers,
@@ -331,40 +336,30 @@ export default {
 
         // esline-disable-next no-fallthrough
         default:
+          // move to next step (uses browser validation only)
           this.stepIndex += 1;
       }
     },
 
+    // auth
     userLoaded(user = firebase.auth().currentUser) {
-      console.log('userLoaded', user); // @DEBUG
+      console.log(user);
 
-      // initialize dancers and contacts (using stored values, if possible)
-      if (!this.dancersData.length) {
-        loadUserCollectionItems('dancers')
-          .then((dancers) => {
-            if (!dancers.length) {
-              // no saved dancers, add an empty one for the user to begin with
-              this.dancersData.push({});
-            } else {
-              dancers.forEach((dancer) => {
-                this.dancersData.push(dancer);
-              });
-            }
-          });
-      }
-      if (!this.contactsData.length) {
-        loadUserCollectionItems('contacts')
-          .then((contacts) => {
-            if (!contacts.length) {
-              // no saved contacts, add an empty one for the user to begin with
-              this.contactsData.push({});
-            } else {
-              contacts.forEach((contact) => {
-                this.contactsData.push(contact);
-              });
-            }
-          });
-      }
+      // initialize user data
+      loadUserCollectionItems('dancers')
+        .then(dancers => (dancers.length ? dancers : [{}]).map(d => this.formatItem('dancers', d)))
+        .then(dancers => (this.dancers = dancers));
+      loadUserCollectionItems('contacts')
+        .then(contacts => (contacts.length ? contacts : [{}]).map(c => this.formatItem('contacts', c)))
+        .then(contacts => (this.contacts = contacts));
+
+      // initialize schedule picker data
+      loadCollectionItems('classes')
+        .then(classes => classes.map(c => this.formatItem('classes', c)))
+        .then(classes => (this.classes = classes));
+      loadCollectionItems('timeslots')
+        .then(timeslots => timeslots.map(t => this.formatItem('timeslots', t)))
+        .then(timeslots => (this.timeslots = timeslots));
     },
     loginAnonymously() {
       return firebase.auth().signInAnonymously();
@@ -372,14 +367,9 @@ export default {
     logout() {
       return firebase.auth().signOut();
     },
-
-    closeSchedulePicker(e) {
-      if (e.key === 'Escape') {
-        this.schedulePickerDancerId = null;
-      }
-    },
   },
   created() {
+    // handle user
     firebase.auth().onAuthStateChanged((user) => {
       this.user = user;
 
@@ -394,7 +384,7 @@ export default {
           firebase.database().ref('users').child(user.uid).update(user.providerData[0]);
         }
 
-        this.userLoaded();
+        this.userLoaded(user);
       } else {
         // force back to login step if logged out
         this.stepIndex = 0;

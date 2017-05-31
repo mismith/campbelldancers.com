@@ -16,6 +16,19 @@ export { firebase, firebaseui };
 export const firebaseApp = firebase.initializeApp(config);
 export const firebaseuiApp = new firebaseui.auth.AuthUI(firebase.auth());
 
+export function loadCollectionItems(collection = 'items') {
+  return firebase.database().ref(collection).once('value')
+    .then((itemsSnap) => {
+      const items = itemsSnap.val();
+
+      if (!items) return null;
+
+      return Object.keys(items).map(key => ({
+        [idKey]: key,
+        ...items[key],
+      }));
+    });
+}
 export function loadItemCollectionItems(itemIds, collection = 'items') {
   return Promise.all(Object.keys(itemIds).map(itemId =>
     firebase.database().ref(`${collection}/${itemId}`).once('value')
@@ -38,7 +51,7 @@ export function loadUserCollectionItems(collection = 'items', user = firebase.au
       const itemIds = snap.val();
 
       // @TODO: proper fallbacks
-      if (!itemIds) return [];
+      if (!itemIds) return {};
 
       return loadItemCollectionItems(itemIds, collection);
     });
