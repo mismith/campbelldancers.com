@@ -16,6 +16,21 @@ export { firebase, firebaseui };
 export const firebaseApp = firebase.initializeApp(config);
 export const firebaseuiApp = new firebaseui.auth.AuthUI(firebase.auth());
 
+export function cleanItem(item) {
+  const cleanedItem = { ...item };
+
+  delete cleanedItem[idKey];
+
+  return cleanedItem;
+}
+export function prepareItem(item, id) {
+  const preparedItem = { ...item };
+
+  preparedItem[idKey] = id;
+
+  return preparedItem;
+}
+
 export function loadCollectionItems(collection = 'items') {
   return firebase.database().ref(collection).once('value')
     .then((itemsSnap) => {
@@ -32,14 +47,7 @@ export function loadCollectionItems(collection = 'items') {
 export function loadItemCollectionItems(itemIds, collection = 'items') {
   return Promise.all(Object.keys(itemIds).map(itemId =>
     firebase.database().ref(`${collection}/${itemId}`).once('value')
-      .then((itemSnap) => {
-        const item = itemSnap.val();
-
-        if (!item) return null;
-
-        item[idKey] = itemId;
-        return item;
-      }),
+      .then(itemSnap => prepareItem(itemSnap.val(), itemId)),
     ));
 }
 
@@ -58,22 +66,26 @@ export function loadUserCollectionItems(collection = 'items', user = firebase.au
 }
 
 export function createOrUpdateUserCollectionItem(item, collection = 'items', user = firebase.auth().currentUser) {
+  let itemId = item[idKey];
   const userId = user.uid;
-  const preparedItem = { ...item };
+  const cleanedItem = cleanItem(item);
 
-  if (item[idKey]) {
+  if (itemId) {
     // update
-    const itemId = item[idKey];
-    delete preparedItem[idKey];
-
-    return firebase.database().ref(`${collection}/${itemId}`).update(preparedItem);
+    return firebase.database().ref(`${collection}/${itemId}`).update(cleanedItem)
+      .then(() => itemId);
   }
 
   // create
-  // @TODO do proper grouped async here
-  const itemId = firebase.database().ref(collection).push(preparedItem).key;
-  return firebase.database().ref(`users:${collection}/${userId}/${itemId}`).set(itemId);
+  const pushPromise = firebase.database().ref(collection).push(cleanedItem);
+  itemId = pushPromise.key;
+  return Promise.all([
+    pushPromise,
+    firebase.database().ref(`users:${collection}/${userId}/${itemId}`).set(itemId),
+  ])
+    .then(() => itemId);
 }
 export function createOrUpdateUserCollectionItems(items, collection = 'items', user = firebase.auth().currentUser) {
+  console.log(items);
   return Promise.all(items.map(item => createOrUpdateUserCollectionItem(item, collection, user)));
 }

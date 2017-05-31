@@ -2,7 +2,7 @@
   <form class="enroll align-center" @submit.prevent="handleSubmit">
     <header>
       <ol class="breadcrumbs">
-        <li v-for="(step, i) in steps" @click.prevent="i < stepIndex && (stepIndex = i)" :class="{breadcrumb: true, active: i === stepIndex, disabled: i > stepIndex}">
+        <li v-for="(step, i) in steps" v-if="step.name" @click.prevent="i < stepIndex && (stepIndex = i)" :class="{breadcrumb: true, active: i === stepIndex, disabled: i > stepIndex}">
           {{ step.name }}
         </li>
       </ol>
@@ -32,7 +32,7 @@
         <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(dancer, dancerIndex) of dancers" v-if="!dancer.archivedAt" class="card bg-tartan">
+        <article v-for="(dancer, dancerIndex) of dancers" v-if="!dancer['@deleted']" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -84,7 +84,7 @@
               </tr>
             </tbody>
           </table>
-          <aside v-if="dancerIndex > 0 || dancers.filter(filterArchived).length > 1">
+          <aside v-if="dancerIndex > 0 || dancers.filter(filterDeleted).length > 1">
             <button @click.prevent="removeDancer(dancerIndex)" title="Remove dancer" class="btn-close">&times;</button>
           </aside>
         </article>
@@ -105,7 +105,7 @@
         <p><small>We suggest you add at least 2 people—always better to be prepared!</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(contact, contactIndex) of contacts" v-if="!contact.archivedAt" class="card bg-tartan">
+        <article v-for="(contact, contactIndex) of contacts" v-if="!contact['@deleted']" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -134,7 +134,7 @@
               </tr>
             </tbody>
           </table>
-          <aside v-if="contactIndex > 0 || contacts.filter(filterArchived).length > 1">
+          <aside v-if="contactIndex > 0 || contacts.filter(filterDeleted).length > 1">
             <button @click.prevent="removeContact(contactIndex)" title="Remove emergency contact" class="btn-close">&times;</button>
           </aside>
         </article>
@@ -156,7 +156,8 @@
     </div>
 
     <footer v-if="user" class="call-to-action align-center">
-      <button type="submit" class="btn">{{ stepIndex === steps.length - 1 ? 'Home' : 'Next' }}</button>
+      <button @click.prevent="stepIndex -= 1" v-if="1 <= stepIndex && stepIndex < 3" class="btn btn-left dimmed">Back</button>
+      <button type="submit" class="btn btn-right">{{ stepIndex === steps.length - 1 ? 'Home' : 'Next' }}</button>
     </footer>
   </form>
 </template>
@@ -166,8 +167,10 @@ import moment from 'moment';
 import {
   firebase,
   idKey,
+  cleanItem,
   loadCollectionItems,
   loadUserCollectionItems,
+  createOrUpdateUserCollectionItem,
   createOrUpdateUserCollectionItems,
 } from '../helpers/firebase';
 import Auth from './Auth';
@@ -205,7 +208,6 @@ export default {
   computed: {
     schedulePickerDancerTimeslots() {
       const dancer = this.dancers[this.schedulePickerDancerIndex];
-      console.log(dancer);
       const age = moment().diff(dancer.birthday, 'years');
 
       return this.timeslots.map((t) => {
@@ -243,11 +245,11 @@ export default {
 
         if (dancerData.timeslotIds[timeslotId]) {
           // unselect/remove
-          this.$delete(dancerData.timeslotIds, timeslotId);
+          delete dancerData.timeslotIds[timeslotId];
           timeslotData.enrolled -= 1;
         } else {
           // select/add
-          this.$set(dancerData.timeslotIds, timeslotId, timeslotId);
+          dancerData.timeslotIds[timeslotId] = timeslotId;
           timeslotData.enrolled += 1;
         }
         if (e) e.stopPropagation();
@@ -261,15 +263,17 @@ export default {
 
     // data-processing layers
     formatItem(collection, item = {}) {
+      const formattedItem = {
+        '@created': moment().format(),
+        ...item,
+      };
       switch (collection) {
         default:
-          return {
-            ...item,
-          };
+          return formattedItem;
         case 'dancers':
           return {
             timeslotIds: {},
-            ...item,
+            ...formattedItem,
           };
         case 'timeslots': // eslint-disable-line no-case-declarations
           const timeslot = {
@@ -278,7 +282,7 @@ export default {
               active: false,
               disabled: false,
             },
-            ...item,
+            ...formattedItem,
           };
 
           timeslot.classes = this.classes
@@ -288,8 +292,8 @@ export default {
           return timeslot;
       }
     },
-    filterArchived(item) {
-      return !item.archivedAt;
+    filterDeleted(item) {
+      return !item['@deleted'];
     },
 
     // data manipulation
@@ -298,7 +302,7 @@ export default {
     },
     removeDancer(dancerIndex) {
       if (this.dancers[dancerIndex][idKey]) {
-        this.$set(this.dancers[dancerIndex], 'archivedAt', moment().format());
+        this.$set(this.dancers[dancerIndex], '@deleted', moment().format()); // @NB: use $set here since we are adding a new prop to the dancer
       } else {
         this.dancers.splice(dancerIndex, 1);
       }
@@ -309,7 +313,7 @@ export default {
     },
     removeContact(contactIndex) {
       if (this.contacts[contactIndex][idKey]) {
-        this.$set(this.contacts[contactIndex], 'archivedAt', moment().format());
+        this.$set(this.contacts[contactIndex], '@deleted', moment().format()); // @NB: use $set here since we are adding a new prop to the dancer
       } else {
         this.contacts.splice(contactIndex, 1);
       }
@@ -317,22 +321,27 @@ export default {
 
     // data storage
     handleSubmit() {
-      const json = {
-        dancers: this.dancers,
-        contacts: this.contacts,
-      };
-      console.log(json); // @TEMP
-
       switch (this.stepIndex) {
         case this.steps.length - 1:
           // redirect to home
           window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
           break;
 
-        case this.steps.length - 2:
+        case this.steps.length - 2: // eslint-disable-line no-case-declarations
           // save form data
-          createOrUpdateUserCollectionItems(this.dancers, 'dancers');
-          createOrUpdateUserCollectionItems(this.contacts, 'contacts');
+          Promise.all([
+            createOrUpdateUserCollectionItems(this.dancers, 'dancers'),
+            createOrUpdateUserCollectionItems(this.contacts, 'contacts'),
+          ])
+            .then(() => {
+              const enrollment = {
+                '@created': moment().format(),
+                userAgent: window.navigator.userAgent,
+                dancers: this.dancers.filter(this.filterDeleted).map(cleanItem),
+                contacts: this.contacts.filter(this.filterDeleted).map(cleanItem),
+              };
+              createOrUpdateUserCollectionItem(enrollment, 'enrollments');
+            });
 
         // esline-disable-next no-fallthrough
         default:
@@ -342,9 +351,7 @@ export default {
     },
 
     // auth
-    userLoaded(user = firebase.auth().currentUser) {
-      console.log(user);
-
+    userLoaded(user = firebase.auth().currentUser) { // eslint-disable-line no-unused-vars
       // initialize user data
       loadUserCollectionItems('dancers')
         .then(dancers => (dancers.length ? dancers : [{}]).map(d => this.formatItem('dancers', d)))
