@@ -412,23 +412,42 @@ export default {
   flex-direction: column;
   align-items: center;
 
+  & > * {
+    @media (width < 600px) {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
   & > div {
     display: flex;
     flex-direction: column;
     align-items: center;
+    max-width: 100%;
+  }
+  & > footer {
+    display: flex;
+    justify-content: center;
+    align-self: stretch;
+    max-width: var(--medium);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+    & .btn:not([type=submit]) {
+      margin-right: auto;
+    }
   }
 }
 
 .breadcrumbs {
   @apply --heading;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-start;
   font-size: 12px;
   list-style: none;
   padding: 0;
-  margin: 20px;
+  margin: 20px 0;
   counter-reset: breadcrumbs;
 
   & .breadcrumb {
@@ -444,10 +463,14 @@ export default {
 
     &:before {
       content: counter(breadcrumbs);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
       letter-spacing: 0;
       border: double 3px var(--accent);
       border-radius: 50%;
-      padding: 5px 10px;
       margin-right: 10px;
     }
     &.active {
@@ -469,7 +492,9 @@ export default {
 article.card {
   /* for close button */
   display: inline-flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  flex-shrink: 1;
   text-align: left;
 }
 aside.card {

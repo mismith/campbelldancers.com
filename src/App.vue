@@ -114,6 +114,9 @@ export default {
 .call-to-action {
   margin-top: 40px;
 }
+.dimmed {
+  opacity: .75;
+}
 
 * {
   box-sizing: border-box;
@@ -274,6 +277,31 @@ textarea {
     color: var(--accent);
   }
 }
+.btn-left {
+  &:before {
+    content: '';
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border: 5px solid transparent;
+    border-right: 10px solid currentColor;
+    margin-right: 15px;
+    margin-left: -5px;
+  }
+}
+.btn-right {
+  &:after {
+    content: '';
+    width: 0;
+    height: 0;
+    display: inline-block;
+    border: 5px solid transparent;
+    border-left: 10px solid currentColor;
+    margin-left: 10px;
+    margin-right: -5px;
+  }
+}
+
 .table {
   display: inline-table;
   border: 0;
@@ -345,8 +373,8 @@ section,
   & nav {
     @apply --heading;
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
+    flex-wrap: wrap;
     max-width: none;
     line-height: 2;
 
@@ -372,6 +400,7 @@ section,
     min-height: 0;
     background-color: var(--lightest);
     border-bottom: 3px double var(--accent);
+    z-index: 100;
 
     & > div {
       flex-direction: row;
@@ -396,6 +425,7 @@ section,
         }
       }
       & nav {
+        flex-shrink: 1;
         font-size: 12px;
       }
     }

@@ -288,9 +288,10 @@ export default {
     width: 100%;
 
     & article {
+      flex-shrink: 1;
       margin-bottom: 40px;
 
-      @media (min-width: 640px) {
+      @media (width >= 640px) {
         flex-basis: 48%;
       }
     }
@@ -306,7 +307,7 @@ export default {
       margin-top: 5px;
     }
 
-    @media (min-width: 600px) {
+    @media (width >= 600px) {
       display: flex;
 
       & figure {
@@ -331,6 +332,8 @@ export default {
 
 #instafeed {
   & > * {
+    flex-shrink: 1;
+    
     & img {
       width: 100%;
       height: auto;
@@ -347,7 +350,7 @@ export default {
       margin-top: 10px;
     }
 
-    @media (min-width: 600px) {
+    @media (width >= 600px) {
       flex-basis: calc(50% - 40px);
     }
   }
