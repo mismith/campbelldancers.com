@@ -86,6 +86,5 @@ export function createOrUpdateUserCollectionItem(item, collection = 'items', use
     .then(() => itemId);
 }
 export function createOrUpdateUserCollectionItems(items, collection = 'items', user = firebase.auth().currentUser) {
-  console.log(items);
   return Promise.all(items.map(item => createOrUpdateUserCollectionItem(item, collection, user)));
 }

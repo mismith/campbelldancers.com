@@ -22,7 +22,7 @@
 
     <footer id="footer" class="align-center">
       <header>
-        <div>Campbell School of Highland Dance &nbsp;&bull;&nbsp; 2016&ndash;2017</div>
+        <div><router-link to="/">Campbell School of Highland Dance</router-link> &nbsp;&bull;&nbsp; 2016&ndash;2017</div>
       </header>
     </footer>
   </div>
@@ -110,6 +110,9 @@ export default {
     flex-grow: 1;
     margin: 5px;
   }
+}
+.heading {
+  @apply --heading;
 }
 .call-to-action {
   margin-top: 40px;

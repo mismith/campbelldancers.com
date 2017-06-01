@@ -148,10 +148,12 @@
 
     <div v-if="stepIndex === steps.length - 1">
       <header>
-        <h2>Enrolled!</h2>
+        <h2 class="heading">Enrolled</h2>
       </header>
       <div>
-        <p>We can't wait to dance together :)</p>
+        <p>We can't wait to enjoy dance together :)</p>
+        <p>&nbsp;</p>
+        <p><img src="/static/images/instructors.jpg" alt="Our instructors" /></p>
       </div>
     </div>
 
