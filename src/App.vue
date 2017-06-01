@@ -149,6 +149,14 @@ a {
     text-decoration: underline;
   }
 }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply --heading;
+}
 h2 {
   margin-bottom: 40px;
   border-top: double 3px var(--accent);
@@ -159,6 +167,7 @@ h3 {
   margin-bottom: 5px;
 
   & + h4 {
+    font-size: 14px;
     margin-top: 0;
   }
 }
@@ -438,6 +447,7 @@ section,
 #footer {
   font-size: 10px;
   padding: 24px;
+  border-top: 3px double var(--accent);
   margin-top: auto;
 }
 </style>
