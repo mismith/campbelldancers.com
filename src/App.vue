@@ -347,11 +347,6 @@ form {
     padding-top: 10px; /* @HACK */
   }
 }
-iframe {
-  max-width: 100%;
-  border: solid 1px var(--light);
-  border-radius: 5px;
-}
 
 section,
 #header > div,

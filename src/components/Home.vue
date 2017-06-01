@@ -5,8 +5,8 @@
         <h2><a href="#about">About</a></h2>
       </header>
       <div>
-        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages and abilities. Located in <strong>SW Calgary</strong>, Alberta, Canada, we combine the love of dancing with focused technical development and strength.</p>
-        <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
+        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <strong>Calgary</strong>, Alberta, Canada, we combine the love of dancing with focused technical development and strength.</p>
+        <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
         <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
       </div>
       <footer class="call-to-action align-center">
@@ -70,111 +70,48 @@
       <header>
         <h2><a href="#classes">Classes</a></h2>
       </header>
-      <div class="classes">
-        <article>
-          <header>
-            <h3>Little Leapers</h3>
-            <h4>Age: 2-4</h4>
-          </header>
-          <div>
-            <p>The perfect way for little ones to learn how to move and work their muscles! This play based class introduces the kids to the basics of Highland dance through games, activities, and fun in an easy, low pressure environment.</p>
-          </div>
-          <footer>
-            <h5>Mon: 4:10-4:45pm</h5>
-          </footer>
-        </article>
-        <article>
-          <header>
-            <h3>Primary</h3>
-            <h4>Age: 4-6</h4>
-          </header>
-          <div>
-            <p>New dancers or graduates of Tiny Stars. Primaries learn Highland technique and dances through a combination of traditional dance teaching, cross training, and movement based activities. Primaries are eligible to compete at sanctioned competitions if they so choose. We also foster and encourage dance friendships and bonds to begin building a sense of family.</p>
-          </div>
-          <footer>
-            <h5>Mon: 4:45-5:30pm</h5>
-          </footer>
-        </article>
-        <article>
-          <header>
-            <h3>Beginner</h3>
-            <h4>Age: 7+</h4>
-          </header>
-          <div>
-            <p>New dancers, graduates from Primary and those competing at a Beginner level. Beginners develop a high level of technique while learning the 5 basic Highland and National dances. Dancers have a strong focus on building muscle and endurance stamina through cross training, stretching, and activities designed for Highland dancers. Introduction of our core values: athleticism, community, and mindfulness.</p>
-          </div>
-          <footer>
-            <h5>Mon: 5:30-6:15pm</h5>
-            <h5>Wed: 5:15-6:15pm</h5>
-          </footer>
-        </article>
-        <article>
-          <header>
-            <h3>Novice</h3>
-          </header>
-          <div>
-            <p>Novice dancers continue building technique and strive to compete with a high level of precision at a novice level. Cross training and strength training help to develop the whole dancer into a strong, well balanced contender. Dancers continue to develop our core values: athleticism, community, and mindfulness.</p>
-          </div>
-          <footer>
-            <h5>Mon: 6:15-7:15pm</h5>
-            <h5>Wed: 6:15-7:15pm</h5>
-          </footer>
-        </article>
-        <article>
-          <header>
-            <h3>Intermediate/Premier</h3>
-          </header>
-          <div>
-            <p>Classes focus heavily on technique, precision, and strength as we prepare the dancers for championships and competitions at the intermediate and premier level. Graceful embodiment of our core values of athleticism, community, and mindfulness.</p>
-          </div>
-          <footer>
-            <h5>Wed: 7:15-8:15pm</h5>
-          </footer>
-        </article>
-        <article>
-          <header>
-            <h3>Adult</h3>
-          </header>
-          <div>
-            <p>A recreational class for new and returning dancers. New dancers learn technique and all traditional dances while returning/competitive dancers hone skills. A welcoming atmosphere for any age and ability level!</p>
-          </div>
-          <footer>
-            <h5>Mon: 7:15-8:15pm</h5>
-          </footer>
-        </article>
+      <div class="align-center">
+        <p>Our youngest dancers begin with <strong>learning about movement</strong> through play-based activities and instruction. The basics of <strong>highland technique</strong> are introduced in a fun, easy, low pressure environment. Our little leapers also begin to <strong>feel comfortable</strong> with being on stage through many opportunities to perform for small audiences.</p>
+        <p>Beginner dancers (all ages) develop a high level of technique while learning the <strong>five basic dances</strong> (Fling, Sword, Seann Truibhas, Lilt, Flora) through a combination of traditional technique, cross-training, and strength-based movement exercises. The basics of <strong>choreography and performing</strong> are introduced in low pressure settings, while competition is encouraged (but not mandatory!). Dance <strong>friendships and bonds</strong> are nurtured as we introduce our core values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong>.</p>
+        <p>As dancers progress, a high level of <strong>technique and precision</strong> become the main focus of classes, along with learning <strong>additional dances</strong>. Competition, cross-training, choreographies, performance, and strength-training all help build a <strong>well rounded, enthusiastic dancer</strong> who embodies our core values.</p>
+        <p>Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!</p>
       </div>
-      <div>
-        <hr />
-        <article id="prices" class="align-center">
-          <header>
-            <h3><a href="#prices">Prices</a></h3>
-            <h4>Per student</h4>
-          </header>
-          <table class="table align-left">
-            <tbody>
-              <tr>
-                <td style="width: 50%;">1 class/week</td>
-                <td style="width: 50%;">$50/month</td>
-              </tr>
-              <tr>
-                <td>2 classes/week</td>
-                <td>$90/month</td>
-              </tr>
-              <tr>
-                <td>1 class/week + 1 private lesson/week</td>
-                <td>$125/month</td>
-              </tr>
-              <tr>
-                <td>2 classes/week + 1 private lesson/week</td>
-                <td>$150/month</td>
-              </tr>
-              <tr>
-                <td>Individual privates</td>
-                <td>$25</td>
-              </tr>
-            </tbody>
-          </table>
-        </article>
+      <div id="schedule">
+        <header class="align-center">
+          <h3><a href="#schedule">Schedule</a></h3>
+          <h4>Weekly</h4>
+        </header>
+        <schedule-picker :timeslots="timeslotsWithNames" />
+      </div>
+      <div id="prices" class="align-center">
+        <header>
+          <h3><a href="#prices">Prices</a></h3>
+          <h4>Per student</h4>
+        </header>
+        <table class="table align-left">
+          <tbody>
+            <tr>
+              <td style="width: 50%;">1 class/week</td>
+              <td style="width: 50%;">$50/month</td>
+            </tr>
+            <tr>
+              <td>2 classes/week</td>
+              <td>$90/month</td>
+            </tr>
+            <tr>
+              <td>1 class/week + 1 private lesson/week</td>
+              <td>$125/month</td>
+            </tr>
+            <tr>
+              <td>2 classes/week + 1 private lesson/week</td>
+              <td>$150/month</td>
+            </tr>
+            <tr>
+              <td>Individual privates</td>
+              <td>$25</td>
+            </tr>
+          </tbody>
+        </table>
         <footer class="call-to-action align-center">
           <router-link to="/enroll" class="btn">Enroll</router-link>
         </footer>
@@ -255,14 +192,6 @@
         <h2><a href="#photos">Photos</a></h2>
       </header>
       <div id="instafeed" class="flex-cols"></div>
-    </section>
-    <section id="calendar" class="bg-tartan">
-      <header>
-        <h2><a href="#calendar">Calendar</a></h2>
-      </header>
-      <div>
-        <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&showPrint=0&showCalendars=0&showTz=0&height=600&wkst=1&src=campbelldancers.com_6jebcm7ue9tfu0ivbfndqooatk%40group.calendar.google.com&color=%232952A3&ctz=America%2FEdmonton" width="600" height="600" frameborder="0" scrolling="no"></iframe>
-      </div>
       <footer class="call-to-action align-center">
         <router-link to="/enroll" class="btn">Enroll</router-link>
       </footer>
@@ -272,9 +201,28 @@
 
 <script>
 import Instafeed from 'instafeed.js';
+import { firebase, idKey } from '../helpers/firebase';
+import SchedulePicker from './SchedulePicker';
 
 export default {
   name: 'home',
+  firebase: {
+    timeslots: firebase.database().ref('timeslots'),
+    classes: firebase.database().ref('classes'),
+  },
+  computed: {
+    timeslotsWithNames() {
+      return this.timeslots.map((t) => {
+        const timeslot = { ...t };
+
+        timeslot.classes = this.classes
+          .filter(c => Object.keys(timeslot.classIds).includes(c[idKey]));
+        timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
+
+        return timeslot;
+      });
+    },
+  },
   mounted() {
     try {
       new Instafeed({
@@ -290,30 +238,35 @@ export default {
       console.error(err);
     }
   },
+  components: {
+    SchedulePicker,
+  },
 };
 </script>
 
 <style lang="postcss">
 @import '../variables.css';
 
-#classes {
-  & .classes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
+#schedule {
+  max-width: 1000px;
+  margin-top: 20px;
 
-    & article {
-      flex-shrink: 1;
-      margin-bottom: 40px;
+  & .schedule-picker {
+    height: 400px;
+    margin-top: 40px;
+    margin-bottom: 20px;
 
-      @media (width >= 640px) {
-        flex-basis: 48%;
+    & .timeslot {
+      cursor: auto;
+
+      &:hover {
+        background-color: rgba(var(--accent-rgb), .15);
       }
     }
-  }
-  & hr {
-    margin-top: 0;
+
+    & > footer {
+      display: none;
+    }
   }
 }
 

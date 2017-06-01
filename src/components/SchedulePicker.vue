@@ -49,7 +49,7 @@ export default {
   },
   computed: {
     selected() {
-      return this.timeslots.filter(timeslot => timeslot.props.active);
+      return this.timeslots.filter(timeslot => timeslot && timeslot.props && timeslot.props.active);
     },
   },
   methods: {
@@ -83,7 +83,7 @@ export default {
   & > div {
     display: flex;
     flex-grow: 1;
-    height: calc(100% - 40px); /* @HACK */
+    height: 100%;
   }
   & > footer {
     display: flex;

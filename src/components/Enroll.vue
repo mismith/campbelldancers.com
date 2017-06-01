@@ -606,6 +606,10 @@ aside.card {
     height: 100%;
     background-color: var(--lightest);
     padding: 20px;
+
+    & > div {
+      height: calc(100% - 40px); /* @HACK */
+    }
   }
   &:after {
     content: '×';
