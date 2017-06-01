@@ -375,23 +375,23 @@ export default {
           createOrUpdateUserCollectionItems(this.contacts, 'contacts'),
         ])
           .then(([userDancerIds, userContactIds]) => {
-            // save dancers:contacts
-            userDancerIds.forEach((dancerId) => {
-              userContactIds.forEach((contactId) => {
-                firebase.database().ref(`dancers:contacts/${dancerId}/${contactId}`).set(contactId);
-              });
-            });
-
             // save enrollment
-            const dancerIds = {};
-            this.dancers.forEach((d, i) => {
-              if (d['@deleted']) return;
-              dancerIds[userDancerIds[i]] = userDancerIds[i];
-            });
             const contactIds = {};
-            this.contacts.forEach((c, i) => {
-              if (c['@deleted']) return;
-              contactIds[userContactIds[i]] = userContactIds[i];
+            this.contacts.forEach((contact, i) => {
+              if (contact['@deleted']) return;
+
+              const contactId = userContactIds[i];
+              contactIds[contactId] = contactId;
+            });
+            const dancerIds = {};
+            this.dancers.forEach((dancer, i) => {
+              if (dancer['@deleted']) return;
+
+              const dancerId = userDancerIds[i];
+              dancerIds[dancerId] = dancerId;
+
+              // update dancers:contacts
+              firebase.database().ref(`dancers:contacts/${dancerId}`).set(contactIds); // @TODO: async-check this?
             });
             this.enrollment = {
               ...this.enrollment,
