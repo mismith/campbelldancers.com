@@ -46,8 +46,13 @@
                 <td>
                   <label class="selectable">
                     <select v-model="enroller.for" required>
-                      <option value="children">my child/children</option>
-                      <option value="self">myself</option>
+                      <optgroup>
+                        <option value="children">my child/children</option>
+                        <option value="self">myself</option>
+                      </optgroup>
+                      <optgroup>
+                        <option value="other">other</option>
+                      </optgroup>
                     </select>
                   </label>
                 </td>
@@ -608,7 +613,7 @@ aside.card {
     padding: 20px;
 
     & > div {
-      height: calc(100% - 40px); /* @HACK */
+      height: calc(100% - 40px); /* @HACK: footer height */
     }
   }
   &:after {
