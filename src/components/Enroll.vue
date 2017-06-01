@@ -3,7 +3,7 @@
     <header>
       <ol class="breadcrumbs">
         <li v-for="(step, i) in steps" v-if="step.name" @click.prevent="i < stepIndex && (stepIndex = i)" :class="{breadcrumb: true, active: i === stepIndex, disabled: i > stepIndex}">
-          {{ step.name }}
+          <span>{{ step.name }}</span>
         </li>
       </ol>
     </header>
@@ -495,7 +495,7 @@ export default {
   align-items: center;
 
   & > * {
-    @media (width < 600px) {
+    @media (--medium-max) {
       padding-left: 10px;
       padding-right: 10px;
     }
@@ -567,6 +567,11 @@ export default {
     &.disabled {
       opacity: .5;
       cursor: not-allowed;
+    }
+    @media (--medium-max) {
+      & span {
+        display: none;
+      }
     }
   }
 }

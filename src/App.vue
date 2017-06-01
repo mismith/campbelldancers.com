@@ -86,6 +86,7 @@ export default {
   margin-bottom: -20px;
 
   & > * {
+    flex-shrink: 1;
     margin: 20px;
   }
 }
@@ -175,6 +176,9 @@ hr {
 }
 figure {
   margin: 0;
+}
+img {
+  max-width: 100%;
 }
 
 label {
@@ -355,6 +359,10 @@ section,
   & > div {
     max-width: var(--small);
   }
+  @media (--small-max) {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 }
 #header {
   min-height: 75vh;
@@ -379,19 +387,9 @@ section,
     justify-content: center;
     flex-wrap: wrap;
     max-width: none;
-    line-height: 2;
 
     & a {
-      margin: 5px;
-
-      &:not(:last-child) {
-        &:after {
-          content: "•";
-          display: inline-block;
-          color: var(--accent);
-          margin-left: .5em;
-        }
-      }
+      margin: 5px 20px;
     }
   }
 

@@ -7,6 +7,10 @@
 
   --small:      600px;
   --medium:     800px;
+  @custom-media --small-min (width >= 600px);
+  @custom-media --medium-min (width >= 800px);
+  @custom-media --small-max (width < 600px);
+  @custom-media --medium-max (width < 800px);
   --header-height: 48px;
 
   --heading: {
