@@ -20,12 +20,12 @@
       <div>
         <article id="alexandra" class="right">
           <figure>
-            <img src="/static/images/alexandra.jpg?v=1" alt="Alexandra Campbell" width="200" height="274" />
+            <img src="/static/images/alexandra.jpg" alt="Alexandra Campbell" width="200" height="274" />
           </figure>
           <div>
             <header>
               <h3><a href="#alexandra">Alexandra Campbell</a></h3>
-              <h4>Director</h4>
+              <h4>Co-Director</h4>
             </header>
             <div>
               <p>Alexandra has been dancing and teaching for almost 20 years, competing with enthusiasm for the large majority. She is a Member of the SDTA and ScotDance Canada. In her spare time, Alexandra is a geophysicist, mom of two, and owns Amora Creative, a business that brings your Pinterest boards to life. Alexandra has always been drawn to the athleticism and community that dance provides, and enjoys developing dancers to their full potential while encouraging the bonds that dance creates.</p>
@@ -36,15 +36,31 @@
         <br />
         <article id="elayna">
           <figure>
-            <img src="/static/images/elayna.jpg?v=1" alt="Elayna Campbell" width="200" height="274" />
+            <img src="/static/images/elayna.jpg" alt="Elayna Campbell" width="200" height="274" />
           </figure>
           <div>
             <header>
               <h3><a href="#elayna">Elayna Campbell</a></h3>
-              <h4>Director</h4>
+              <h4>Co-Director</h4>
             </header>
             <div>
               <p>Elayna began dancing at the age of 9 and enjoyed competing and performing before realizing her passion lay in teaching. She is currently a Member of both the SDTA and ScotDance Canada. She has danced at multiple international events including the Tattoos at Basel and Edinburgh. Complementing her love of dance, Elayna is also a passionate elementary school teacher with the Calgary Board of Education. Elayna uses her natural positivity and compassionate nature to help each dancer achieve their goals.</p>
+            </div>
+          </div>
+        </article>
+        <br />
+        <br />
+        <article id="kendra" class="right">
+          <figure>
+            <img src="/static/images/kendra.jpg" alt="Kendra McNabb" width="200" height="200" />
+          </figure>
+          <div>
+            <header>
+              <h3><a href="#kendra">Kendra McNabb</a></h3>
+              <h4>Junior Instructor</h4>
+            </header>
+            <div>
+              <p>Kendra has been performing and competing for the past 7 years. To date, she has danced for the JL Mackenzie Scholarship Award, completed Grade 5 of Highland Dance Theory, and is working towards earning her Associates. She has been assisting teaching for two years, and enjoys sharing her love of dance with kids of all ages!</p>
             </div>
           </div>
         </article>
@@ -333,7 +349,7 @@ export default {
 #instafeed {
   & > * {
     flex-shrink: 1;
-    
+
     & img {
       width: 100%;
       height: auto;
