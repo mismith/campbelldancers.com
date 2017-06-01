@@ -8,22 +8,54 @@
       </ol>
     </header>
 
-    <div v-if="stepIndex === 0">
+    <div v-if="stepIndex === 0 && !user">
       <header>
-        <p>Save yourself some time by linking an account below; if you do, <br />next season we'll have all your info stored and ready to go.</p>
+        <p>Save yourself some typing by linking an account below; if you do, <br />next time we'll have all your info stored and ready to go.</p>
       </header>
       <div class="flex-rows">
-        <auth v-if="!user" />
-        <aside v-if="user" class="card bg-tartan">
-          <p>Already logged in.</p>
-          <p><button v-if="user" @click.prevent="logout" class="btn">Log Out</button></p>
-        </aside>
+        <auth />
       </div>
-      <footer v-if="!user">
+      <footer>
         <a class="btn-add" @click.prevent="loginAnonymously">
           <big style="margin-top: -7px;">&raquo;</big> Skip <small>(and don't save info for next time)</small>
         </a>
       </footer>
+    </div>
+    <div v-if="stepIndex === 0 && user">
+      <header>
+        <p>First off, let's confirm some info about you.</p>
+      </header>
+      <div class="flex-rows">
+        <article class="card bg-tartan">
+          <table>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td>
+                  <input type="text" name="name" v-model="enroller.name" placeholder="First Last" required autofocus />
+                </td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td>
+                  <input type="email" name="email" v-model="enroller.email" required />
+                </td>
+              </tr>
+              <tr>
+                <td>I'm enrolling:</td>
+                <td>
+                  <label class="selectable">
+                    <select v-model="enroller.for" required>
+                      <option value="children">my child/children</option>
+                      <option value="self">myself</option>
+                    </select>
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </article>
+      </div>
     </div>
 
     <div v-if="stepIndex === 1">
@@ -48,7 +80,7 @@
                 </td>
               </tr>
               <tr>
-                <td>Competing</td>
+                <td>Competitive level</td>
                 <td>
                   <label class="selectable">
                     <select v-model="dancer.ability" required>
@@ -158,8 +190,9 @@
     </div>
 
     <footer v-if="user" class="call-to-action align-center">
-      <button @click.prevent="stepIndex -= 1" v-if="1 <= stepIndex && stepIndex < 3" class="btn btn-left dimmed">Back</button>
-      <button type="submit" class="btn btn-right">{{ stepIndex === steps.length - 1 ? 'Home' : 'Next' }}</button>
+      <button v-if="stepIndex === 0" @click.prevent="logout" class="btn dimmed">Sign Out</button>
+      <button v-if="1 <= stepIndex && stepIndex < 3" @click.prevent="stepIndex -= 1" class="btn btn-left dimmed">Back</button>
+      <button v-if="stepIndex < steps.length - 1" type="submit" class="btn btn-right">Next</button>
     </footer>
   </form>
 </template>
@@ -169,7 +202,6 @@ import moment from 'moment';
 import {
   firebase,
   idKey,
-  cleanItem,
   loadCollectionItems,
   loadUserCollectionItems,
   createOrUpdateUserCollectionItem,
@@ -199,10 +231,14 @@ export default {
         {}, // Done
       ],
 
+
       dancers: [],
       contacts: [],
       classes: [],
       timeslots: [],
+
+      enroller: {},
+      enrollment: {},
 
       schedulePickerDancerIndex: null,
     };
@@ -292,6 +328,11 @@ export default {
           timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
 
           return timeslot;
+        case 'enroller':
+          return {
+            for: 'children',
+            ...formattedItem,
+          };
       }
     },
     filterDeleted(item) {
@@ -323,37 +364,72 @@ export default {
 
     // data storage
     handleSubmit() {
-      switch (this.stepIndex) {
-        case this.steps.length - 1:
-          // redirect to home
-          window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
-          break;
-
-        case this.steps.length - 2: // eslint-disable-line no-case-declarations
-          // save form data
-          Promise.all([
-            createOrUpdateUserCollectionItems(this.dancers, 'dancers'),
-            createOrUpdateUserCollectionItems(this.contacts, 'contacts'),
-          ])
-            .then(() => {
-              const enrollment = {
-                '@created': moment().format(),
-                userAgent: window.navigator.userAgent,
-                dancers: this.dancers.filter(this.filterDeleted).map(cleanItem),
-                contacts: this.contacts.filter(this.filterDeleted).map(cleanItem),
-              };
-              createOrUpdateUserCollectionItem(enrollment, 'enrollments');
+      if (this.stepIndex === this.steps.length - 1) {
+        // redirect to home
+        window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
+        return;
+      } else if (this.stepIndex === this.steps.length - 2) {
+        // save form data
+        Promise.all([
+          createOrUpdateUserCollectionItems(this.dancers, 'dancers'),
+          createOrUpdateUserCollectionItems(this.contacts, 'contacts'),
+        ])
+          .then(([userDancerIds, userContactIds]) => {
+            // save dancers:contacts
+            userDancerIds.forEach((dancerId) => {
+              userContactIds.forEach((contactId) => {
+                firebase.database().ref(`dancers:contacts/${dancerId}/${contactId}`).set(contactId);
+              });
             });
 
-        // esline-disable-next no-fallthrough
-        default:
-          // move to next step (uses browser validation only)
-          this.stepIndex += 1;
+            // save enrollment
+            const dancerIds = {};
+            this.dancers.forEach((d, i) => {
+              if (d['@deleted']) return;
+              dancerIds[userDancerIds[i]] = userDancerIds[i];
+            });
+            const contactIds = {};
+            this.contacts.forEach((c, i) => {
+              if (c['@deleted']) return;
+              contactIds[userContactIds[i]] = userContactIds[i];
+            });
+            this.enrollment = {
+              ...this.enrollment,
+              '@created': moment().format(),
+              '@userAgent': window.navigator.userAgent,
+              enroller: this.enroller,
+              dancerIds,
+              contactIds,
+            };
+            return createOrUpdateUserCollectionItem(this.enrollment, 'enrollments');
+          })
+          .then((enrollmentId) => {
+            this.enrollment[idKey] = enrollmentId;
+          });
+      } else if (this.stepIndex === 0) {
+        // move enroller info to dancers or contacts based on 'for' choice
+        if (this.enroller.for === 'self') {
+          this.dancers[0].name = this.dancers[0].name || this.enroller.name;
+        } else {
+          this.contacts[0].name = this.contacts[0].name || this.enroller.name;
+          this.contacts[0].email = this.contacts[0].email || this.enroller.email;
+          this.contacts[0].phone = this.contacts[0].phone || this.enroller.phone;
+        }
       }
+      // move to next step (uses browser validation only)
+      this.stepIndex += 1;
     },
 
     // auth
     userLoaded(user = firebase.auth().currentUser) { // eslint-disable-line no-unused-vars
+      // initialize enroller
+      this.enroller = this.formatItem('enroller', {
+        name: user.displayName,
+        email: user.email,
+        phone: user.phoneNumber,
+        ...this.enroller,
+      });
+
       // initialize user data
       loadUserCollectionItems('dancers')
         .then(dancers => (dancers.length ? dancers : [{}]).map(d => this.formatItem('dancers', d)))
@@ -383,11 +459,6 @@ export default {
       this.user = user;
 
       if (user) {
-        // skip login step if already logged in (e.g. on page reload)
-        if (this.stepIndex === 0) {
-          this.stepIndex += 1;
-        }
-
         // store/update user info
         if (user.providerData && user.providerData.length) {
           firebase.database().ref('users').child(user.uid).update(user.providerData[0]);
@@ -397,6 +468,8 @@ export default {
       } else {
         // force back to login step if logged out
         this.stepIndex = 0;
+
+        this.enroller = this.formatItem('enroller');
       }
     });
   },
