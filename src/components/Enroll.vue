@@ -395,8 +395,8 @@ export default {
               const dancerId = userDancerIds[i];
               dancerIds[dancerId] = dancerId;
 
-              // update dancers:contacts
-              firebase.database().ref(`dancers:contacts/${dancerId}`).set(contactIds); // @TODO: async-check this?
+              // update dancer contacts
+              firebase.database().ref(`dancers/${dancerId}/contactIds`).set(contactIds); // @TODO: async-check this?
             });
             this.enrollment = {
               ...this.enrollment,
