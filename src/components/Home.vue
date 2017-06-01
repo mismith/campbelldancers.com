@@ -7,10 +7,10 @@
       <div>
         <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages and abilities. Located in <strong>SW Calgary</strong>, Alberta, Canada, we combine the love of dancing with focused technical development and strength.</p>
         <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
-        <p><strong>Registration</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
+        <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
       </div>
       <footer class="call-to-action align-center">
-        <router-link to="/register" class="btn">Register</router-link>
+        <router-link to="/enroll" class="btn">Enroll</router-link>
       </footer>
     </section>
     <section id="instructors">
@@ -176,7 +176,7 @@
           </table>
         </article>
         <footer class="call-to-action align-center">
-          <router-link to="/register" class="btn">Register</router-link>
+          <router-link to="/enroll" class="btn">Enroll</router-link>
         </footer>
       </div>
     </section>
@@ -264,7 +264,7 @@
         <iframe src="https://calendar.google.com/calendar/embed?showTitle=0&showPrint=0&showCalendars=0&showTz=0&height=600&wkst=1&src=campbelldancers.com_6jebcm7ue9tfu0ivbfndqooatk%40group.calendar.google.com&color=%232952A3&ctz=America%2FEdmonton" width="600" height="600" frameborder="0" scrolling="no"></iframe>
       </div>
       <footer class="call-to-action align-center">
-        <router-link to="/register" class="btn">Register</router-link>
+        <router-link to="/enroll" class="btn">Enroll</router-link>
       </footer>
     </section>
   </div>
