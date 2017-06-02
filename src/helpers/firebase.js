@@ -40,3 +40,7 @@ export function relate(collectionA, idA, collectionB, idB, setIdA, setIdB) {
 export function unrelate(collectionA, idA, collectionB, idB) {
   return relate(collectionA, idA, collectionB, idB, null, null);
 }
+
+export function sync(path, value) {
+  return firebase.database().ref(path).set(value);
+}

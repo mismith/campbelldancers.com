@@ -32,20 +32,20 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" name="name" v-model="user.displayName" v-model-firebase-sync="`enrollments/${enrollment[idKey]}/name`" placeholder="First Last" required autofocus />
+                  <input type="text" name="name" v-model="user.displayName" @input="sync(`enrollments/${enrollment[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Email</td>
                 <td>
-                  <input type="email" name="email" v-model="user.email" v-model-firebase-sync="`enrollments/${enrollment[idKey]}/email`" required />
+                  <input type="email" name="email" v-model="user.email" @input="sync(`enrollments/${enrollment[idKey]}/email`, $event.target.value)" required />
                 </td>
               </tr>
               <tr>
                 <td>I'm enrolling:</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="enrollment.for" v-model-firebase-sync="`enrollments/${enrollment[idKey]}/for`" required>
+                    <select v-model="enrollment.for" @input="sync(`enrollments/${enrollment[idKey]}/for`, $event.target.value)" required>
                       <optgroup>
                         <option value="children">my child/children</option>
                         <option value="self">myself</option>
@@ -75,20 +75,20 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" v-model="dancer.name" v-model-firebase-sync="`dancers/${dancer[idKey]}/name`" placeholder="First Last" required autofocus />
+                  <input type="text" v-model="dancer.name" @input="sync(`dancers/${dancer[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Birthday</td>
                 <td>
-                  <input type="date" v-model="dancer.birthday" v-model-firebase-sync="`dancers/${dancer[idKey]}/birthday`" placeholder="YYYY-MM-DD" required />
+                  <input type="date" v-model="dancer.birthday" @input="sync(`dancers/${dancer[idKey]}/birthday`, $event.target.value)" placeholder="YYYY-MM-DD" required />
                 </td>
               </tr>
               <tr>
                 <td>Competitive level</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="dancer.ability" v-model-firebase-sync="`dancers/${dancer[idKey]}/ability`" required>
+                    <select v-model="dancer.ability" @input="sync(`dancers/${dancer[idKey]}/ability`, $event.target.value)" required>
                       <optgroup>
                         <option>New / Unsure</option>
                       </optgroup>
@@ -116,7 +116,7 @@
               <tr>
                 <td>Allergies / <br />Medical <br />concerns</td>
                 <td>
-                  <textarea v-model="dancer.medical" v-model-firebase-sync="`dancers/${dancer[idKey]}/medical`" placeholder="(optional)"></textarea>
+                  <textarea v-model="dancer.medical" @input="sync(`dancers/${dancer[idKey]}/medical`, $event.target.value)" placeholder="(optional)"></textarea>
                 </td>
               </tr>
             </tbody>
@@ -148,25 +148,25 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" v-model="contact.name" v-model-firebase-sync="`contacts/${contact[idKey]}/name`" placeholder="First Last" required autofocus />
+                  <input type="text" v-model="contact.name" @input="sync(`contacts/${contact[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Email</td>
                 <td>
-                  <input type="email" v-model="contact.email" v-model-firebase-sync="`contacts/${contact[idKey]}/email`" required />
+                  <input type="email" v-model="contact.email" @input="sync(`contacts/${contact[idKey]}/email`, $event.target.value)" required />
                 </td>
               </tr>
               <tr>
                 <td>Primary phone</td>
                 <td>
-                  <input type="tel" v-model="contact.phone" v-model-firebase-sync="`contacts/${contact[idKey]}/phone`" required />
+                  <input type="tel" v-model="contact.phone" @input="sync(`contacts/${contact[idKey]}/phone`, $event.target.value)" required />
                 </td>
               </tr>
               <tr>
                 <td>Secondary phone</td>
                 <td>
-                  <input type="tel" v-model="contact.phone2" v-model-firebase-sync="`contacts/${contact[idKey]}/phone2`" placeholder="(optional)" />
+                  <input type="tel" v-model="contact.phone2" @input="sync(`contacts/${contact[idKey]}/phone2`, $event.target.value)" placeholder="(optional)" />
                 </td>
               </tr>
             </tbody>
@@ -210,6 +210,7 @@ import {
   idKey,
   relate,
   unrelate,
+  sync,
 } from '../helpers/firebase';
 import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
@@ -354,6 +355,8 @@ export default {
     },
   },
   methods: {
+    sync,
+
     // schedule picker
     toggleTimeslot(e, timeslot) {
       if (timeslot && timeslot.props && !timeslot.props.disabled) { // make sure it's toggleable
