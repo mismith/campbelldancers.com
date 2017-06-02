@@ -19,7 +19,7 @@
               :style="{top: calculateDimension(moment(timeslot.startTime, 'HH:mm').valueOf(), time), height: calculateDimension(moment(timeslot.endTime, 'HH:mm').valueOf() - moment(timeslot.startTime, 'HH:mm').valueOf() + time.valueOf(), time)}"
             >
               <small>{{ timeslot.startTime }} &ndash; {{ timeslot.endTime }}</small>
-              <div v-html="timeslot.name"></div>
+              <div v-html="timeslot[contentKey]"></div>
             </li>
           </ul>
         </td>
@@ -34,6 +34,11 @@ import moment from 'moment';
 export default {
   name: 'schedule',
   props: {
+    contentKey: {
+      type: String,
+      default: 'name',
+    },
+
     dayLabelFormat: {
       type: String,
       default: 'dddd',
@@ -67,10 +72,6 @@ export default {
     timeslots: {
       type: Array,
     },
-  },
-  data() {
-    return {
-    };
   },
   computed: {
     interval() {

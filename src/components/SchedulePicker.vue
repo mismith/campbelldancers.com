@@ -2,6 +2,7 @@
   <div class="schedule-picker">
     <div>
       <schedule
+        :content-key="contentKey"
         start-time="16:00"
         end-time="20:00"
         :start-day="1"
@@ -12,6 +13,7 @@
         style="width: 75%;"
       />
       <schedule
+        :content-key="contentKey"
         start-time="10:00"
         end-time="14:00"
         :start-day="6"
@@ -43,6 +45,9 @@ import Schedule from './Schedule';
 export default {
   name: 'schedule-picker',
   props: {
+    contentKey: {
+      type: String,
+    },
     timeslots: {
       type: Array,
     },
