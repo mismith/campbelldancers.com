@@ -216,7 +216,7 @@ export default {
         const timeslot = { ...t };
 
         timeslot.classes = this.classes
-          .filter(c => Object.keys(timeslot.classIds).includes(c[idKey]));
+          .filter(c => Object.keys(timeslot['@classes']).includes(c[idKey]));
         timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
 
         return timeslot;

@@ -69,7 +69,7 @@
         <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(dancer, dancerIndex) of dancers" v-if="!dancer['@deleted']" class="card bg-tartan">
+        <article v-for="(dancer, dancerIndex) of dancers" v-if="!dancer._deleted" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -109,7 +109,7 @@
                 <td>Classes</td>
                 <td>
                   <label title="Pick classes" class="selectable">
-                    <input @click.prevent="schedulePickerDancerIndex = dancerIndex" placeholder="0 selected" :value="dancer.timeslotIds && Object.keys(dancer.timeslotIds).length ? `${Object.keys(dancer.timeslotIds).length} selected` : null" required />
+                    <input @click.prevent="schedulePickerDancerIndex = dancerIndex" placeholder="0 selected" :value="dancer['@timeslots'] && Object.keys(dancer['@timeslots']).length ? `${Object.keys(dancer['@timeslots']).length} selected` : null" required />
                   </label>
                 </td>
               </tr>
@@ -142,7 +142,7 @@
         <p><small>We suggest you add at least 2 people—always better to be prepared!</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(contact, contactIndex) of contacts" v-if="!contact['@deleted']" class="card bg-tartan">
+        <article v-for="(contact, contactIndex) of contacts" v-if="!contact._deleted" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -203,6 +203,7 @@
 </template>
 
 <script>
+/* eslint-disable no-underscore-dangle */
 import moment from 'moment';
 import {
   firebase,
@@ -259,14 +260,14 @@ export default {
 
         // selected
         timeslot.props.active = false;
-        if (dancer.timeslotIds[timeslotId]) {
+        if (dancer['@timeslots'][timeslotId]) {
           timeslot.props.active = true;
         }
 
         // unavailable
         timeslot.props.disabled = !timeslot.classes.reduce((enabled, c) => {
           if (enabled) return true;
-          if (c.capacity && timeslot.enrolled >= c.capacity) return false;
+          if (c.capacity > 0 && Object.keys(timeslot['@dancers']).length >= c.capacity) return false;
 
           return !age || (age &&
             (!c.minAge || (c.minAge && age >= c.minAge)) &&
@@ -285,15 +286,16 @@ export default {
         const timeslotId = timeslot[idKey];
         const timeslotData = this.timeslots.find(t => t[idKey] === timeslotId);
         const dancerData = this.dancers[this.schedulePickerDancerIndex];
+        const dancerId = dancerData[idKey];
 
-        if (dancerData.timeslotIds[timeslotId]) {
+        if (dancerData['@timeslots'][timeslotId]) {
           // unselect/remove
-          delete dancerData.timeslotIds[timeslotId];
-          timeslotData.enrolled -= 1;
+          this.$set(dancerData['@timeslots'], timeslotId, null);
+          this.$set(timeslotData['@dancers'], dancerId, null);
         } else {
           // select/add
-          dancerData.timeslotIds[timeslotId] = timeslotId;
-          timeslotData.enrolled += 1;
+          this.$set(dancerData['@timeslots'], timeslotId, timeslotId);
+          this.$set(timeslotData['@dancers'], dancerId, dancerId);
         }
         if (e) e.stopPropagation();
       }
@@ -307,20 +309,28 @@ export default {
     // data-processing layers
     formatItem(collection, item = {}) {
       const formattedItem = {
-        '@created': moment().format(),
+        _created: moment().format(),
+        _deleted: null,
         ...item,
       };
       switch (collection) {
         default:
           return formattedItem;
+        case 'enroller':
+          return {
+            for: 'children',
+            ...formattedItem,
+          };
         case 'dancers':
           return {
-            timeslotIds: {},
+            // pre-init here so we can build relations
+            [idKey]: firebase.database().ref().push().key,
+            '@timeslots': {},
             ...formattedItem,
           };
         case 'timeslots': // eslint-disable-line no-case-declarations
           const timeslot = {
-            enrolled: 0, // @TODO
+            '@dancers': {},
             props: {
               active: false,
               disabled: false,
@@ -329,19 +339,19 @@ export default {
           };
 
           timeslot.classes = this.classes
-            .filter(c => Object.keys(timeslot.classIds).includes(c[idKey]));
-          timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
+            .filter(c => Object.keys(timeslot['@classes']).includes(c[idKey]));
+          timeslot.capacity = timeslot.classes.reduce((capacity, c) => {
+            const classCapacity = c.capacity || 0;
+            if (capacity > 0 && classCapacity > 0) return Math.min(capacity, classCapacity);
+            return Math.max(0, capacity, classCapacity);
+          }, timeslot.capacity || 0);
+          timeslot.name = timeslot.classes.map(c => c.name).join(' / ') + ': ' + Object.keys(timeslot['@dancers']).length + '/' + timeslot.capacity; // eslint-disable-line
 
           return timeslot;
-        case 'enroller':
-          return {
-            for: 'children',
-            ...formattedItem,
-          };
       }
     },
     filterDeleted(item) {
-      return !item['@deleted'];
+      return !item._deleted;
     },
 
     // data manipulation
@@ -350,7 +360,7 @@ export default {
     },
     removeDancer(dancerIndex) {
       if (this.dancers[dancerIndex][idKey]) {
-        this.$set(this.dancers[dancerIndex], '@deleted', moment().format()); // @NB: use $set here since we are adding a new prop to the dancer
+        this.dancers[dancerIndex]._deleted = moment().format();
       } else {
         this.dancers.splice(dancerIndex, 1);
       }
@@ -361,7 +371,7 @@ export default {
     },
     removeContact(contactIndex) {
       if (this.contacts[contactIndex][idKey]) {
-        this.$set(this.contacts[contactIndex], '@deleted', moment().format()); // @NB: use $set here since we are adding a new prop to the dancer
+        this.contacts[contactIndex]._deleted = moment().format();
       } else {
         this.contacts.splice(contactIndex, 1);
       }
@@ -374,42 +384,49 @@ export default {
         window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
         return;
       } else if (this.stepIndex === this.steps.length - 2) {
+        console.log(this.timeslots);
         // save form data
         Promise.all([
           createOrUpdateUserCollectionItems(this.dancers, 'dancers'),
           createOrUpdateUserCollectionItems(this.contacts, 'contacts'),
+          this.timeslots.map(timeslot =>
+            firebase.database().ref(`timeslots/${timeslot[idKey]}/@dancers`).update(timeslot['@dancers']),
+          ),
         ])
           .then(([userDancerIds, userContactIds]) => {
             // save enrollment
             const contactIds = {};
             this.contacts.forEach((contact, i) => {
-              if (contact['@deleted']) return;
+              if (contact._deleted) return;
 
               const contactId = userContactIds[i];
               contactIds[contactId] = contactId;
             });
             const dancerIds = {};
             this.dancers.forEach((dancer, i) => {
-              if (dancer['@deleted']) return;
+              if (dancer._deleted) return;
 
               const dancerId = userDancerIds[i];
               dancerIds[dancerId] = dancerId;
 
-              // update dancer contacts
-              firebase.database().ref(`dancers/${dancerId}/contactIds`).set(contactIds); // @TODO: async-check this?
+              // update dancer relations
+              // @TODO: async-check these?
+              firebase.database().ref(`dancers/${dancerId}/@contacts`).set(contactIds);
             });
             this.enrollment = {
               ...this.enrollment,
-              '@created': moment().format(),
-              '@userAgent': window.navigator.userAgent,
+              _created: moment().format(),
+              _userAgent: window.navigator.userAgent,
               enroller: this.enroller,
-              dancerIds,
-              contactIds,
+              '@dancers': dancerIds,
+              '@contacts': contactIds,
             };
             return createOrUpdateUserCollectionItem(this.enrollment, 'enrollments');
           })
           .then((enrollmentId) => {
+            // refresh local vars in case the user wants to go back and change things
             this.enrollment[idKey] = enrollmentId;
+            this.userLoaded();
           });
       } else if (this.stepIndex === 0) {
         // move enroller info to dancers or contacts based on 'for' choice

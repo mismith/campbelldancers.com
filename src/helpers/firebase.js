@@ -54,7 +54,7 @@ export function loadItemCollectionItems(itemIds, collection = 'items') {
 export function loadUserCollectionItems(collection = 'items', user = firebase.auth().currentUser) {
   const userId = user.uid;
 
-  return firebase.database().ref(`users:${collection}/${userId}`).once('value')
+  return firebase.database().ref(`users/${userId}/@${collection}`).once('value')
     .then((snap) => {
       const itemIds = snap.val();
 
@@ -70,18 +70,14 @@ export function createOrUpdateUserCollectionItem(item, collection = 'items', use
   const userId = user.uid;
   const cleanedItem = cleanItem(item);
 
-  if (itemId) {
-    // update
-    return firebase.database().ref(`${collection}/${itemId}`).update(cleanedItem)
-      .then(() => itemId);
-  }
+  const promise = itemId ?
+    firebase.database().ref(`${collection}/${itemId}`).update(cleanedItem) : // update
+    firebase.database().ref(collection).push(cleanedItem); // create
 
-  // create
-  const pushPromise = firebase.database().ref(collection).push(cleanedItem);
-  itemId = pushPromise.key;
+  itemId = itemId || promise.key;
   return Promise.all([
-    pushPromise,
-    firebase.database().ref(`users:${collection}/${userId}/${itemId}`).set(itemId),
+    promise,
+    firebase.database().ref(`users/${userId}/@${collection}/${itemId}`).set(itemId),
   ])
     .then(() => itemId);
 }
