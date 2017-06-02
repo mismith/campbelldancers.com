@@ -22,7 +22,8 @@
     "smooth-scroll": "cferdinandi/smooth-scroll",
     "vue": "^2.2.6",
     "vue-router": "^2.3.1",
-    "vuefire": "^1.4.3"
+    "vuefire": "^1.4.3",
+    "vuejs-datepicker": "^0.7.12"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",

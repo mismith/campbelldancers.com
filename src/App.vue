@@ -190,22 +190,21 @@ img {
   max-width: 100%;
 }
 
-label {
-  &.selectable {
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
+label.selectable,
+.vdp-datepicker > div:first-child {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
 
-    &:after {
-      content: '';
-      width: 0;
-      height: 0;
-      border: 5px solid transparent;
-      border-top-color: var(--dark);
-      border-top-width: 8px;
-      border-bottom-width: 0;
-      margin-left: -1.25em;
-    }
+  &:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color: var(--dark);
+    border-top-width: 8px;
+    border-bottom-width: 0;
+    margin-left: -1.25em;
   }
 }
 .input,
