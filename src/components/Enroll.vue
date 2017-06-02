@@ -2,13 +2,13 @@
   <form class="enroll align-center" @submit.prevent="handleSubmit">
     <header>
       <ol class="breadcrumbs">
-        <li v-for="(step, i) in steps" v-if="step.name" @click.prevent="i < stepIndex && (stepIndex = i)" :class="{breadcrumb: true, active: i === stepIndex, disabled: i > stepIndex}">
+        <li v-for="(step, i) in steps" v-if="step.name" @click.prevent="i < enrollment.stepIndex && setStepIndex(i)" :class="{breadcrumb: true, active: i === enrollment.stepIndex, disabled: i > enrollment.stepIndex}">
           <span>{{ step.name }}</span>
         </li>
       </ol>
     </header>
 
-    <div v-if="stepIndex === 0 && !user">
+    <div v-if="enrollment.stepIndex === 0 && !user">
       <header>
         <p>Save yourself some typing by linking an account below; if you do, <br />next time we'll have all your info stored and ready to go.</p>
       </header>
@@ -21,9 +21,9 @@
         </a>
       </footer>
     </div>
-    <div v-if="stepIndex === 0 && user">
+    <div v-if="enrollment.stepIndex === 0 && user">
       <header>
-        <p>First off, let's confirm some info about you.</p>
+        <p>First off, let's confirm some info about you:</p>
       </header>
       <div class="flex-rows">
         <article class="card bg-tartan">
@@ -32,20 +32,20 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" name="name" v-model="enroller.name" placeholder="First Last" required autofocus />
+                  <input type="text" name="name" v-model="user.displayName" v-model-firebase-sync="`enrollments/${enrollment[idKey]}/name`" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Email</td>
                 <td>
-                  <input type="email" name="email" v-model="enroller.email" required />
+                  <input type="email" name="email" v-model="user.email" v-model-firebase-sync="`enrollments/${enrollment[idKey]}/email`" required />
                 </td>
               </tr>
               <tr>
                 <td>I'm enrolling:</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="enroller.for" required>
+                    <select v-model="enrollment.for" v-model-firebase-sync="`enrollments/${enrollment[idKey]}/for`" required>
                       <optgroup>
                         <option value="children">my child/children</option>
                         <option value="self">myself</option>
@@ -63,32 +63,32 @@
       </div>
     </div>
 
-    <div v-if="stepIndex === 1">
+    <div v-if="enrollment.stepIndex === 1">
       <header>
         <p>Who will be dancing with us?</p>
         <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(dancer, dancerIndex) of dancers" v-if="!dancer._deleted" class="card bg-tartan">
+        <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" v-model="dancer.name" placeholder="First Last" required autofocus />
+                  <input type="text" v-model="dancer.name" v-model-firebase-sync="`dancers/${dancer[idKey]}/name`" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Birthday</td>
                 <td>
-                  <input type="date" v-model="dancer.birthday" placeholder="YYYY-MM-DD" required />
+                  <input type="date" v-model="dancer.birthday" v-model-firebase-sync="`dancers/${dancer[idKey]}/birthday`" placeholder="YYYY-MM-DD" required />
                 </td>
               </tr>
               <tr>
                 <td>Competitive level</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="dancer.ability" required>
+                    <select v-model="dancer.ability" v-model-firebase-sync="`dancers/${dancer[idKey]}/ability`" required>
                       <optgroup>
                         <option>New / Unsure</option>
                       </optgroup>
@@ -116,13 +116,13 @@
               <tr>
                 <td>Allergies / <br />Medical <br />concerns</td>
                 <td>
-                  <textarea v-model="dancer.medical" placeholder="(optional)"></textarea>
+                  <textarea v-model="dancer.medical" v-model-firebase-sync="`dancers/${dancer[idKey]}/medical`" placeholder="(optional)"></textarea>
                 </td>
               </tr>
             </tbody>
           </table>
-          <aside v-if="dancerIndex > 0 || dancers.filter(filterDeleted).length > 1">
-            <button @click.prevent="removeDancer(dancerIndex)" title="Remove dancer" class="btn-close">&times;</button>
+          <aside v-if="dancerIndex > 0 || dancers.length > 1">
+            <button @click.prevent="removeDancer(dancer)" title="Remove dancer" class="btn-close">&times;</button>
           </aside>
         </article>
       </div>
@@ -132,47 +132,47 @@
         </a>
       </footer>
       <aside v-if="schedulePickerDancerIndex !== null" @click.self="schedulePickerDancerIndex = null" class="schedule-picker-container align-left">
-        <schedule-picker :timeslots="schedulePickerDancerTimeslots" @select="pickClass" @done="schedulePickerDancerIndex = null" />
+        <schedule-picker content-key="$name" :timeslots="schedulePickerDancerTimeslots" @select="toggleTimeslot" @done="schedulePickerDancerIndex = null" />
       </aside>
     </div>
 
-    <div v-if="stepIndex === 2">
+    <div v-if="enrollment.stepIndex === 2">
       <header>
         <p>Who should we contact if something goes awry?</p>
         <p><small>We suggest you add at least 2 people—always better to be prepared!</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(contact, contactIndex) of contacts" v-if="!contact._deleted" class="card bg-tartan">
+        <article v-for="(contact, contactIndex) of contacts" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" v-model="contact.name" placeholder="First Last" required autofocus />
+                  <input type="text" v-model="contact.name" v-model-firebase-sync="`contacts/${contact[idKey]}/name`" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Email</td>
                 <td>
-                  <input type="email" v-model="contact.email" required />
+                  <input type="email" v-model="contact.email" v-model-firebase-sync="`contacts/${contact[idKey]}/email`" required />
                 </td>
               </tr>
               <tr>
                 <td>Primary phone</td>
                 <td>
-                  <input type="tel" v-model="contact.phone" required />
+                  <input type="tel" v-model="contact.phone" v-model-firebase-sync="`contacts/${contact[idKey]}/phone`" required />
                 </td>
               </tr>
               <tr>
                 <td>Secondary phone</td>
                 <td>
-                  <input type="tel" v-model="contact.phone2" placeholder="(optional)" />
+                  <input type="tel" v-model="contact.phone2" v-model-firebase-sync="`contacts/${contact[idKey]}/phone2`" placeholder="(optional)" />
                 </td>
               </tr>
             </tbody>
           </table>
-          <aside v-if="contactIndex > 0 || contacts.filter(filterDeleted).length > 1">
-            <button @click.prevent="removeContact(contactIndex)" title="Remove emergency contact" class="btn-close">&times;</button>
+          <aside v-if="contactIndex > 0 || contacts.length > 1">
+            <button @click.prevent="removeContact(contact)" title="Remove emergency contact" class="btn-close">&times;</button>
           </aside>
         </article>
       </div>
@@ -183,7 +183,7 @@
       </footer>
     </div>
 
-    <div v-if="stepIndex === steps.length - 1">
+    <div v-if="enrollment.stepIndex === steps.length - 1">
       <header>
         <h2 class="heading">Enrolled</h2>
       </header>
@@ -195,9 +195,9 @@
     </div>
 
     <footer v-if="user" class="call-to-action align-center">
-      <button v-if="stepIndex === 0" @click.prevent="logout" class="btn dimmed">Sign Out</button>
-      <button v-if="1 <= stepIndex && stepIndex < 3" @click.prevent="stepIndex -= 1" class="btn btn-left dimmed">Back</button>
-      <button v-if="stepIndex < steps.length - 1" type="submit" class="btn btn-right">Next</button>
+      <button v-if="enrollment.stepIndex === 0" @click.prevent="logout" class="btn dimmed">Sign Out</button>
+      <button v-if="1 <= enrollment.stepIndex && enrollment.stepIndex < 3" @click.prevent="setStepIndex(enrollment.stepIndex - 1)" class="btn btn-left dimmed">Back</button>
+      <button v-if="enrollment.stepIndex < steps.length - 1" type="submit" class="btn btn-right">Next</button>
     </footer>
   </form>
 </template>
@@ -208,10 +208,8 @@ import moment from 'moment';
 import {
   firebase,
   idKey,
-  loadCollectionItems,
-  loadUserCollectionItems,
-  createOrUpdateUserCollectionItem,
-  createOrUpdateUserCollectionItems,
+  relate,
+  unrelate,
 } from '../helpers/firebase';
 import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
@@ -220,10 +218,11 @@ export default {
   name: 'enroll',
   data() {
     return {
+      console, // @DEBUG
+
       user: firebase.auth().currentUser,
       idKey,
 
-      stepIndex: 0,
       steps: [
         {
           name: 'Account',
@@ -237,43 +236,118 @@ export default {
         {}, // Done
       ],
 
-
-      dancers: [],
-      contacts: [],
-      classes: [],
-      timeslots: [],
-
-      enroller: {},
-      enrollment: {},
-
       schedulePickerDancerIndex: null,
     };
   },
+  firebase: {
+    $enrollment: {
+      source: firebase.database().ref('enrollments').push({
+        _created: moment().format(),
+        userAgent: window.navigator.userAgent,
+      }),
+      asObject: true,
+    },
+
+    $dancers: firebase.database().ref('dancers'),
+    $contacts: firebase.database().ref('contacts'),
+
+    $classes: firebase.database().ref('classes'),
+    $timeslots: firebase.database().ref('timeslots'),
+  },
   computed: {
+    // models
+    enrollment() {
+      const item = {
+        stepIndex: 0,
+        for: 'children',
+        ...this.$enrollment,
+      };
+      return item;
+    },
+    dancers() {
+      return this.$dancers.map(($item) => {
+        const item = {
+          '@timeslots': {},
+          '@contacts': {},
+          ...$item,
+        };
+        return item;
+      });
+    },
+    contacts() {
+      return this.$contacts.map(($item) => {
+        const item = {
+          '@dancers': {},
+          ...$item,
+        };
+        return item;
+      });
+    },
+
+    classes() {
+      return this.$classes.map(($item) => {
+        const item = {
+          '@timeslots': {},
+          ...$item,
+        };
+        return item;
+      });
+    },
+    timeslots() {
+      return this.$timeslots.map(($item) => {
+        const item = {
+          '@classes': {},
+          '@dancers': {},
+          props: {
+            active: false,
+            disabled: false,
+          },
+          ...$item,
+        };
+        item.$classes = this.classes
+          .filter(c => Object.keys(item['@classes']).includes(c[idKey]));
+        item.$capacity = item.$classes.reduce((capacity, c) => {
+          const classCapacity = c.capacity || 0;
+          if (capacity > 0 && classCapacity > 0) return Math.min(capacity, classCapacity);
+          return Math.max(0, capacity, classCapacity);
+        }, 0);
+        item.$name = item.$classes.map(c => c.name).join(' / ') /*@DEBUG*/ + ': ' + Object.keys(item['@dancers']).length + '/' + item.$capacity; // eslint-disable-line
+        return item;
+      });
+    },
+
     schedulePickerDancerTimeslots() {
+      // augment timeslots with dancer-specific props for interactivity
       const dancer = this.dancers[this.schedulePickerDancerIndex];
       const age = moment().diff(dancer.birthday, 'years');
 
       return this.timeslots.map((t) => {
         const timeslot = { ...t };
-        const timeslotId = timeslot[idKey];
 
-        // selected
-        timeslot.props.active = false;
-        if (dancer['@timeslots'][timeslotId]) {
+        if (timeslot['@dancers'][dancer[idKey]]) {
           timeslot.props.active = true;
+          timeslot.props.disabled = false;
+        } else {
+          timeslot.props.disabled = false;
+          timeslot.props.active = false;
+
+          // disable if (any of the classes in this timeslot are) over capacity
+          if (timeslot.$capacity > 0) {
+            timeslot.props.disabled = Object.keys(timeslot['@dancers']).length >= timeslot.$capacity;
+          }
+
+          // disable if dancer is out of (any of the classes') age range
+          if (age > 0) {
+            timeslot.props.disabled = !timeslot.$classes.reduce((enabled, c) => {
+              if (enabled) return true;
+
+              return (
+                (!c.minAge || (c.minAge && age >= c.minAge)) &&
+                (!c.maxAge || (c.maxAge && age <= c.maxAge))
+              );
+            }, timeslot.props.disabled);
+          }
         }
-
-        // unavailable
-        timeslot.props.disabled = !timeslot.classes.reduce((enabled, c) => {
-          if (enabled) return true;
-          if (c.capacity > 0 && Object.keys(timeslot['@dancers']).length >= c.capacity) return false;
-
-          return !age || (age &&
-            (!c.minAge || (c.minAge && age >= c.minAge)) &&
-            (!c.maxAge || (c.maxAge && age <= c.maxAge))
-          );
-        }, timeslot.props.active);
 
         return timeslot;
       });
@@ -281,23 +355,20 @@ export default {
   },
   methods: {
     // schedule picker
-    pickClass(e, timeslot) {
-      if (timeslot && timeslot.props && !timeslot.props.disabled) { // make sure it's selectable
+    toggleTimeslot(e, timeslot) {
+      if (timeslot && timeslot.props && !timeslot.props.disabled) { // make sure it's toggleable
         const timeslotId = timeslot[idKey];
-        const timeslotData = this.timeslots.find(t => t[idKey] === timeslotId);
-        const dancerData = this.dancers[this.schedulePickerDancerIndex];
-        const dancerId = dancerData[idKey];
+        const dancer = this.dancers[this.schedulePickerDancerIndex];
+        const dancerId = dancer[idKey];
 
-        if (dancerData['@timeslots'][timeslotId]) {
+        if (e) e.stopPropagation();
+        if (dancer['@timeslots'][timeslotId] || timeslot['@dancers'][dancerId]) {
           // unselect/remove
-          this.$set(dancerData['@timeslots'], timeslotId, null);
-          this.$set(timeslotData['@dancers'], dancerId, null);
+          unrelate('dancers', dancerId, 'timeslots', timeslotId);
         } else {
           // select/add
-          this.$set(dancerData['@timeslots'], timeslotId, timeslotId);
-          this.$set(timeslotData['@dancers'], dancerId, dancerId);
+          relate('dancers', dancerId, 'timeslots', timeslotId);
         }
-        if (e) e.stopPropagation();
       }
     },
     closeSchedulePicker(e) {
@@ -306,168 +377,72 @@ export default {
       }
     },
 
-    // data-processing layers
-    formatItem(collection, item = {}) {
-      const formattedItem = {
-        _created: moment().format(),
-        _deleted: null,
-        ...item,
-      };
-      switch (collection) {
-        default:
-          return formattedItem;
-        case 'enroller':
-          return {
-            for: 'children',
-            ...formattedItem,
-          };
-        case 'dancers':
-          return {
-            // pre-init here so we can build relations
-            [idKey]: firebase.database().ref().push().key,
-            '@timeslots': {},
-            ...formattedItem,
-          };
-        case 'timeslots': // eslint-disable-line no-case-declarations
-          const timeslot = {
-            '@dancers': {},
-            props: {
-              active: false,
-              disabled: false,
-            },
-            ...formattedItem,
-          };
-
-          timeslot.classes = this.classes
-            .filter(c => Object.keys(timeslot['@classes']).includes(c[idKey]));
-          timeslot.capacity = timeslot.classes.reduce((capacity, c) => {
-            const classCapacity = c.capacity || 0;
-            if (capacity > 0 && classCapacity > 0) return Math.min(capacity, classCapacity);
-            return Math.max(0, capacity, classCapacity);
-          }, timeslot.capacity || 0);
-          timeslot.name = timeslot.classes.map(c => c.name).join(' / ') + ': ' + Object.keys(timeslot['@dancers']).length + '/' + timeslot.capacity; // eslint-disable-line
-
-          return timeslot;
-      }
-    },
-    filterDeleted(item) {
-      return !item._deleted;
-    },
-
     // data manipulation
     addDancer() {
-      this.dancers.push(this.formatItem('dancers'));
+      // @TODO: add relations
+      return this.$firebaseRefs.$dancers.push({
+        _created: moment().format(),
+      });
     },
-    removeDancer(dancerIndex) {
-      if (this.dancers[dancerIndex][idKey]) {
-        this.dancers[dancerIndex]._deleted = moment().format();
-      } else {
-        this.dancers.splice(dancerIndex, 1);
-      }
+    removeDancer(item) {
+      // @TODO: remove relations
+      return Promise.all(Object.keys(item['@timeslots'])
+        .map(timeslotId => unrelate('dancers', item[idKey], 'timeslots', timeslotId)))
+        .then(() => this.$firebaseRefs.$dancers.child(item[idKey]).remove());
     },
 
     addContact() {
-      this.contacts.push(this.formatItem('contacts'));
+      // @TODO: add relations
+      return this.$firebaseRefs.$contacts.push({
+        _created: moment().format(),
+      });
     },
-    removeContact(contactIndex) {
-      if (this.contacts[contactIndex][idKey]) {
-        this.contacts[contactIndex]._deleted = moment().format();
-      } else {
-        this.contacts.splice(contactIndex, 1);
-      }
+    removeContact(item) {
+      // @TODO: remove relations
+      return this.$firebaseRefs.$contacts.child(item[idKey]).remove();
+    },
+
+    setStepIndex(stepIndex) {
+      return this.$firebaseRefs.$enrollment.child('stepIndex').set(stepIndex);
     },
 
     // data storage
     handleSubmit() {
-      if (this.stepIndex === this.steps.length - 1) {
+      if (this.enrollment.stepIndex === this.steps.length - 1) {
         // redirect to home
         window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
         return;
-      } else if (this.stepIndex === this.steps.length - 2) {
-        console.log(this.timeslots);
-        // save form data
-        Promise.all([
-          createOrUpdateUserCollectionItems(this.dancers, 'dancers'),
-          createOrUpdateUserCollectionItems(this.contacts, 'contacts'),
-          this.timeslots.map(timeslot =>
-            firebase.database().ref(`timeslots/${timeslot[idKey]}/@dancers`).update(timeslot['@dancers']),
-          ),
-        ])
-          .then(([userDancerIds, userContactIds]) => {
-            // save enrollment
-            const contactIds = {};
-            this.contacts.forEach((contact, i) => {
-              if (contact._deleted) return;
-
-              const contactId = userContactIds[i];
-              contactIds[contactId] = contactId;
-            });
-            const dancerIds = {};
-            this.dancers.forEach((dancer, i) => {
-              if (dancer._deleted) return;
-
-              const dancerId = userDancerIds[i];
-              dancerIds[dancerId] = dancerId;
-
-              // update dancer relations
-              // @TODO: async-check these?
-              firebase.database().ref(`dancers/${dancerId}/@contacts`).set(contactIds);
-            });
-            this.enrollment = {
-              ...this.enrollment,
-              _created: moment().format(),
-              _userAgent: window.navigator.userAgent,
-              enroller: this.enroller,
-              '@dancers': dancerIds,
-              '@contacts': contactIds,
-            };
-            return createOrUpdateUserCollectionItem(this.enrollment, 'enrollments');
-          })
-          .then((enrollmentId) => {
-            // refresh local vars in case the user wants to go back and change things
-            this.enrollment[idKey] = enrollmentId;
-            this.userLoaded();
+      } else if (this.enrollment.stepIndex === this.steps.length - 2) {
+        // mark as submitted
+        this.$firebaseRefs.$enrollment.update({
+          _submitted: moment().format(),
+        });
+      } else if (this.enrollment.stepIndex === 1) {
+        // auto-add first entry if dancers empty
+        // port over enroller info based on 'for' choice
+        if (!this.contacts.length) {
+          this.$firebaseRefs.$contacts.push({
+            _created: moment().format(),
+            name: this.enrollment.for !== 'self' ? (this.enrollment.name || this.user.displayName) : null,
+            email: this.enrollment.for !== 'self' ? (this.enrollment.email || this.user.email) : null,
+            phone: this.enrollment.for !== 'self' ? (this.user.phoneNumber) : null,
           });
-      } else if (this.stepIndex === 0) {
-        // move enroller info to dancers or contacts based on 'for' choice
-        if (this.enroller.for === 'self') {
-          this.dancers[0].name = this.dancers[0].name || this.enroller.name;
-        } else {
-          this.contacts[0].name = this.contacts[0].name || this.enroller.name;
-          this.contacts[0].email = this.contacts[0].email || this.enroller.email;
-          this.contacts[0].phone = this.contacts[0].phone || this.enroller.phone;
+        }
+      } else if (this.enrollment.stepIndex === 0) {
+        // auto-add first entry if dancers empty
+        // port over enroller info based on 'for' choice
+        if (!this.dancers.length) {
+          this.$firebaseRefs.$dancers.push({
+            _created: moment().format(),
+            name: this.enrollment.for === 'self' ? (this.enrollment.name || this.user.displayName) : null,
+          });
         }
       }
       // move to next step (uses browser validation only)
-      this.stepIndex += 1;
+      this.setStepIndex(this.enrollment.stepIndex + 1);
     },
 
     // auth
-    userLoaded(user = firebase.auth().currentUser) { // eslint-disable-line no-unused-vars
-      // initialize enroller
-      this.enroller = this.formatItem('enroller', {
-        name: user.displayName,
-        email: user.email,
-        phone: user.phoneNumber,
-        ...this.enroller,
-      });
-
-      // initialize user data
-      loadUserCollectionItems('dancers')
-        .then(dancers => (dancers.length ? dancers : [{}]).map(d => this.formatItem('dancers', d)))
-        .then(dancers => (this.dancers = dancers));
-      loadUserCollectionItems('contacts')
-        .then(contacts => (contacts.length ? contacts : [{}]).map(c => this.formatItem('contacts', c)))
-        .then(contacts => (this.contacts = contacts));
-
-      // initialize schedule picker data
-      loadCollectionItems('classes')
-        .then(classes => classes.map(c => this.formatItem('classes', c)))
-        .then(classes => (this.classes = classes));
-      loadCollectionItems('timeslots')
-        .then(timeslots => timeslots.map(t => this.formatItem('timeslots', t)))
-        .then(timeslots => (this.timeslots = timeslots));
-    },
     loginAnonymously() {
       return firebase.auth().signInAnonymously();
     },
@@ -486,12 +461,11 @@ export default {
           firebase.database().ref('users').child(user.uid).update(user.providerData[0]);
         }
 
-        this.userLoaded(user);
+        // link user <-> enrollment
+        relate('enrollments', this.enrollment[idKey], 'users', user.uid);
       } else {
         // force back to login step if logged out
-        this.stepIndex = 0;
-
-        this.enroller = this.formatItem('enroller');
+        this.setStepIndex(0);
       }
     });
   },
