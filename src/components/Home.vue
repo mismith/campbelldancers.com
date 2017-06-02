@@ -248,11 +248,11 @@ export default {
 @import '../variables.css';
 
 #schedule {
+  width: 100%;
   max-width: 1000px;
   margin-top: 20px;
 
   & .schedule-picker {
-    height: 400px;
     margin-top: 40px;
     margin-bottom: 20px;
 
@@ -263,9 +263,11 @@ export default {
         background-color: rgba(var(--accent-rgb), .15);
       }
     }
-
     & > footer {
       display: none;
+    }
+    @media (--medium-min) {
+      height: var(--small);
     }
   }
 }

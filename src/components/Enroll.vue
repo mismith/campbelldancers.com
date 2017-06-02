@@ -599,7 +599,6 @@ aside.card {
   right: 0;
   bottom: 0;
   background-color: rgba(0,0,0,.75);
-  padding: 30px;
   z-index: 101;
 
   & .schedule-picker {
@@ -607,22 +606,22 @@ aside.card {
     height: 100%;
     background-color: var(--lightest);
     padding: 20px;
-
-    & > div {
-      height: calc(100% - 40px); /* @HACK: footer height */
-    }
   }
-  &:after {
-    content: '×';
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    color: rgba(255,255,255,1);
-    font-size: 40px;
-    line-height: 20px;
-    vertical-align: top;
-    cursor: pointer;
-    opacity: .75;
+  @media (--small-min) {
+    padding: 30px;
+    
+    &:after {
+      content: '×';
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: rgba(255,255,255,1);
+      font-size: 40px;
+      line-height: 20px;
+      vertical-align: top;
+      cursor: pointer;
+      opacity: .75;
+    }
   }
 }
 </style>

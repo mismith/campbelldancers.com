@@ -317,6 +317,9 @@ textarea {
   }
 }
 
+table {
+  flex-shrink: 1;
+}
 .table {
   display: inline-table;
   border: 0;

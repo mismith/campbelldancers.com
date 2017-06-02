@@ -10,7 +10,6 @@
         time-interval="00:30"
         :timeslots="timeslots"
         @timeslot-click="handleTimeslotClick"
-        style="width: 75%;"
       />
       <schedule
         :content-key="contentKey"
@@ -20,14 +19,13 @@
         time-interval="00:30"
         :timeslots="timeslots"
         @timeslot-click="handleTimeslotClick"
-        style="width: 22.5%; margin-left: 2.5%"
       />
     </div>
     <footer>
       <div>
         <strong>{{ selected.length || 0 }} class{{ selected.length === 1 ? '' : 'es' }} selected</strong>
       </div>
-      <aside class="two-inputs">
+      <aside>
         <div class="timeslot disabled">Unavailable</div>
         <div class="timeslot">Available</div>
         <div class="timeslot active">Selected</div>
@@ -74,28 +72,60 @@ export default {
 .schedule-picker {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  max-width: 100%;
 
-  & table.schedule {
-    & tbody {
-      & tr:nth-child(2n) {
-        & th {
-          visibility: hidden;
+  & > div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-shrink: 1;
+    height: 100%;
+    overflow: auto;
+
+    & table.schedule {
+      & tbody {
+        & tr:nth-child(2n) {
+          & th {
+            visibility: hidden;
+          }
+        }
+      }
+      @media (--medium-max) {
+        min-height: var(--small);
+
+        & + table.schedule {
+          max-width: 200px;
+        }
+      }
+      @media (--medium-min) {
+        width: 75%;
+
+        & + table.schedule {
+          width: 22.5%;
+          margin-left: 2.5%;
         }
       }
     }
   }
-  & > div {
-    display: flex;
-    flex-grow: 1;
-    height: 100%;
-  }
   & > footer {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: wrap;
     text-align: center;
     z-index: 2;
+    
+    & > * {
+      margin: 3px;
+    }
+    & aside {
+      display: flex;
+      flex-wrap: wrap;
+      margin: auto;
+
+      & > * {
+        margin: 3px;
+      }
+    }
   }
 }
 .timeslot {
