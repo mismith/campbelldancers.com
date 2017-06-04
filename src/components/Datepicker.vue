@@ -13,7 +13,7 @@
         :clear-button="clearButton"
         :disabled="disabledPicker"
         :required="required"
-        @focus="autoblur">
+        @focus="$event.target.blur()">
       <span class="vdp-datepicker__clear-button" :class="{'input-group-addon' : bootstrapStyling}" v-if="clearButton && selectedDate" @click="clearDate()"><i :class="clearButtonIcon"><span v-if="calendarButtonIcon.length === 0">&times;</span></i></span>
     </div>
         <!-- Day View -->

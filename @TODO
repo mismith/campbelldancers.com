@@ -3,9 +3,5 @@
 - add call to action / blurb to registration section
 - hook up schedule to interactive calendar that parents can subscribe to
 
-- schedule-picker mobile styling
-- bugginess on fresh login
-- auto-resume (unsubmitted) enrollment instead of creating a new one
-- privates disabled for no reason?
-- birthday should be required
-- add relations
+- schedule picker birthday/privates logic
+- schedule picker mobile styling

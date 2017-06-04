@@ -32,20 +32,20 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" name="name" v-model="user.displayName" @input="sync(`enrollments/${enrollment[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
+                  <input type="text" name="name" v-model="enrollment.name" @input="sync(`~/enrollments/${enrollment[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Email</td>
                 <td>
-                  <input type="email" name="email" v-model="user.email" @input="sync(`enrollments/${enrollment[idKey]}/email`, $event.target.value)" required />
+                  <input type="email" name="email" v-model="enrollment.email" @input="sync(`~/enrollments/${enrollment[idKey]}/email`, $event.target.value)" required />
                 </td>
               </tr>
               <tr>
                 <td>I'm enrolling:</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="enrollment.for" @input="sync(`enrollments/${enrollment[idKey]}/for`, $event.target.value)" required>
+                    <select v-model="enrollment.for" @input="sync(`~/enrollments/${enrollment[idKey]}/for`, $event.target.value)" required>
                       <optgroup>
                         <option value="children">my child/children</option>
                         <option value="self">myself</option>
@@ -75,20 +75,20 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" v-model="dancer.name" @input="sync(`dancers/${dancer[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
+                  <input type="text" v-model="dancer.name" @input="sync(`~/dancers/${dancer[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Birthday</td>
                 <td>
-                  <datepicker v-model="dancer.birthday" name="birthday" @input="sync(`dancers/${dancer[idKey]}/birthday`, moment($event).format())" format="MMMM d, yyyy" default-view="year" required />
+                  <datepicker v-model="dancer.birthday" name="birthday" @input="sync(`~/dancers/${dancer[idKey]}/birthday`, moment($event).format())" format="MMMM d, yyyy" default-view="year" required />
                 </td>
               </tr>
               <tr>
                 <td>Competitive level</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="dancer.ability" @input="sync(`dancers/${dancer[idKey]}/ability`, $event.target.value)" required>
+                    <select v-model="dancer.ability" @input="sync(`~/dancers/${dancer[idKey]}/ability`, $event.target.value)" required>
                       <optgroup>
                         <option>New / Unsure</option>
                       </optgroup>
@@ -109,14 +109,19 @@
                 <td>Classes</td>
                 <td>
                   <label title="Pick classes" class="selectable">
-                    <input @click.prevent="schedulePickerDancerIndex = dancerIndex" placeholder="0 selected" :value="dancer['@timeslots'] && Object.keys(dancer['@timeslots']).length ? `${Object.keys(dancer['@timeslots']).length} selected` : null" required />
+                    <input
+                      @click="schedulePickerDancerIndex = dancerIndex"
+                      :value="dancer['@timeslots'] && Object.keys(dancer['@timeslots']).length ? `${Object.keys(dancer['@timeslots']).length} selected` : null"
+                      placeholder="0 selected"
+                      @focus="$event.target.blur()"
+                      required />
                   </label>
                 </td>
               </tr>
               <tr>
                 <td>Allergies / <br />Medical <br />concerns</td>
                 <td>
-                  <textarea v-model="dancer.medical" @input="sync(`dancers/${dancer[idKey]}/medical`, $event.target.value)" placeholder="(optional)"></textarea>
+                  <textarea v-model="dancer.medical" @input="sync(`~/dancers/${dancer[idKey]}/medical`, $event.target.value)" placeholder="(optional)"></textarea>
                 </td>
               </tr>
             </tbody>
@@ -148,25 +153,25 @@
               <tr>
                 <td>Name</td>
                 <td>
-                  <input type="text" v-model="contact.name" @input="sync(`contacts/${contact[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
+                  <input type="text" v-model="contact.name" @input="sync(`~/contacts/${contact[idKey]}/name`, $event.target.value)" placeholder="First Last" required autofocus />
                 </td>
               </tr>
               <tr>
                 <td>Email</td>
                 <td>
-                  <input type="email" v-model="contact.email" @input="sync(`contacts/${contact[idKey]}/email`, $event.target.value)" required />
+                  <input type="email" v-model="contact.email" @input="sync(`~/contacts/${contact[idKey]}/email`, $event.target.value)" required />
                 </td>
               </tr>
               <tr>
                 <td>Primary phone</td>
                 <td>
-                  <input type="tel" v-model="contact.phone" @input="sync(`contacts/${contact[idKey]}/phone`, $event.target.value)" required />
+                  <input type="tel" v-model="contact.phone" @input="sync(`~/contacts/${contact[idKey]}/phone`, $event.target.value)" required />
                 </td>
               </tr>
               <tr>
                 <td>Secondary phone</td>
                 <td>
-                  <input type="tel" v-model="contact.phone2" @input="sync(`contacts/${contact[idKey]}/phone2`, $event.target.value)" placeholder="(optional)" />
+                  <input type="tel" v-model="contact.phone2" @input="sync(`~/contacts/${contact[idKey]}/phone2`, $event.target.value)" placeholder="(optional)" />
                 </td>
               </tr>
             </tbody>
@@ -188,16 +193,15 @@
         <h2 class="heading">Enrolled</h2>
       </header>
       <div>
-        <p>We can't wait to dance together :)</p>
-        <p>&nbsp;</p>
         <p><img src="/static/images/instructors.jpg" alt="Our instructors" /></p>
+        <p>We can't wait to dance together :)</p>
       </div>
     </div>
 
     <footer v-if="user" class="call-to-action align-center">
-      <button v-if="enrollment.stepIndex === 0" @click.prevent="logout" class="btn dimmed">Sign Out</button>
-      <button v-if="1 <= enrollment.stepIndex && enrollment.stepIndex < 3" @click.prevent="setStepIndex(enrollment.stepIndex - 1)" class="btn btn-left dimmed">Back</button>
-      <button v-if="enrollment.stepIndex < steps.length - 1" type="submit" class="btn btn-right">Next</button>
+      <button type="button" v-if="enrollment.stepIndex === 0" @click.prevent="logout" class="btn dimmed">Sign Out</button>
+      <button type="button" v-if="1 <= enrollment.stepIndex && enrollment.stepIndex < 3" @click.prevent="setStepIndex(enrollment.stepIndex - 1)" class="btn btn-left dimmed">Back</button>
+      <button type="submit" v-if="enrollment.stepIndex < steps.length - 1" class="btn btn-right">Next</button>
     </footer>
   </form>
 </template>
@@ -216,12 +220,18 @@ import {
 import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
 
+const db = firebase.database().ref('production');
+
 export default {
   name: 'enroll',
   data() {
     return {
       user: firebase.auth().currentUser,
       idKey,
+      enrollmentRaw: null,
+      enrollmentsRaw: [],
+      dancersRaw: [],
+      contactsRaw: [],
 
       steps: [
         {
@@ -240,19 +250,8 @@ export default {
     };
   },
   firebase: {
-    $enrollment: {
-      source: firebase.database().ref('enrollments').push({
-        _created: moment().format(),
-        userAgent: window.navigator.userAgent,
-      }),
-      asObject: true,
-    },
-
-    $dancers: firebase.database().ref('dancers'),
-    $contacts: firebase.database().ref('contacts'),
-
-    $classes: firebase.database().ref('classes'),
-    $timeslots: firebase.database().ref('timeslots'),
+    classesRaw: db.child('classes'),
+    timeslotsRaw: db.child('timeslots'),
   },
   computed: {
     // models
@@ -260,12 +259,12 @@ export default {
       const item = {
         stepIndex: 0,
         for: 'children',
-        ...this.$enrollment,
+        ...this.enrollmentRaw,
       };
       return item;
     },
     dancers() {
-      return this.$dancers.map(($item) => {
+      return this.dancersRaw.map(($item) => {
         const item = {
           '@timeslots': {},
           '@contacts': {},
@@ -275,7 +274,7 @@ export default {
       });
     },
     contacts() {
-      return this.$contacts.map(($item) => {
+      return this.contactsRaw.map(($item) => {
         const item = {
           '@dancers': {},
           ...$item,
@@ -285,7 +284,7 @@ export default {
     },
 
     classes() {
-      return this.$classes.map(($item) => {
+      return this.classesRaw.map(($item) => {
         const item = {
           '@timeslots': {},
           ...$item,
@@ -294,7 +293,7 @@ export default {
       });
     },
     timeslots() {
-      return this.$timeslots.map(($item) => {
+      return this.timeslotsRaw.map(($item) => {
         const item = {
           '@classes': {},
           '@dancers': {},
@@ -356,7 +355,9 @@ export default {
   methods: {
     console, // @DEBUG
     moment,
-    sync,
+    sync(path, value) {
+      return sync(path.replace(/^~/i, db.child(`users/${this.user.uid}`).path), value);
+    },
 
     // schedule picker
     toggleTimeslot(e, timeslot) {
@@ -368,10 +369,26 @@ export default {
         if (e) e.stopPropagation();
         if (dancer['@timeslots'][timeslotId] || timeslot['@dancers'][dancerId]) {
           // unselect/remove
-          unrelate('dancers', dancerId, 'timeslots', timeslotId);
+          unrelate({
+            path: db.child(`users/${this.user.uid}`).path,
+            collection: 'dancers',
+            id: dancerId,
+          }, {
+            path: db.path,
+            collection: 'timeslots',
+            id: timeslotId,
+          });
         } else {
           // select/add
-          relate('dancers', dancerId, 'timeslots', timeslotId);
+          relate({
+            path: db.child(`users/${this.user.uid}`).path,
+            collection: 'dancers',
+            id: dancerId,
+          }, {
+            path: db.path,
+            collection: 'timeslots',
+            id: timeslotId,
+          });
         }
       }
     },
@@ -383,31 +400,37 @@ export default {
 
     // data manipulation
     addDancer() {
-      // @TODO: add relations
-      return this.$firebaseRefs.$dancers.push({
+      return this.$firebaseRefs.dancersRaw.push({
         _created: moment().format(),
       });
     },
     removeDancer(item) {
-      // @TODO: remove relations
       return Promise.all(Object.keys(item['@timeslots'])
-        .map(timeslotId => unrelate('dancers', item[idKey], 'timeslots', timeslotId)))
-        .then(() => this.$firebaseRefs.$dancers.child(item[idKey]).remove());
+        .map(timeslotId =>
+          unrelate({
+            path: db.child(`users/${this.user.uid}`).path,
+            collection: 'dancers',
+            id: item[idKey],
+          }, {
+            path: db.path,
+            collection: 'timeslots',
+            id: timeslotId,
+          })))
+        .then(() =>
+          this.$firebaseRefs.dancersRaw.child(item[idKey]).remove());
     },
 
     addContact() {
-      // @TODO: add relations
-      return this.$firebaseRefs.$contacts.push({
+      return this.$firebaseRefs.contactsRaw.push({
         _created: moment().format(),
       });
     },
     removeContact(item) {
-      // @TODO: remove relations
-      return this.$firebaseRefs.$contacts.child(item[idKey]).remove();
+      return this.$firebaseRefs.contactsRaw.child(item[idKey]).remove();
     },
 
     setStepIndex(stepIndex) {
-      return this.$firebaseRefs.$enrollment.child('stepIndex').set(stepIndex);
+      return this.$firebaseRefs.enrollmentRaw.child('stepIndex').set(stepIndex);
     },
 
     // data storage
@@ -418,14 +441,14 @@ export default {
         return;
       } else if (this.enrollment.stepIndex === this.steps.length - 2) {
         // mark as submitted
-        this.$firebaseRefs.$enrollment.update({
+        this.$firebaseRefs.enrollmentRaw.update({
           _submitted: moment().format(),
         });
       } else if (this.enrollment.stepIndex === 1) {
         // auto-add first entry if dancers empty
         // port over enroller info based on 'for' choice
         if (!this.contacts.length) {
-          this.$firebaseRefs.$contacts.push({
+          this.$firebaseRefs.contactsRaw.push({
             _created: moment().format(),
             name: this.enrollment.for !== 'self' ? (this.enrollment.name || this.user.displayName) : null,
             email: this.enrollment.for !== 'self' ? (this.enrollment.email || this.user.email) : null,
@@ -436,7 +459,7 @@ export default {
         // auto-add first entry if dancers empty
         // port over enroller info based on 'for' choice
         if (!this.dancers.length) {
-          this.$firebaseRefs.$dancers.push({
+          this.$firebaseRefs.dancersRaw.push({
             _created: moment().format(),
             name: this.enrollment.for === 'self' ? (this.enrollment.name || this.user.displayName) : null,
           });
@@ -460,14 +483,35 @@ export default {
       this.user = user;
 
       if (user) {
+        this.$bindAsObject('userRaw', db.child(`users/${user.uid}`));
         // store/update user info
-        if (user.providerData && user.providerData.length) {
-          firebase.database().ref('users').child(user.uid).update(user.providerData[0]);
-        }
+        const providerData = {
+          ...user.providerData[0],
+          _loggedin: moment().format(),
+        };
+        this.$firebaseRefs.userRaw.update(providerData);
 
-        // link user <-> enrollment
-        relate('enrollments', this.enrollment[idKey], 'users', user.uid);
-      } else {
+        // load user relations/data
+        this.$bindAsArray('enrollmentsRaw', this.$firebaseRefs.userRaw.child('enrollments'), undefined, () => {
+          if (!this.enrollmentRaw) {
+            const enrollmentRaw = this.enrollmentsRaw.reverse().find(e => !e._submitted);
+            let enrollmentId;
+            if (!enrollmentRaw) {
+              enrollmentId = this.$firebaseRefs.enrollmentsRaw.push({
+                _created: moment().format(),
+                userAgent: window.navigator.userAgent,
+                name: this.user.displayName,
+                email: this.user.email,
+              }).key;
+            } else {
+              enrollmentId = enrollmentRaw[idKey];
+            }
+            this.$bindAsObject('enrollmentRaw', this.$firebaseRefs.enrollmentsRaw.child(enrollmentId));
+          }
+        });
+        this.$bindAsArray('dancersRaw', this.$firebaseRefs.userRaw.child('dancers'));
+        this.$bindAsArray('contactsRaw', this.$firebaseRefs.userRaw.child('contacts'));
+      } else if (this.enrollment && this.enrollment[idKey]) {
         // force back to login step if logged out
         this.setStepIndex(0);
       }

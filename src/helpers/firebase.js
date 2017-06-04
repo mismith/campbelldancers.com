@@ -31,14 +31,31 @@ export function prepareItem(item, id) {
   return preparedItem;
 }
 
-export function relate(collectionA, idA, collectionB, idB, setIdA, setIdB) {
+export function relate(a, b) {
+  const A = {
+    path: '',
+    value: a.id,
+    ...a,
+  };
+  const B = {
+    path: '',
+    value: b.id,
+    ...b,
+  };
+
   return Promise.all([
-    firebase.database().ref(`${collectionA}/${idA}/@${collectionB}/${idB}`).set(typeof setIdB !== 'undefined' ? setIdB : idB),
-    firebase.database().ref(`${collectionB}/${idB}/@${collectionA}/${idA}`).set(typeof setIdA !== 'undefined' ? setIdA : idA),
+    firebase.database().ref(`${A.path}/${A.collection}/${A.id}/@${B.collection}/${B.id}`).set(B.value),
+    firebase.database().ref(`${B.path}/${B.collection}/${B.id}/@${A.collection}/${A.id}`).set(A.value),
   ]);
 }
-export function unrelate(collectionA, idA, collectionB, idB) {
-  return relate(collectionA, idA, collectionB, idB, null, null);
+export function unrelate(a, b) {
+  return relate({
+    ...a,
+    value: null,
+  }, {
+    ...b,
+    value: null,
+  });
 }
 
 export function sync(path, value) {
