@@ -81,7 +81,7 @@
               <tr>
                 <td>Birthday</td>
                 <td>
-                  <datepicker v-model="dancer.birthday" @input="sync(`dancers/${dancer[idKey]}/birthday`, moment($event).format())" format="MMMM d, yyyy" required />
+                  <datepicker v-model="dancer.birthday" name="birthday" @input="sync(`dancers/${dancer[idKey]}/birthday`, moment($event).format())" format="MMMM d, yyyy" default-view="year" required />
                 </td>
               </tr>
               <tr>
@@ -205,7 +205,7 @@
 <script>
 /* eslint-disable no-underscore-dangle */
 import moment from 'moment';
-import datepicker from 'vuejs-datepicker';
+import datepicker from './Datepicker';
 import {
   firebase,
   idKey,
