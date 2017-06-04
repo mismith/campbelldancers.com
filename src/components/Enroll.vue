@@ -81,7 +81,7 @@
               <tr>
                 <td>Birthday</td>
                 <td>
-                  <datepicker v-model="dancer.birthday" @input="sync(`dancers/${dancer[idKey]}/birthday`, moment($event).format())" format="MMMM d, yyyy" :calendar-button="true" calendar-button-icon=" " required />
+                  <datepicker v-model="dancer.birthday" @input="sync(`dancers/${dancer[idKey]}/birthday`, moment($event).format())" format="MMMM d, yyyy" required />
                 </td>
               </tr>
               <tr>
@@ -188,7 +188,7 @@
         <h2 class="heading">Enrolled</h2>
       </header>
       <div>
-        <p>We can't wait to enjoy dance together :)</p>
+        <p>We can't wait to dance together :)</p>
         <p>&nbsp;</p>
         <p><img src="/static/images/instructors.jpg" alt="Our instructors" /></p>
       </div>
@@ -311,7 +311,7 @@ export default {
           if (capacity > 0 && classCapacity > 0) return Math.min(capacity, classCapacity);
           return Math.max(0, capacity, classCapacity);
         }, 0);
-        item.$name = item.$classes.map(c => c.name).join(' / ') /*@DEBUG*/ + ': ' + Object.keys(item['@dancers']).length + '/' + item.$capacity; // eslint-disable-line
+        item.$name = item.$classes.map(c => c.name).join(' / ');
         return item;
       });
     },
@@ -609,7 +609,7 @@ aside.card {
   }
   @media (--small-min) {
     padding: 30px;
-    
+
     &:after {
       content: '×';
       position: absolute;
