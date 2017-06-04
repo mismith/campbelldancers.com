@@ -1,0 +1,44 @@
+{
+  "rules": {
+    "classes": {
+      ".read": true,
+      ".write": false
+    },
+    "timeslots": {
+      ".read": true,
+      "$timeslotId": {
+        "@dancers": {
+          ".write": true,
+        },
+        "$otherProperties": {
+          ".write": false
+        }
+      }
+    },
+
+    "contacts": {
+      ".read": "auth != null",
+      ".write": "auth != null && newData.exists()", // no DELETE
+    },
+    "dancers": {
+      ".read": "auth != null",
+      ".write": "auth != null && newData.exists()", // no DELETE
+    },
+    "enrollments": {
+      ".read": "auth != null",
+      ".write": "newData.exists()", // no DELETE
+    },
+
+    "user": {
+      "$userId": {
+        ".read": "auth != null && auth.uid === $userId", // is SELF
+        ".write": "auth != null && auth.uid === $userId", // is SELF
+      }
+    },
+
+    "$relations": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    }
+  }
+}
