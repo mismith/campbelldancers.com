@@ -435,11 +435,7 @@ export default {
 
     // data storage
     handleSubmit() {
-      if (this.enrollment.stepIndex === this.steps.length - 1) {
-        // redirect to home
-        window.location.href = '//campbelldancers.com'; // @TODO: do this properly?
-        return;
-      } else if (this.enrollment.stepIndex === this.steps.length - 2) {
+      if (this.enrollment.stepIndex === this.steps.length - 2) {
         // mark as submitted
         this.$firebaseRefs.enrollmentRaw.update({
           _submitted: moment().format(),
