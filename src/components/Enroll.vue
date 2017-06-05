@@ -192,8 +192,21 @@
         <h2 class="heading">Enrolled</h2>
       </header>
       <div>
-        <p><img src="/static/images/instructors.jpg" alt="Our instructors" /></p>
         <p>We can't wait to dance together :)</p>
+        <p><br /></p>
+        <img src="/static/images/instructors.jpg" alt="Our instructors" style="vertical-align: bottom;" />
+        <aside class="card bg-tartan align-left" style="max-width: 400px;">
+          <div>
+            <p>Don't forget: you must pay the <strong>$25 registration fee per child</strong> to secure your place. A confirmation email will be sent once payment is received.</p>
+            <p>Register <strong>before June 30</strong> and your registration fee will be applied towards your September class fees!</p>
+            <p>To pay, choose one of the following options:</p>
+            <ol>
+              <li>E-transfer to <a href="mailto:alexandra@campbelldancers.com">alexandra@campbelldancers.com</a></li>
+              <li>Cheque made payable to "Campbell School of Highland Dance"</li>
+              <li>Cash</li>
+            </ol>
+          </div>
+        </aside>
       </div>
     </div>
 
