@@ -214,6 +214,7 @@ label.selectable,
     border-top-width: 8px;
     border-bottom-width: 0;
     margin-left: -1.25em;
+    pointer-events: none;
   }
 }
 .input,

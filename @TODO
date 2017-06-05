@@ -6,13 +6,11 @@
 - schedule picker mobile styling
 
 Safari Mobile:
-- can't scroll inputs (email)
+- can't scroll inputs (email): iOS/Safari bug. crazy.
 - Birthday picker on mobile
 - Schedule picker on mobile is unscrollable
 
 Desktop Chrome:
-- Add 4-4:30 on spot on Thursday
-- Can't click arrow on Birthday picker 
 - Autofocus next input where possible
 - Successful enrollment confirmation email
 - Add don't forget deposit blurb
