@@ -82,7 +82,7 @@
       <div id="schedule">
         <header class="align-center">
           <h3><a href="#schedule">Schedule</a></h3>
-          <h4>Weekly</h4>
+          <h4>Fall 2017</h4>
         </header>
         <schedule-picker :timeslots="timeslotsWithNames" />
       </div>
