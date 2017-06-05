@@ -87,7 +87,7 @@
           <h3><a href="#schedule">Schedule</a></h3>
           <h4>Fall 2017</h4>
         </header>
-        <schedule-picker :timeslots="timeslotsWithNames" />
+        <schedule-picker :timeslots="timeslots" content-key="$name" />
       </div>
       <div id="prices" class="align-center">
         <header>
@@ -207,13 +207,14 @@
 
 <script>
 import Instafeed from 'instafeed.js';
-import { firebase, idKey } from '../helpers/firebase';
+import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import SchedulePicker from './SchedulePicker';
-
-const db = firebase.database().ref('production');
 
 export default {
   name: 'home',
+  mixins: [
+    PublicCollectionsMixin,
+  ],
   data() {
     return {
       menuToggled: false,
@@ -221,22 +222,7 @@ export default {
       bannerHeight: 0,
     };
   },
-  firebase: {
-    timeslots: db.child('timeslots'),
-    classes: db.child('classes'),
-  },
   computed: {
-    timeslotsWithNames() {
-      return this.timeslots.map((t) => {
-        const timeslot = { ...t };
-
-        timeslot.classes = this.classes
-          .filter(c => Object.keys(timeslot['@classes']).includes(c[idKey]));
-        timeslot.name = timeslot.classes.map(c => c.name).join(' / ');
-
-        return timeslot;
-      });
-    },
     bannerOffset() {
       return this.bannerHeight ? 1 - ((this.bannerHeight - this.scrollTop) / this.bannerHeight) : 0;
     },

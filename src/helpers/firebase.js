@@ -16,20 +16,22 @@ export { firebase, firebaseui };
 export const firebaseApp = firebase.initializeApp(config);
 export const firebaseuiApp = new firebaseui.auth.AuthUI(firebase.auth());
 
-export function cleanItem(item) {
-  const cleanedItem = { ...item };
+export const db = firebaseApp.database().ref('production');
 
-  delete cleanedItem[idKey];
+// export function cleanItem(item) {
+//   const cleanedItem = { ...item };
 
-  return cleanedItem;
-}
-export function prepareItem(item, id) {
-  const preparedItem = { ...item };
+//   delete cleanedItem[idKey];
 
-  preparedItem[idKey] = id;
+//   return cleanedItem;
+// }
+// export function prepareItem(item, id) {
+//   const preparedItem = { ...item };
 
-  return preparedItem;
-}
+//   preparedItem[idKey] = id;
+
+//   return preparedItem;
+// }
 
 export function relate(a, b) {
   const A = {

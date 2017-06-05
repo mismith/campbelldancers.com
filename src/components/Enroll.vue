@@ -225,17 +225,20 @@ import datepicker from './Datepicker';
 import {
   firebase,
   idKey,
+  db,
   relate,
   unrelate,
   sync,
 } from '../helpers/firebase';
+import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
 
-const db = firebase.database().ref('production');
-
 export default {
   name: 'enroll',
+  mixins: [
+    PublicCollectionsMixin,
+  ],
   data() {
     return {
       user: firebase.auth().currentUser,
@@ -260,10 +263,6 @@ export default {
 
       schedulePickerDancerIndex: null,
     };
-  },
-  firebase: {
-    classesRaw: db.child('classes'),
-    timeslotsRaw: db.child('timeslots'),
   },
   computed: {
     // models
@@ -291,38 +290,6 @@ export default {
           '@dancers': {},
           ...$item,
         };
-        return item;
-      });
-    },
-
-    classes() {
-      return this.classesRaw.map(($item) => {
-        const item = {
-          '@timeslots': {},
-          ...$item,
-        };
-        return item;
-      });
-    },
-    timeslots() {
-      return this.timeslotsRaw.map(($item) => {
-        const item = {
-          '@classes': {},
-          '@dancers': {},
-          props: {
-            active: false,
-            disabled: false,
-          },
-          ...$item,
-        };
-        item.$classes = this.classes
-          .filter(c => Object.keys(item['@classes']).includes(c[idKey]));
-        item.$capacity = item.$classes.reduce((capacity, c) => {
-          const classCapacity = c.capacity || 0;
-          if (capacity > 0 && classCapacity > 0) return Math.min(capacity, classCapacity);
-          return Math.max(0, capacity, classCapacity);
-        }, 0);
-        item.$name = item.$classes.map(c => c.name).join(' / ');
         return item;
       });
     },
