@@ -82,6 +82,7 @@ export default {
   margin-bottom: -20px;
 
   & > * {
+    flex-basis: calc(50% - 40px);
     flex-shrink: 1;
     margin: 20px;
   }
@@ -333,6 +334,11 @@ table {
   }
   & ul {
     padding-left: 20px;
+    margin: 0;
+
+    & li {
+      margin-bottom: 10px;
+    }
   }
 }
 form {

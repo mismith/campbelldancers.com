@@ -148,7 +148,7 @@
             <tr>
               <td>Links</tD>
               <td>
-                <ul style="margin: 0;">
+                <ul>
                   <li><a href="https://www.facebook.com/campbelldancers/" target="_blank">CSHD on Facebook</a></li>
                   <li><a href="https://www.instagram.com/campbelldancers/" target="_blank">CSHD on Instagram</a></li>
                   <li><a href="http://www.chda.ab.ca/" target="_blank">Calgary Highland Dancing Association</a></li>
@@ -312,7 +312,7 @@ export default {
       margin-top: 5px;
     }
 
-    @media (width >= 600px) {
+    @media (--small-min) {
       display: flex;
 
       & figure {
@@ -334,6 +334,13 @@ export default {
   }
 }
 
+#contact {
+  & li {
+    & a {
+      white-space: pre-wrap;
+    }
+  }
+}
 
 #instafeed {
   & > * {
@@ -353,10 +360,6 @@ export default {
     & figcaption {
       font-size: 13px;
       margin-top: 10px;
-    }
-
-    @media (width >= 600px) {
-      flex-basis: calc(50% - 40px);
     }
   }
 }

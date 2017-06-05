@@ -651,7 +651,7 @@ aside.card {
   right: 0;
   bottom: 0;
   background-color: rgba(0,0,0,.75);
-  z-index: 101;
+  z-index: 1002;
 
   & .schedule-picker {
     display: flex;
