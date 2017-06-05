@@ -65,6 +65,9 @@
           </div>
         </article>
       </div>
+      <footer class="call-to-action align-center">
+        <router-link to="/enroll" class="btn">Enroll</router-link>
+      </footer>
     </section>
     <section id="classes">
       <header>
