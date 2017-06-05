@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <section id="banner" ref="banner">
-      <img src="/static/images/logo.svg" style="max-height: 60vh;" :style="{transformOrigin: 'center bottom', transform: `scale(${1 - bannerOffset})`}" />
+      <img src="/static/images/logo.svg" style="max-height: 60vh;" :style="{transformOrigin: 'center bottom', transform: `scale(${Math.max(0, Math.min(1 - bannerOffset, 1))})`}" />
     </section>
     <section id="about" class="bg-tartan align-center">
       <header>
