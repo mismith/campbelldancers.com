@@ -9,6 +9,8 @@ Safari Mobile:
 - can't scroll inputs (email): iOS/Safari bug. crazy.
 - Birthday picker on mobile
 - Schedule picker on mobile is unscrollable
+- validation
+- :hover double taps
 
 Desktop Chrome:
 - Autofocus next input where possible

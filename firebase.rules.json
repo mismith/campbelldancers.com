@@ -5,6 +5,10 @@
         ".read": true,
         ".write": false
       },
+      "locations": {
+        ".read": true,
+        ".write": false
+      },
       "timeslots": {
         ".read": true,
         "$timeslotId": {
