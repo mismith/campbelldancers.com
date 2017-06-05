@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <header id="header" class="align-center" :class="{menu: $route.name !== 'home'}">
+    <header id="header" @click="menuToggled = false" class="align-center" :class="{banner: $route.name === 'home', active: scrollTop > headerHeight, toggled: menuToggled}">
       <div>
-        <header>
+        <header @click="menuToggled = false">
           <h1>
             <router-link to="/">
               <img src="/static/images/logo.svg" alt="Campbell School of Highland Dance" />
@@ -14,7 +14,11 @@
           <router-link to="/#instructors">Instructors</router-link>
           <router-link to="/#classes">Classes</router-link>
           <router-link to="/#contact">Contact</router-link>
+          <router-link to="/enroll" class="btn">Enroll</router-link>
         </nav>
+        <footer>
+          <button @click.stop="menuToggled = !menuToggled"><i>Menu</i></button>
+        </footer>
       </div>
     </header>
 
@@ -31,22 +35,24 @@
 <script>
 export default {
   name: 'app',
-  // data() {
-  //   return {
-  //     scrollTop: 0,
-  //   };
-  // },
-  // methods: {
-  //   handleScroll(e) {
-  //     this.scrollTop = e.target.scrollingElement.scrollTop;
-  //   },
-  // },
-  // mounted() {
-  //   window.addEventListener('scroll', this.handleScroll);
-  // },
-  // beforeDestroy() {
-  //   window.removeEventListener('scroll', this.handleScroll);
-  // },
+  data() {
+    return {
+      menuToggled: false,
+      scrollTop: 0,
+      headerHeight: 100,
+    };
+  },
+  methods: {
+    handleScroll(e) {
+      this.scrollTop = e.target.scrollingElement.scrollTop;
+    },
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
+  },
 };
 </script>
 
@@ -371,35 +377,66 @@ section,
   }
 }
 #header {
-  min-height: 75vh;
+  & > div {
+    & > header {
+      & h1 {
+        & a {
+          & img {
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+    & > nav {
+      @apply --heading;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: none;
 
-  & header {
-    width: 100%;
-    max-width: var(--small);
+      & a {
+        margin: 5px 20px;
+      }
+    }
+    & > footer {
+      display: none;
+    }
+  }
+  &.banner {
+    min-height: 75vh;
+    transition: all 300ms;
 
-    & h1 {
-      margin-bottom: 60px;
-
-      & img {
+    & > div {
+      & > header {
         width: 100%;
-        max-height: 60vh;
-        vertical-align: middle;
+        max-width: var(--small);
+
+        & h1 {
+          margin-bottom: 60px;
+          
+          & a {
+            & img {
+              width: 100%;
+              max-height: 60vh;
+            }
+          }
+        }
+      }
+    }
+    &.active {
+      & + * {
+        margin-top: 50%;
       }
     }
   }
-  & nav {
-    @apply --heading;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    max-width: none;
-
-    & a {
-      margin: 5px 20px;
+  &:not(.banner) {
+    & + * {
+      margin-top: var(--header-height);
     }
   }
-
-  &.menu {
+  &:not(.banner),
+  &.banner.active {
     position: fixed;
     top: 0;
     left: 0;
@@ -407,19 +444,20 @@ section,
     min-height: 0;
     background-color: var(--lightest);
     border-bottom: 3px double var(--accent);
-    z-index: 100;
+    z-index: 999;
 
     & > div {
       flex-direction: row;
       min-height: var(--header-height);
+      background-color: inherit;
       padding: 0;
       margin: 0 auto;
 
-      & header {
+      & > header {
         width: auto;
 
         & h1 {
-          margin: 0 24px;
+          margin: 0 10px;
           
           & a {
             display: block;
@@ -431,13 +469,75 @@ section,
           }
         }
       }
-      & nav {
+      & > nav {
         flex-shrink: 1;
         font-size: 12px;
       }
     }
-    & + * {
-      margin-top: var(--header-height);
+    @media (--small-max) {
+      & > div {
+        & > nav {
+          flex-direction: column;
+          align-items: stretch;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: inherit;
+          border-bottom: 3px double var(--accent);
+          margin-top: 3px;
+
+          & a {
+            padding: 10px;
+          }
+        }
+        & > footer {
+          display: flex;
+          margin-left: auto;
+          margin-right: 10px;
+
+          & button {
+            color: rgba(0,0,0,.5);
+            border: 0;  
+
+            & i {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              height: 3px;
+              width: 18px;
+              background-color: currentColor;
+              font-size: 0;
+              margin: 9px 0;
+
+              &:before,
+              &:after {
+                content: '';
+                height: 3px;
+                width: 100%;
+                background-color: inherit;
+                vertical-align: middle;
+              }
+              &:before {
+                margin-top: -6px;
+              }
+              &:after {
+                margin-bottom: -6px;
+              }
+            }
+            &:hover {
+              color: rgba(0,0,0,1);
+            }
+          }
+        }
+      }
+      &:not(.toggled) {
+        & > div {
+          & > nav {
+            display: none;
+          }
+        }
+      }
     }
   }
 }
