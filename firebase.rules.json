@@ -9,7 +9,7 @@
         ".read": true,
         "$timeslotId": {
           "@dancers": {
-            ".write": true,
+            ".write": true
           },
           "$otherProperties": {
             ".write": false
@@ -19,7 +19,7 @@
       "users": {
         "$userId": {
           ".read": "auth != null && auth.uid === $userId", // is SELF
-          ".write": "auth != null && auth.uid === $userId", // is SELF
+          ".write": "auth != null && auth.uid === $userId" // is SELF
         }
       }
     }
