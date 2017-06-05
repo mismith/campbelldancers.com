@@ -4,4 +4,19 @@
 - hook up schedule to interactive calendar that parents can subscribe to
 
 - schedule picker mobile styling
-- fix mobile menu stacking --> replace with dropdown
+
+Safari Mobile:
+- can't scroll inputs (email)
+- Birthday picker on mobile
+- Add primary to skill level list
+- Schedule picker on mobile is unscrollable
+
+Desktop Chrome:
+- full justify the classes blurb
+- Add 4-4:30 on spot on Thursday
+- Can't click arrow on Birthday picker 
+- Autofocus next input where possible
+- Successful enrollment confirmation email
+- Add don't forget deposit blurb
+- Weekly --> fall 2017
+- Fix banner/menu
