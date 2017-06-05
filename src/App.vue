@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header id="header" @click="menuToggled = false" class="align-center" :class="{banner: $route.name === 'home', active: scrollTop > headerHeight, toggled: menuToggled}">
+    <header id="header" @click="menuToggled = false" class="align-center" :class="{toggled: menuToggled}">
       <div>
         <header @click="menuToggled = false">
           <h1>
@@ -38,20 +38,7 @@ export default {
   data() {
     return {
       menuToggled: false,
-      scrollTop: 0,
-      headerHeight: 100,
     };
-  },
-  methods: {
-    handleScroll(e) {
-      this.scrollTop = e.target.scrollingElement.scrollTop;
-    },
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll);
   },
 };
 </script>
@@ -381,11 +368,34 @@ section,
   }
 }
 #header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 0;
+  background-color: var(--lightest);
+  border-bottom: 3px double var(--accent);
+  z-index: 999;
+
   & > div {
+    flex-direction: row;
+    min-height: var(--header-height);
+    background-color: inherit;
+    padding: 0;
+    margin: 0 auto;
+
     & > header {
+      width: auto;
+
       & h1 {
+        margin: 0 10px;
+        
         & a {
+          display: block;
+
           & img {
+            width: auto;
+            height: 36px;
             vertical-align: middle;
           }
         }
@@ -397,7 +407,9 @@ section,
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
+      flex-shrink: 1;
       max-width: none;
+      font-size: 12px;
 
       & a {
         margin: 5px 20px;
@@ -407,139 +419,70 @@ section,
       display: none;
     }
   }
-  &.banner {
-    min-height: 75vh;
-    transition: all 300ms;
-
-    & > div {
-      & > header {
-        width: 100%;
-        max-width: var(--small);
-
-        & h1 {
-          margin-bottom: 60px;
-          
-          & a {
-            & img {
-              width: 100%;
-              max-height: 60vh;
-            }
-          }
-        }
-      }
-    }
-    &.active {
-      & + * {
-        margin-top: 50%;
-      }
-    }
+  & + * {
+    margin-top: var(--header-height);
   }
-  &:not(.banner) {
-    & + * {
-      margin-top: var(--header-height);
-    }
-  }
-  &:not(.banner),
-  &.banner.active {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    min-height: 0;
-    background-color: var(--lightest);
-    border-bottom: 3px double var(--accent);
-    z-index: 999;
-
+  @media (--small-max) {
     & > div {
-      flex-direction: row;
-      min-height: var(--header-height);
-      background-color: inherit;
-      padding: 0;
-      margin: 0 auto;
-
-      & > header {
-        width: auto;
-
-        & h1 {
-          margin: 0 10px;
-          
-          & a {
-            display: block;
-
-            & img {
-              width: auto;
-              height: 36px;
-            }
-          }
-        }
-      }
       & > nav {
-        flex-shrink: 1;
-        font-size: 12px;
+        flex-direction: column;
+        align-items: stretch;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: inherit;
+        border-bottom: 3px double var(--accent);
+        margin-top: 3px;
+
+        & a {
+          padding: 10px;
+        }
+      }
+      & > footer {
+        display: flex;
+        margin-left: auto;
+        margin-right: 10px;
+
+        & button {
+          color: rgba(0,0,0,.5);
+          border: 0;  
+
+          & i {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 3px;
+            width: 18px;
+            background-color: currentColor;
+            font-size: 0;
+            margin: 9px 0;
+
+            &:before,
+            &:after {
+              content: '';
+              height: 3px;
+              width: 100%;
+              background-color: inherit;
+              vertical-align: middle;
+            }
+            &:before {
+              margin-top: -6px;
+            }
+            &:after {
+              margin-bottom: -6px;
+            }
+          }
+          &:hover {
+            color: rgba(0,0,0,1);
+          }
+        }
       }
     }
-    @media (--small-max) {
+    &:not(.toggled) {
       & > div {
         & > nav {
-          flex-direction: column;
-          align-items: stretch;
-          position: absolute;
-          top: 100%;
-          left: 0;
-          right: 0;
-          background-color: inherit;
-          border-bottom: 3px double var(--accent);
-          margin-top: 3px;
-
-          & a {
-            padding: 10px;
-          }
-        }
-        & > footer {
-          display: flex;
-          margin-left: auto;
-          margin-right: 10px;
-
-          & button {
-            color: rgba(0,0,0,.5);
-            border: 0;  
-
-            & i {
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              height: 3px;
-              width: 18px;
-              background-color: currentColor;
-              font-size: 0;
-              margin: 9px 0;
-
-              &:before,
-              &:after {
-                content: '';
-                height: 3px;
-                width: 100%;
-                background-color: inherit;
-                vertical-align: middle;
-              }
-              &:before {
-                margin-top: -6px;
-              }
-              &:after {
-                margin-bottom: -6px;
-              }
-            }
-            &:hover {
-              color: rgba(0,0,0,1);
-            }
-          }
-        }
-      }
-      &:not(.toggled) {
-        & > div {
-          & > nav {
-            display: none;
-          }
+          display: none;
         }
       }
     }

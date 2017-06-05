@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <section id="banner" ref="banner">
+      <img src="/static/images/logo.svg" style="max-height: 60vh;" :style="{transformOrigin: 'center bottom', transform: `scale(${1 - bannerOffset})`}" />
+    </section>
     <section id="about" class="bg-tartan align-center">
       <header>
         <h2><a href="#about">About</a></h2>
@@ -211,6 +214,13 @@ const db = firebase.database().ref('production');
 
 export default {
   name: 'home',
+  data() {
+    return {
+      menuToggled: false,
+      scrollTop: 0,
+      bannerHeight: 0,
+    };
+  },
   firebase: {
     timeslots: db.child('timeslots'),
     classes: db.child('classes'),
@@ -227,8 +237,23 @@ export default {
         return timeslot;
       });
     },
+    bannerOffset() {
+      return this.bannerHeight ? 1 - ((this.bannerHeight - this.scrollTop) / this.bannerHeight) : 0;
+    },
+  },
+  methods: {
+    handleScroll(e) {
+      this.scrollTop = e.target.scrollingElement.scrollTop;
+    },
+    handleResize() {
+      this.bannerHeight = this.$refs.banner.offsetHeight;
+    },
   },
   mounted() {
+    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('resize', this.handleResize);
+    this.handleResize();
+
     try {
       new Instafeed({
         clientId: 'c4d7db79bf68469ba1b71aebf43bc8df',
@@ -242,6 +267,10 @@ export default {
     } catch (err) {
       console.error(err);
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
+    window.removeEventListener('resize', this.handleResize);
   },
   components: {
     SchedulePicker,
