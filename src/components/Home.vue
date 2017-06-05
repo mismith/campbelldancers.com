@@ -204,11 +204,13 @@ import Instafeed from 'instafeed.js';
 import { firebase, idKey } from '../helpers/firebase';
 import SchedulePicker from './SchedulePicker';
 
+const db = firebase.database().ref('production');
+
 export default {
   name: 'home',
   firebase: {
-    timeslots: firebase.database().ref('timeslots'),
-    classes: firebase.database().ref('classes'),
+    timeslots: db.child('timeslots'),
+    classes: db.child('classes'),
   },
   computed: {
     timeslotsWithNames() {
