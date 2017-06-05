@@ -4,7 +4,7 @@
       <header>
         <h2><a href="#about">About</a></h2>
       </header>
-      <div>
+      <div class="align-justify">
         <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <strong>Calgary</strong>, Alberta, Canada, we combine the love of dancing with focused technical development and strength.</p>
         <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
         <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
@@ -73,7 +73,7 @@
       <header>
         <h2><a href="#classes">Classes</a></h2>
       </header>
-      <div class="align-center">
+      <div class="align-justify">
         <p>Our youngest dancers begin with <strong>learning about movement</strong> through play-based activities and instruction. The basics of <strong>highland technique</strong> are introduced in a fun, easy, low pressure environment. Our little leapers also begin to <strong>feel comfortable</strong> with being on stage through many opportunities to perform for small audiences.</p>
         <p>Beginner dancers (all ages) develop a high level of technique while learning the <strong>five basic dances</strong> (Fling, Sword, Seann Truibhas, Lilt, Flora) through a combination of traditional technique, cross-training, and strength-based movement exercises. The basics of <strong>choreography and performing</strong> are introduced in low pressure settings, while competition is encouraged (but not mandatory!). Dance <strong>friendships and bonds</strong> are nurtured as we introduce our core values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong>.</p>
         <p>As dancers progress, a high level of <strong>technique and precision</strong> become the main focus of classes, along with learning <strong>additional dances</strong>. Competition, cross-training, choreographies, performance, and strength-training all help build a <strong>well rounded, enthusiastic dancer</strong> who embodies our core values.</p>

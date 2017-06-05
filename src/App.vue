@@ -82,6 +82,9 @@ export default {
 .align-left {
   text-align: left;
 }
+.align-justify {
+  text-align: justify;
+}
 .flex-cols {
   display: flex;
   flex-wrap: wrap;
