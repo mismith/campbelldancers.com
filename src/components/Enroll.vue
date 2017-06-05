@@ -91,15 +91,14 @@
                     <select v-model="dancer.ability" @input="sync(`~/dancers/${dancer[idKey]}/ability`, $event.target.value)" required>
                       <optgroup>
                         <option>New / Unsure</option>
+                        <option>Not competing</option>
                       </optgroup>
                       <optgroup>
+                        <option>Primary</option>
                         <option>Beginner</option>
                         <option>Novice</option>
                         <option>Intermediate</option>
                         <option>Premier</option>
-                      </optgroup>
-                      <optgroup>
-                        <option>Non-competitive</option>
                       </optgroup>
                     </select>
                   </label>
