@@ -138,6 +138,11 @@ export default {
   & small {
     font-size: 12px;
   }
+  & div {
+    & small {
+      opacity: .5;
+    }
+  }
   &:not(.disabled, .active) {
     &:hover {
       background-color: rgba(var(--accent-rgb), .333);

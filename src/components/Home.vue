@@ -139,10 +139,14 @@
               <td><a href="tel:+14039980111">403-998-0111</a></td>
             </tr>
             <tr>
-              <td>Location</td>
+              <td>Locations</td>
               <td>
-                <em>Strathcona Community Center</em><br />
-                <a href="https://www.google.ca/maps/place/277+Strathcona+Dr+SW,+Calgary,+AB+T3H+2A4" target="_blank">277 Strathcona Dr SW<br />Calgary, AB T3H 2A4</a>
+                <ul>
+                  <li v-for="location in locations">
+                    <em>{{ location.name }}</em><br />
+                    <a :href="`https://www.google.ca/maps/place/${encodeURIComponent(location.address)}`" target="_blank">{{ location.address }}</a>
+                  </li>
+                </ul>
               </td>
             </tr>
             <tr>
@@ -228,6 +232,8 @@ export default {
     },
   },
   methods: {
+    encodeURIComponent: window.encodeURIComponent,
+
     handleScroll(e) {
       this.scrollTop = e.target.scrollingElement.scrollTop;
     },
