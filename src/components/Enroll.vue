@@ -336,7 +336,7 @@ export default {
           }
 
           // disable if dancer is out of (any of the classes') age range
-          if (age > 0) {
+          if (age > 0 && !timeslot.props.disabled) {
             timeslot.props.disabled = !timeslot.$classes.reduce((enabled, c) => {
               if (enabled) return true;
 
