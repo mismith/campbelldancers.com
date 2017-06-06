@@ -82,9 +82,12 @@ export default {
   margin-bottom: -20px;
 
   & > * {
-    flex-basis: calc(50% - 40px);
     flex-shrink: 1;
     margin: 20px;
+
+    @media (--small-min) {
+      flex-basis: calc(50% - 40px);
+    }
   }
 }
 .flex-rows {

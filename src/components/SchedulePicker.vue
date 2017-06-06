@@ -78,8 +78,6 @@ export default {
     display: flex;
     flex-wrap: wrap;
     flex-shrink: 1;
-    height: 100%;
-    overflow: auto;
 
     & .schedule {
       & .times {
@@ -87,7 +85,12 @@ export default {
           visibility: hidden;
         }
       }
-      @media (--medium-min) {
+    }
+    @media (--medium-min) {
+      height: 100%;
+      overflow: auto;
+
+      & .schedule {
         flex-basis: 75%;
 
         & + .schedule {
