@@ -223,12 +223,12 @@ export default {
     return {
       menuToggled: false,
       scrollTop: 0,
-      bannerHeight: 0,
     };
   },
   computed: {
     bannerOffset() {
-      return this.bannerHeight ? 1 - ((this.bannerHeight - this.scrollTop) / this.bannerHeight) : 0;
+      const height = this.$refs.banner ? this.$refs.banner.offsetHeight : 0;
+      return this.scrollTop && height ? 1 - ((height - this.scrollTop) / height) : 0;
     },
   },
   methods: {
@@ -237,14 +237,9 @@ export default {
     handleScroll(e) {
       this.scrollTop = e.target.scrollingElement.scrollTop;
     },
-    handleResize() {
-      this.bannerHeight = this.$refs.banner.offsetHeight;
-    },
   },
   mounted() {
     window.addEventListener('scroll', this.handleScroll);
-    window.addEventListener('resize', this.handleResize);
-    this.handleResize();
 
     try {
       new Instafeed({
@@ -262,7 +257,6 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
-    window.removeEventListener('resize', this.handleResize);
   },
   components: {
     SchedulePicker,
