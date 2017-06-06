@@ -9,6 +9,9 @@
             </router-link>
           </h1>
         </header>
+        <aside class="heading" title="Campbell School of Highland Dance">
+          <router-link to="/">CSHD</router-link>
+        </aside>
         <nav>
           <router-link to="/#about">About</router-link>
           <router-link to="/#instructors">Instructors</router-link>
@@ -386,14 +389,16 @@ section,
   min-height: 0;
   background-color: var(--lightest);
   border-bottom: 3px double var(--accent);
-  z-index: 999;
+  z-index: 1000;
 
   & > div {
+    position: relative;
     flex-direction: row;
     min-height: var(--header-height);
     background-color: inherit;
     padding: 0;
     margin: 0 auto;
+    z-index: 999;
 
     & > header {
       width: auto;
@@ -402,15 +407,20 @@ section,
         margin: 0 10px;
         
         & a {
-          display: block;
+          display: flex;
 
           & img {
             width: auto;
-            height: 36px;
+            height: 28px;
             vertical-align: middle;
           }
         }
       }
+    }
+    & > aside {
+      display: none;
+      font-weight: bolder;
+      margin: auto;
     }
     & > nav {
       @apply --heading;
@@ -433,7 +443,19 @@ section,
   & + * {
     margin-top: var(--header-height);
   }
-  @media (--small-max) {
+  @media (--medium-max) {
+    &:after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 100%;
+      background-color: rgba(0,0,0,.5);
+      opacity: 0;
+      transition: opacity 300ms;
+      z-index: 997;
+    }
     & > div {
       & > nav {
         flex-direction: column;
@@ -443,16 +465,22 @@ section,
         left: 0;
         right: 0;
         background-color: inherit;
+        border-top: 3px double var(--accent);
         border-bottom: 3px double var(--accent);
-        margin-top: 3px;
+        transition: all 300ms;
+        transform: scale(1) rotate(0);
+        transform-origin: 92.5% -10%;
+        z-index: 998;
 
         & a {
           padding: 10px;
         }
       }
+      & > aside {
+        display: flex;
+      }
       & > footer {
         display: flex;
-        margin-left: auto;
         margin-right: 10px;
 
         & button {
@@ -490,10 +518,18 @@ section,
         }
       }
     }
+    &.toggled {
+      &:after {
+        bottom: 0;
+        opacity: 1;
+      }
+    }
     &:not(.toggled) {
       & > div {
         & > nav {
-          display: none;
+          transform: scale(0) rotate(-10deg);
+          opacity: 0;
+          pointer-events: none;
         }
       }
     }
