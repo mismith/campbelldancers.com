@@ -5,7 +5,7 @@
         <header @click="menuToggled = false">
           <h1>
             <router-link to="/">
-              <img src="/static/images/logo.svg" alt="Campbell School of Highland Dance" />
+              <img src="/static/images/icon.svg" alt="Campbell School of Highland Dance" />
             </router-link>
           </h1>
         </header>
