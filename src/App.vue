@@ -83,10 +83,12 @@ export default {
 
   & > * {
     flex-shrink: 1;
-    margin: 20px;
+    margin: 20px auto;
 
     @media (--small-min) {
       flex-basis: calc(50% - 40px);
+      margin-left: 20px;
+      margin-right: 20px;
     }
   }
 }
