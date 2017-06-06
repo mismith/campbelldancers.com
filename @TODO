@@ -3,15 +3,8 @@
 - add call to action / blurb to registration section
 - hook up schedule to interactive calendar that parents can subscribe to
 
-- schedule picker mobile styling
-
-Safari Mobile:
-- can't scroll inputs (email): iOS/Safari bug. crazy.
 - Birthday picker on mobile
-- Schedule picker on mobile is unscrollable
 - validation
 - :hover double taps
-
-Desktop Chrome:
 - Autofocus next input where possible
 - Successful enrollment confirmation email

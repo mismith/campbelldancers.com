@@ -81,26 +81,17 @@ export default {
     height: 100%;
     overflow: auto;
 
-    & table.schedule {
-      & tbody {
-        & tr:nth-child(2n) {
-          & th {
-            visibility: hidden;
-          }
-        }
-      }
-      @media (--medium-max) {
-        min-height: var(--small);
-
-        & + table.schedule {
-          max-width: 200px;
+    & .schedule {
+      & .times {
+        & .time:nth-child(2n + 1) {
+          visibility: hidden;
         }
       }
       @media (--medium-min) {
-        width: 75%;
+        flex-basis: 75%;
 
-        & + table.schedule {
-          width: 22.5%;
+        & + .schedule {
+          flex-basis: 22.5%;
           margin-left: 2.5%;
         }
       }
@@ -115,7 +106,7 @@ export default {
     z-index: 2;
     
     & > * {
-      margin: 3px;
+      margin: 5px;
     }
     & aside {
       display: flex;
@@ -123,7 +114,7 @@ export default {
       margin: auto;
 
       & > * {
-        margin: 3px;
+        margin: 5px;
       }
     }
   }
