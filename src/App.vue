@@ -485,7 +485,7 @@ section,
 
         & button {
           color: rgba(0,0,0,.5);
-          border: 0;  
+          border: 0; 
 
           & i {
             display: flex;

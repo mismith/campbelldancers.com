@@ -527,19 +527,6 @@ export default {
     align-items: center;
     max-width: 100%;
   }
-  & > footer {
-    display: flex;
-    justify-content: center;
-    align-self: stretch;
-    max-width: var(--medium);
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-
-    & .btn:not([type=submit]) {
-      margin-right: auto;
-    }
-  }
 }
 
 .breadcrumbs {
