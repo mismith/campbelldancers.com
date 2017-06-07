@@ -1,29 +1,31 @@
 {
   "rules": {
     "$environment": {
-      "classes": {
-        ".read": true,
-        ".write": false
-      },
-      "locations": {
-        ".read": true,
-        ".write": false
-      },
-      "timeslots": {
-        ".read": true,
-        "$timeslotId": {
-          "@dancers": {
-            ".write": true
-          },
-          "$otherProperties": {
-            ".write": false
+      "data": {
+        "classes": {
+          ".read": true,
+          ".write": false
+        },
+        "locations": {
+          ".read": true,
+          ".write": false
+        },
+        "timeslots": {
+          ".read": true,
+          "$timeslotId": {
+            "@dancers": {
+              ".write": true
+            },
+            "$otherProperties": {
+              ".write": false
+            }
           }
-        }
-      },
-      "users": {
-        "$userId": {
-          ".read": "auth != null && auth.uid === $userId", // is SELF
-          ".write": "auth != null && auth.uid === $userId" // is SELF
+        },
+        "users": {
+          "$userId": {
+            ".read": "auth != null && auth.uid === $userId", // is SELF
+            ".write": "auth != null && auth.uid === $userId" // is SELF
+          }
         }
       }
     }
