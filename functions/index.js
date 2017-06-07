@@ -1,13 +1,44 @@
 const ENV = 'production';
+const DEBUG = false;
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const firebase = admin.initializeApp(functions.config().firebase);
-const db = firebase.database().ref(ENV);
+const config = DEBUG ? {
+  credential: admin.credential.cert(require('./campbell-dancers-firebase-adminsdk.json')),
+  databaseURL: 'https://campbell-dancers.firebaseio.com',
+} : functions.config().firebase;
+const firebase = admin.initializeApp(config);
+const db = firebase.database().ref(`${ENV}/data`);
 
 const moment = require('moment');
 const renderEmail = require('./helpers/renderEmail');
 const sendEmail = require('./helpers/sendEmail');
+
+function getTables(data) {
+  const users = [];
+  const enrollments = [];
+  const dancers = [];
+  const contacts = [];
+  Object.keys(data.users || {}).forEach(function (userId) {
+    const user = Object.assign({
+      '.key': userId,
+    }, data.users[userId]);
+    users.push(user);
+
+    Object.keys(user.dancers || {}).forEach(function (dancerId) {
+      const dancer = Object.assign({
+        '.key': dancerId,
+        '$userId': userId,
+      }, user.dancers[dancerId]);
+      dancers.push(dancer);
+
+    });
+  });
+  console.log(users);
+  console.log(dancers);
+}
+db.once('value').then(snap => getTables(snap.val()));
+
 
 function getUsersEnrolledDancers(userId) {
   return Promise.all([
@@ -48,6 +79,8 @@ function getUsersEnrolledDancers(userId) {
 function getFirstName(fullName) {
   return fullName.split(' ').slice(0, 1).join(' ');
 }
+
+if (DEBUG) return;
 
 exports.sendEnrollmentSuccessEmail = functions.database.ref(`${ENV}/users/{userId}/enrollments/{enrollmentId}/_submitted`).onWrite(e => {
   if (e.data && e.data.val()) {
