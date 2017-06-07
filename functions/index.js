@@ -7,39 +7,18 @@ const config = DEBUG ? {
   credential: admin.credential.cert(require('./campbell-dancers-firebase-adminsdk.json')),
   databaseURL: 'https://campbell-dancers.firebaseio.com',
 } : functions.config().firebase;
+
 const firebase = admin.initializeApp(config);
+const dba = firebase.database().ref(`${ENV}/admin`);
 const db = firebase.database().ref(`${ENV}/data`);
 
 const moment = require('moment');
 const renderEmail = require('./helpers/renderEmail');
 const sendEmail = require('./helpers/sendEmail');
 
-function getTables(data) {
-  const users = [];
-  const enrollments = [];
-  const dancers = [];
-  const contacts = [];
-  Object.keys(data.users || {}).forEach(function (userId) {
-    const user = Object.assign({
-      '.key': userId,
-    }, data.users[userId]);
-    users.push(user);
-
-    Object.keys(user.dancers || {}).forEach(function (dancerId) {
-      const dancer = Object.assign({
-        '.key': dancerId,
-        '$userId': userId,
-      }, user.dancers[dancerId]);
-      dancers.push(dancer);
-
-    });
-  });
-  console.log(users);
-  console.log(dancers);
+function getFirstName(fullName) {
+  return fullName.split(' ').slice(0, 1).join(' ');
 }
-db.once('value').then(snap => getTables(snap.val()));
-
-
 function getUsersEnrolledDancers(userId) {
   return Promise.all([
     db.child(`users/${userId}/dancers`).once('value'),
@@ -76,13 +55,31 @@ function getUsersEnrolledDancers(userId) {
       return enrolledDancers;
     });
 }
-function getFirstName(fullName) {
-  return fullName.split(' ').slice(0, 1).join(' ');
-}
 
-if (DEBUG) return;
+if (DEBUG) return; // @DEBUG
 
-exports.sendEnrollmentSuccessEmail = functions.database.ref(`${ENV}/users/{userId}/enrollments/{enrollmentId}/_submitted`).onWrite(e => {
+exports.syncAdminItems = functions.database.ref(`/${ENV}/data/users/{userId}/{collection}/{itemId}`).onWrite(e => {
+  switch (e.params.collection) {
+    case 'dancers':
+    case 'contacts':
+    case 'enrollments':
+      let data = e.data.val();
+      if (data) {
+        const userIds = {};
+        userIds[e.params.userId] = e.params.userId;
+
+        data = Object.assign({
+          '@users': userIds,
+        }, data);
+      }
+      return dba.child(`${e.params.collection}/${e.params.itemId}`).set(data);
+    default:
+      // ignore
+      return;
+  }
+});
+
+exports.sendEnrollmentSuccessEmail = functions.database.ref(`/${ENV}/data/users/{userId}/enrollments/{enrollmentId}/_submitted`).onWrite(e => {
   if (e.data && e.data.val()) {
     // get parent/enrollment
     return e.data.ref.parent.once('value')
