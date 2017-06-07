@@ -92,7 +92,7 @@
       <div id="prices" class="align-center">
         <header>
           <h3><a href="#prices">Prices</a></h3>
-          <h4>Per student</h4>
+          <h4>Per dancer</h4>
         </header>
         <table class="table align-left">
           <tbody>

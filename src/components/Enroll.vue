@@ -191,13 +191,11 @@
       <header>
         <h2 class="heading">Enrolled</h2>
       </header>
-      <div>
-        <p>We <strong>can't wait</strong> to dance together! ✨</p>
-        <p><br /></p>
-        <img src="/static/images/instructors.jpg" alt="Our instructors" style="vertical-align: bottom;" />
-        <aside class="card bg-tartan" style="max-width: 400px;">
+      <div class="thanks">
+        <img src="/static/images/instructors.jpg" alt="Our instructors" />
+        <aside class="card bg-tartan">
           <div>
-            <p>Please check your email inbox (<a :href="`mailto:${enrollment.email}`">{{ enrollment.email }}</a>) momentarily for payment instructions.</p>
+            <p>We <strong>can't wait</strong> to dance together! ✨</p>
           </div>
         </aside>
       </div>
@@ -621,6 +619,33 @@ aside.card {
       cursor: pointer;
       opacity: .75;
     }
+  }
+}
+
+@keyframes hover {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-150%);
+    opacity: 1;
+  }
+}
+.thanks {
+  display: flex;
+  flex-direction: column;
+
+  & img {
+    width: 100%;
+    max-width: 400px;
+  }
+  & aside {
+    margin-left: -20px;
+    margin-right: -20px;
+    opacity: 1;
+    transform: translateY(-150%);
+    animation: hover 1s;
   }
 }
 </style>
