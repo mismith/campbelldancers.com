@@ -5,6 +5,8 @@
   --accent:     #50c5d8;
   --accent-rgb: 80, 197, 216;
 
+  --accent-light: #e5f6f9; /* #50c5d8 @ 15% opacity */
+
   --small:      600px;
   --medium:     800px;
   @custom-media --small-min (width >= 600px);

@@ -2,7 +2,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 
-const sendEmail = require('./sendEmail');
+const sendEmail = require('./helpers/sendEmail');
 
 exports.sendEnrollmentSuccessEmail = functions.database.ref('development/users/{userId}/enrollments/{enrollmentId}/_submitted').onWrite(e => {
   if (e && e.data && e.data.val()) {
