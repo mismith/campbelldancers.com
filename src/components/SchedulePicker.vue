@@ -78,6 +78,8 @@ export default {
     display: flex;
     flex-wrap: wrap;
     flex-shrink: 1;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
 
     & .schedule {
       & .times {
@@ -88,7 +90,6 @@ export default {
     }
     @media (--medium-min) {
       height: 100%;
-      overflow: auto;
 
       & .schedule {
         flex-basis: 75%;
