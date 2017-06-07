@@ -46,7 +46,7 @@ function getUsersEnrolledDancers(userId) {
     });
 }
 function getFirstName(fullName) {
-  return fullName.split(' ').slice(0, -1).join(' ');
+  return fullName.split(' ').slice(0, 1).join(' ');
 }
 
 exports.sendEnrollmentSuccessEmail = functions.database.ref(`${ENV}/users/{userId}/enrollments/{enrollmentId}/_submitted`).onWrite(e => {
@@ -83,7 +83,7 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(`${ENV}/users/{userI
               <p>You've booked the following classes:</p>
               ${ol}
               <p>Classes start the week of Sept 18, 2017. You will receive another email in August with your <a href="https://campbelldancers.com/#pricing" style="color: #000000">class costs</a> and exact details.</p>
-              <p>In the meantime, if you have any questions or feedback for us, please contact Elayna at <a href="tel:+14039980111" style="color: #000000">403-998-0111</a>, or simply reply to this email.</p>
+              <p>In the meantime, if you have any questions or feedback for us, please contact Elayna at <a href="tel:+14039980111" style="color: #000000">403-998-0111</a>, or simply <a href="mailto:elayna@campbelldancers.com" style="color: #000000">reply</a> to this email.</p>
               <p><strong>Can't wait to dance with you!</strong><br />Alexandra and Elayna</p>`,
               button: undefined, /*{
                 text: 'Enroll',
@@ -96,7 +96,8 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(`${ENV}/users/{userI
                 width: 500,
                 height: 400,
               },*/
-
+              
+              enrollment,
               dancers,
             }, e.params);
             return renderEmail('enrollment-success', data)
