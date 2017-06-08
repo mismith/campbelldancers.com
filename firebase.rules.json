@@ -1,6 +1,10 @@
 {
   "rules": {
     "$environment": {
+      "admin": {
+        ".read": "auth != null && root.child($environment).child('data').child('users').child(auth.uid).child('admin').val() == true",
+        ".write": "false"
+      },
       "data": {
         "classes": {
           ".read": true,

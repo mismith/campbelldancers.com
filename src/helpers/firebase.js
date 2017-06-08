@@ -18,6 +18,7 @@ export const firebaseuiApp = new firebaseui.auth.AuthUI(firebase.auth());
 
 export const ENV = 'production';
 export const db = firebaseApp.database().ref(`${ENV}/data`);
+export const dba = firebaseApp.database().ref(`${ENV}/admin`);
 
 // export function cleanItem(item) {
 //   const cleanedItem = { ...item };

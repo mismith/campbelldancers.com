@@ -4,6 +4,7 @@ const DEBUG = false;
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const config = DEBUG ? {
+  // local debugging
   credential: admin.credential.cert(require('./campbell-dancers-firebase-adminsdk.json')),
   databaseURL: 'https://campbell-dancers.firebaseio.com',
 } : functions.config().firebase;

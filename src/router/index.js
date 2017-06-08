@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Home from '@/components/Home';
 import Enroll from '@/components/Enroll';
+import Admin from '@/components/Admin';
 
 Vue.use(Router);
 
@@ -17,6 +18,11 @@ export default new Router({
       path: '/enroll',
       name: 'enroll',
       component: Enroll,
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: Admin,
     },
   ],
   scrollBehavior(to, from, savedPosition) {
