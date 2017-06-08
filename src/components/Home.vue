@@ -87,7 +87,7 @@
           <h3><a href="#schedule">Schedule</a></h3>
           <h4>Fall 2017</h4>
         </header>
-        <schedule-picker :timeslots="timeslots" content-key="$name" />
+        <schedule-picker :timeslots="timeslots" content-key="$name" :show-footer="false" />
       </div>
       <div id="prices" class="align-center">
         <header>
@@ -282,9 +282,6 @@ export default {
       &:hover {
         background-color: rgba(var(--accent-rgb), .15);
       }
-    }
-    & > footer {
-      display: none;
     }
     @media (--medium-min) {
       height: var(--small);

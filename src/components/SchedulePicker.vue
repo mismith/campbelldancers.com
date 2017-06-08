@@ -21,7 +21,7 @@
         @timeslot-click="handleTimeslotClick"
       />
     </div>
-    <footer>
+    <footer v-if="showFooter">
       <div>
         <strong>{{ selected.length || 0 }} class{{ selected.length === 1 ? '' : 'es' }} selected</strong>
       </div>
@@ -43,11 +43,15 @@ import Schedule from './Schedule';
 export default {
   name: 'schedule-picker',
   props: {
+    timeslots: {
+      type: Array,
+    },
     contentKey: {
       type: String,
     },
-    timeslots: {
-      type: Array,
+    showFooter: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {

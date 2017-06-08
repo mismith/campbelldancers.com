@@ -213,7 +213,7 @@
 <script>
 /* eslint-disable no-underscore-dangle */
 import moment from 'moment';
-import datepicker from './Datepicker';
+import Datepicker from './Datepicker';
 import {
   firebase,
   idKey,
@@ -493,7 +493,7 @@ export default {
   components: {
     Auth,
     SchedulePicker,
-    datepicker,
+    Datepicker,
   },
 };
 </script>
