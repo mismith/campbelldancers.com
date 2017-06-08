@@ -215,25 +215,24 @@
 import moment from 'moment';
 import Datepicker from './Datepicker';
 import {
-  firebase,
   idKey,
   db,
   relate,
   unrelate,
   sync,
 } from '../helpers/firebase';
+import AuthedMixin from '../helpers/firebase.authed.mixin';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
-import Auth from './Auth';
 import SchedulePicker from './SchedulePicker';
 
 export default {
   name: 'enroll',
   mixins: [
+    AuthedMixin,
     PublicCollectionsMixin,
   ],
   data() {
     return {
-      user: firebase.auth().currentUser,
       idKey,
       enrollmentRaw: null,
       enrollmentsRaw: [],
@@ -435,53 +434,35 @@ export default {
       // move to next step (uses browser validation only)
       this.setStepIndex(this.enrollment.stepIndex + 1);
     },
-
-    // auth
-    loginAnonymously() {
-      return firebase.auth().signInAnonymously();
-    },
-    logout() {
-      return firebase.auth().signOut();
-    },
   },
   created() {
     // handle user
-    firebase.auth().onAuthStateChanged((user) => {
-      this.user = user;
-
-      if (user) {
-        this.$bindAsObject('userRaw', db.child(`users/${user.uid}`));
-        // store/update user info
-        const providerData = {
-          ...user.providerData[0],
-          _loggedin: moment().format(),
-        };
-        this.$firebaseRefs.userRaw.update(providerData);
-
-        // load user relations/data
-        this.$bindAsArray('enrollmentsRaw', this.$firebaseRefs.userRaw.child('enrollments'), undefined, () => {
-          if (!this.enrollmentRaw) {
-            const enrollmentRaw = this.enrollmentsRaw.reverse().find(e => !e._submitted);
-            let enrollmentId;
-            if (!enrollmentRaw) {
-              enrollmentId = this.$firebaseRefs.enrollmentsRaw.push({
-                _created: moment().format(),
-                userAgent: window.navigator.userAgent,
-                name: this.user.displayName,
-                email: this.user.email,
-              }).key;
-            } else {
-              enrollmentId = enrollmentRaw[idKey];
-            }
-            this.$bindAsObject('enrollmentRaw', this.$firebaseRefs.enrollmentsRaw.child(enrollmentId));
+    this.$on('login', () => {
+      // load user relations/data
+      this.$bindAsArray('enrollmentsRaw', this.$firebaseRefs.userRaw.child('enrollments'), undefined, () => {
+        if (!this.enrollmentRaw) {
+          const enrollmentRaw = this.enrollmentsRaw.reverse().find(e => !e._submitted);
+          let enrollmentId;
+          if (!enrollmentRaw) {
+            enrollmentId = this.$firebaseRefs.enrollmentsRaw.push({
+              _created: moment().format(),
+              userAgent: window.navigator.userAgent,
+              name: this.user.displayName,
+              email: this.user.email,
+            }).key;
+          } else {
+            enrollmentId = enrollmentRaw[idKey];
           }
-        });
-        this.$bindAsArray('dancersRaw', this.$firebaseRefs.userRaw.child('dancers'));
-        this.$bindAsArray('contactsRaw', this.$firebaseRefs.userRaw.child('contacts'));
-      } else if (this.enrollment && this.enrollment[idKey]) {
-        // force back to login step if logged out
-        this.setStepIndex(0);
-      }
+          this.$bindAsObject('enrollmentRaw', this.$firebaseRefs.enrollmentsRaw.child(enrollmentId));
+        }
+      });
+      this.$bindAsArray('dancersRaw', this.$firebaseRefs.userRaw.child('dancers'));
+      this.$bindAsArray('contactsRaw', this.$firebaseRefs.userRaw.child('contacts'));
+    });
+    this.$on('logout', () => {
+      // force back to login step if logged out
+      // @TODO: only this locally since saving to db fails with a permission error
+      this.setStepIndex(0);
     });
   },
   mounted() {
@@ -491,7 +472,6 @@ export default {
     document.removeEventListener('keydown', this.closeSchedulePicker);
   },
   components: {
-    Auth,
     SchedulePicker,
     Datepicker,
   },

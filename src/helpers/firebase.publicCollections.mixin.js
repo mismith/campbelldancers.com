@@ -1,4 +1,4 @@
-import { idKey, db } from '../helpers/firebase';
+import { idKey, db } from '@/helpers/firebase';
 
 export default {
   firebase: {
