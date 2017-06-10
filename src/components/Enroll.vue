@@ -461,8 +461,10 @@ export default {
     });
     this.$on('logout', () => {
       // force back to login step if logged out
-      // @TODO: only this locally since saving to db fails with a permission error
-      this.setStepIndex(0);
+      // NB: only this locally since saving to db fails with a permission error
+      if (this.enrollment) {
+        this.enrollment.stepIndex = 0;
+      }
     });
   },
   mounted() {
