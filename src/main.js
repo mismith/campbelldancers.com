@@ -3,6 +3,10 @@ import VueFire from 'vuefire';
 import App from './App';
 import router from './router';
 
+// IE 11 compat
+require('array-includes').shim();
+require('array.prototype.find').shim();
+
 Vue.config.productionTip = false;
 Vue.use(VueFire);
 

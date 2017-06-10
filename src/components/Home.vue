@@ -235,7 +235,9 @@ export default {
     encodeURIComponent: window.encodeURIComponent,
 
     handleScroll(e) {
-      this.scrollTop = e.target.scrollingElement.scrollTop;
+      if (e.target.scrollingElement) {
+        this.scrollTop = e.target.scrollingElement.scrollTop;
+      }
     },
   },
   mounted() {

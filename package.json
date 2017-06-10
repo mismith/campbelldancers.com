@@ -12,6 +12,8 @@
     "deploy": "yarn run build && firebase deploy"
   },
   "dependencies": {
+    "array-includes": "^3.0.3",
+    "array.prototype.find": "^2.0.4",
     "firebase": "^4.0.0",
     "firebaseui": "^2.0.0",
     "instafeed.js": "^1.4.1",
