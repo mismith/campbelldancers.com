@@ -45,7 +45,7 @@
                 <td>I'm enrolling:</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="enrollment.for" @input="sync(`~/enrollments/${enrollment[idKey]}/for`, $event.target.value)" required>
+                    <select v-model="enrollment.for" @change="sync(`~/enrollments/${enrollment[idKey]}/for`, $event.target.value)" required>
                       <optgroup>
                         <option value="children">my child/children</option>
                         <option value="self">myself</option>
@@ -88,7 +88,7 @@
                 <td>Competitive level</td>
                 <td>
                   <label class="selectable">
-                    <select v-model="dancer.ability" @input="sync(`~/dancers/${dancer[idKey]}/ability`, $event.target.value)" required>
+                    <select v-model="dancer.ability" @change="sync(`~/dancers/${dancer[idKey]}/ability`, $event.target.value)" required>
                       <optgroup>
                         <option>New / Unsure</option>
                         <option>Not competing</option>
