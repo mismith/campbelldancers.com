@@ -12,25 +12,33 @@
       <div class="details">
         <div class="dancers">
           <header>
-            <h4>Dancers</h4>
+            <h6>Dancers</h6>
+            <h6 v-if="selected.id" class="color-accent">{{ dancers.filter(d => d.props.active).length }}/</h6>
+            <h6>{{ dancers.length }}</h6>
           </header>
-          <article v-for="dancer of dancers" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
-            <div :title="dancer.name">{{ dancer.name }}</div>
-            <div :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM d, YYYY') }}</div>
-            <div :title="dancer.ability">{{ dancer.ability }}</div>
-            <div :title="dancer.medical">{{ dancer.medical }}</div>
-          </article>
+          <div>
+            <article v-for="dancer of dancers" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
+              <div :title="dancer.name"><strong>{{ dancer.name }}</strong></div>
+              <div v-show="dancer.birthday" :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM D, YYYY') }}</div>
+              <div :title="dancer.ability">{{ dancer.ability }}</div>
+              <div :title="dancer.medical">{{ dancer.medical }}</div>
+            </article>
+          </div>
         </div>
         <div class="contacts">
           <header>
-            <h4>Emergency Contacts</h4>
+            <h6>Emergency Contacts</h6>
+            <h6 v-if="selected.id" class="color-accent">{{ contacts.filter(c => c.props.active).length }}/</h6>
+            <h6>{{ contacts.length }}</h6>
           </header>
-          <article v-for="contact of contacts" class="timeslot contact" :class="contact.props">
-            <div :title="contact.name">{{ contact.name }}</div>
-            <a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a>
-            <a :href="`tel:${contact.phone}`">{{ contact.phone }}</a>
-            <a :href="`tel:${contact.phone2}`">{{ contact.phone2 }}</a>
-          </article>
+          <div>
+            <article v-for="contact of contacts" @click="handleContactSelect($event, contact)" class="timeslot contact" :class="contact.props">
+              <div :title="contact.name"><strong>{{ contact.name }}</strong></div>
+              <a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a>
+              <a :href="`tel:${contact.phone}`">{{ contact.phone }}</a>
+              <a :href="`tel:${contact.phone2}`">{{ contact.phone2 }}</a>
+            </article>
+          </div>
         </div>
       </div>
     </div>
@@ -77,6 +85,7 @@ export default {
           .filter(d => Object.keys(item['@dancers']).includes(d[idKey]));
         item.props.active = this.selected.type === 'timeslot' && this.selected.id === item[idKey];
         item.props.active = item.props.active || (this.selected.type === 'dancer' && item['@dancers'][this.selected.id]);
+        item.props.disabled = !item.$dancers.length;
         return item;
       });
     },
@@ -94,9 +103,11 @@ export default {
         item.$timeslots = this.timeslotsRaw
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
         item.props.active = this.selected.type === 'dancer' && this.selected.id === item[idKey];
-        item.props.active = item.props.active || (this.selected.type === 'timeslot' && item['@timeslots'][this.selected.id]);
+        item.props.active = item.props.active ||
+          (this.selected.type === 'timeslot' && item['@timeslots'][this.selected.id]) ||
+          (this.selected.type === 'contact' && (Object.keys((this.contacts.find(c => c[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
         return item;
-      }).sort((a, b) => (a.name === b.name ? 0 : (a.name < b.name ? -1 : 1))); // eslint-disable-line
+      }).reverse();
     },
     contacts() {
       return this.contactsRaw.map(($item) => {
@@ -108,9 +119,10 @@ export default {
           },
           ...$item,
         };
-        item.props.disabled = !(this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
+        item.props.active = this.selected.type === 'contact' && this.selected.id === item[idKey];
+        item.props.active = item.props.active || (this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
         return item;
-      });
+      }).reverse();
     },
     users() {
       return this.usersRaw.map(($item) => {
@@ -123,17 +135,31 @@ export default {
   },
   methods: {
     moment,
+
+    toggleSelected(item) {
+      if (this.selected && this.selected.type === item.type && this.selected.id === item.id) {
+        this.selected = {};
+      } else {
+        this.selected = item;
+      }
+    },
     handleTimeslotSelect(e, timeslot) {
-      this.selected = {
+      this.toggleSelected({
         type: 'timeslot',
         id: timeslot[idKey],
-      };
+      });
     },
     handleDancerSelect(e, dancer) {
-      this.selected = {
+      this.toggleSelected({
         type: 'dancer',
         id: dancer[idKey],
-      };
+      });
+    },
+    handleContactSelect(e, contact) {
+      this.toggleSelected({
+        type: 'contact',
+        id: contact[idKey],
+      });
     },
   },
   components: {
@@ -147,6 +173,9 @@ export default {
 
 #admin {
   height: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: 20px;
 
   & > div {
     display: flex;
@@ -155,12 +184,21 @@ export default {
     height: 100%;
     width: 100%;
     max-width: none;
-
-    & > * {
-      flex-basis: 50%;
-      flex-grow: 1;
-    }
   }
+}
+.timeslot {
+  &.disabled {
+    cursor: auto;
+  }
+}
+.schedule-picker,
+.details {
+  flex-basis: 50%;
+}
+.schedule-picker {
+  flex-grow: 1;
+  height: 100%;
+  max-height: 400px;
 }
 .details {
   display: flex;
@@ -169,16 +207,27 @@ export default {
   & > * {
     display: flex;
     flex-direction: column;
-    flex-basis: calc(50% - 20px);
+    width: calc(50% - 10px);
+    flex-shrink: 1;
 
-    & header {
-      padding-left: 5px;
-      padding-right: 5px;
-    }
-    & .timeslot {
+    & > header {
+      display: flex;
       padding: 5px;
-      margin: 1px;
+
+      & > *:first-child {
+        margin-right: auto;
+      }
     }
+    & > div {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 1;
+      overflow: auto;
+    }
+  }
+  & .timeslot {
+    padding: 5px;
+    margin: 1px 0;
   }
 }
 .dancer,
@@ -192,8 +241,5 @@ export default {
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-}
-.contact {
-  cursor: auto;
 }
 </style>

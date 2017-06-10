@@ -75,6 +75,9 @@ export default {
 .align-justify {
   text-align: justify;
 }
+.color-accent {
+  color: var(--accent);
+}
 .flex-cols {
   display: flex;
   flex-wrap: wrap;
