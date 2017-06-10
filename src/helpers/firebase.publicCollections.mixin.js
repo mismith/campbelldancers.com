@@ -36,9 +36,9 @@ export default {
           },
           ...$item,
         };
-        item.$classes = this.classes
+        item.$classes = this.classesRaw
           .filter(c => Object.keys(item['@classes']).includes(c[idKey]));
-        item.$locations = this.locations
+        item.$locations = this.locationsRaw
           .filter(l => Object.keys(item['@locations']).includes(l[idKey]));
         item.$capacity = item.$classes.reduce((capacity, c) => {
           const classCapacity = c.capacity || 0;

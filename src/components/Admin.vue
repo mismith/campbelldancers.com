@@ -8,32 +8,31 @@
       <aside v-if="user">Sorry, you need to be an admin.</aside>
     </div>
     <div v-if="user && userRaw.admin">
-      <schedule-picker :timeslots="timeslots" content-key="$name" :show-footer="false" @select="handleTimeslotSelect" />
-
-      <table>
-        <thead>
-          <tr>
-            <th v-for="key of asTableData(adminTimeslots)[0]">{{ key }}</th>
-          </tr>
-        </thead>
-        <thead>
-          <tr v-for="row of asTableData(adminTimeslots).slice(1)">
-            <td v-for="val of row">{{ val }}</td>
-          </tr>
-        </thead>
-      </table>
-      <table>
-        <thead>
-          <tr>
-            <th v-for="key of asTableData(adminDancers)[0]">{{ key }}</th>
-          </tr>
-        </thead>
-        <thead>
-          <tr v-for="row of asTableData(adminDancers).slice(1)">
-            <td v-for="val of row">{{ val }}</td>
-          </tr>
-        </thead>
-      </table>
+      <schedule-picker :timeslots="adminTimeslots" content-key="$name" :show-footer="false" @select="handleTimeslotSelect" />
+      <div class="details">
+        <div class="dancers">
+          <header>
+            <h4>Dancers</h4>
+          </header>
+          <article v-for="dancer of dancers" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
+            <div :title="dancer.name">{{ dancer.name }}</div>
+            <div :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM d, YYYY') }}</div>
+            <div :title="dancer.ability">{{ dancer.ability }}</div>
+            <div :title="dancer.medical">{{ dancer.medical }}</div>
+          </article>
+        </div>
+        <div class="contacts">
+          <header>
+            <h4>Emergency Contacts</h4>
+          </header>
+          <article v-for="contact of contacts" class="timeslot contact" :class="contact.props">
+            <div :title="contact.name">{{ contact.name }}</div>
+            <a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a>
+            <a :href="`tel:${contact.phone}`">{{ contact.phone }}</a>
+            <a :href="`tel:${contact.phone2}`">{{ contact.phone2 }}</a>
+          </article>
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -56,6 +55,12 @@ export default {
     AuthedMixin,
     PublicCollectionsMixin,
   ],
+  data() {
+    return {
+      idKey,
+      selected: {},
+    };
+  },
   firebase: {
     enrollmentsRaw: dba.child('enrollments'),
     dancersRaw: dba.child('dancers'),
@@ -68,35 +73,10 @@ export default {
         const item = {
           ...$item,
         };
-        item.dancers = this.dancers
-          .filter(d => Object.keys(item['@dancers']).includes(d[idKey]))
-          .map(d => d.name);
-        item.classes = item.$classes.map(c => c.name);
-        item.locations = item.$locations.map(l => l.nickname);
-
-        delete item.$capacity;
-        delete item.$name;
-        delete item['@dancers'];
-        delete item['@classes'];
-        delete item.$classes;
-        delete item['@locations'];
-        delete item.$locations;
-        delete item.props;
-        return item;
-      }).sort((a, b) => (a.startDay < b.startDay ? -1 : 1));
-    },
-    adminDancers() {
-      return this.dancers.map(($item) => {
-        const item = {
-          ...$item,
-          birthday: moment($item.birthday).format('MMMM d, YYYY'),
-        };
-        item.timeslots = this.timeslots
-            .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]))
-            .map(t => `${moment().day(t.startDay).format('dddd')} @ ${t.startTime}`);
-
-        delete item['@timeslots'];
-        delete item['@users'];
+        item.$dancers = this.dancersRaw
+          .filter(d => Object.keys(item['@dancers']).includes(d[idKey]));
+        item.props.active = this.selected.type === 'timeslot' && this.selected.id === item[idKey];
+        item.props.active = item.props.active || (this.selected.type === 'dancer' && item['@dancers'][this.selected.id]);
         return item;
       });
     },
@@ -105,17 +85,30 @@ export default {
         const item = {
           '@timeslots': {},
           '@users': {},
+          props: {
+            active: false,
+            disabled: false,
+          },
           ...$item,
         };
+        item.$timeslots = this.timeslotsRaw
+          .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
+        item.props.active = this.selected.type === 'dancer' && this.selected.id === item[idKey];
+        item.props.active = item.props.active || (this.selected.type === 'timeslot' && item['@timeslots'][this.selected.id]);
         return item;
-      });
+      }).sort((a, b) => (a.name === b.name ? 0 : (a.name < b.name ? -1 : 1))); // eslint-disable-line
     },
     contacts() {
       return this.contactsRaw.map(($item) => {
         const item = {
           '@users': {},
+          props: {
+            active: false,
+            disabled: false,
+          },
           ...$item,
         };
+        item.props.disabled = !(this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
         return item;
       });
     },
@@ -129,22 +122,18 @@ export default {
     },
   },
   methods: {
-    getCollectionKeys(arrayOfObjects) {
-      const keys = [].concat.apply([], arrayOfObjects // eslint-disable-line prefer-spread
-        .map(item => Object.keys(item)))
-        .filter((v, i, a) => a.indexOf(v) === i)
-        .sort();
-
-      return keys;
-    },
-    asTableData(arrayOfObjects) {
-      const keys = this.getCollectionKeys(arrayOfObjects);
-
-      return [keys].concat(arrayOfObjects.map(item => [].concat(keys).map(key => item[key])));
-    },
-
+    moment,
     handleTimeslotSelect(e, timeslot) {
-      console.log(timeslot);
+      this.selected = {
+        type: 'timeslot',
+        id: timeslot[idKey],
+      };
+    },
+    handleDancerSelect(e, dancer) {
+      this.selected = {
+        type: 'dancer',
+        id: dancer[idKey],
+      };
     },
   },
   components: {
@@ -157,9 +146,54 @@ export default {
 @import '../variables.css';
 
 #admin {
+  height: 100%;
+
   & > div {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
     width: 100%;
     max-width: none;
+
+    & > * {
+      flex-basis: 50%;
+      flex-grow: 1;
+    }
   }
+}
+.details {
+  display: flex;
+  justify-content: space-between;
+
+  & > * {
+    display: flex;
+    flex-direction: column;
+    flex-basis: calc(50% - 20px);
+
+    & header {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+    & .timeslot {
+      padding: 5px;
+      margin: 1px;
+    }
+  }
+}
+.dancer,
+.contact {
+  display: flex;
+  width: 100%;
+
+  & > * {
+    flex-basis: 25%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+.contact {
+  cursor: auto;
 }
 </style>
