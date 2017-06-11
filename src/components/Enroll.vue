@@ -1,5 +1,5 @@
 <template>
-  <form class="enroll align-center" @submit.prevent="handleSubmit">
+  <form id="enroll" class="align-center" @submit.prevent="handleSubmit">
     <header>
       <ol class="breadcrumbs">
         <li v-for="(step, i) in steps" v-if="step.name" @click.prevent="i < enrollment.stepIndex && setStepIndex(i)" :class="{breadcrumb: true, active: i === enrollment.stepIndex, disabled: i > enrollment.stepIndex}">
@@ -480,10 +480,10 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
 @import '../variables.css';
 
-.enroll {
+#enroll {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -501,135 +501,135 @@ export default {
     align-items: center;
     max-width: 100%;
   }
-}
 
-.breadcrumbs {
-  @apply --heading;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  font-size: 12px;
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
-  counter-reset: breadcrumbs;
-
-  & .breadcrumb {
-    display: inline-flex;
+  & .breadcrumbs {
+    @apply --heading;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    background: none;
-    padding: 10px 30px;
-    border: 0;
-    margin: 0;
-    cursor: pointer;
-    text-decoration: none;
-    counter-increment: breadcrumbs;
+    font-size: 12px;
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    counter-reset: breadcrumbs;
 
-    &:before {
-      content: counter(breadcrumbs);
+    & .breadcrumb {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      letter-spacing: 0;
-      border: double 3px var(--accent);
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    &.active {
-      color: var(--accent);
+      background: none;
+      padding: 10px 30px;
+      border: 0;
+      margin: 0;
+      cursor: pointer;
+      text-decoration: none;
+      counter-increment: breadcrumbs;
 
       &:before {
-        background-color: var(--accent);
-        color: var(--lightest);
-        border-color: var(--lightest);
+        content: counter(breadcrumbs);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        letter-spacing: 0;
+        border: double 3px var(--accent);
+        border-radius: 50%;
+        margin-right: 10px;
       }
-    }
-    &.disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-    @media (--medium-max) {
-      & span {
-        display: none;
+      &.active {
+        color: var(--accent);
+
+        &:before {
+          background-color: var(--accent);
+          color: var(--lightest);
+          border-color: var(--lightest);
+        }
+      }
+      &.disabled {
+        opacity: .5;
+        cursor: not-allowed;
+      }
+      @media (--medium-max) {
+        & span {
+          display: none;
+        }
       }
     }
   }
-}
 
-article.card {
-  /* for close button */
-  display: inline-flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  flex-shrink: 1;
-  text-align: left;
-}
-aside.card {
-  min-width: 200px;
-}
+  & article.card {
+    /* for close button */
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex-shrink: 1;
+    text-align: left;
+  }
+  & aside.card {
+    min-width: 200px;
+  }
 
-.schedule-picker-container {
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0,0,0,.75);
-  z-index: 1002;
-
-  & .schedule-picker {
+  & .schedule-picker-container {
     display: flex;
-    height: 100%;
-    background-color: var(--lightest);
-    padding: 20px;
-  }
-  @media (--small-min) {
-    padding: 30px;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.75);
+    z-index: 1002;
 
-    &:after {
-      content: '×';
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      color: rgba(255,255,255,1);
-      font-size: 40px;
-      line-height: 20px;
-      vertical-align: top;
-      cursor: pointer;
-      opacity: .75;
+    & .schedule-picker {
+      display: flex;
+      height: 100%;
+      background-color: var(--lightest);
+      padding: 20px;
+    }
+    @media (--small-min) {
+      padding: 30px;
+
+      &:after {
+        content: '×';
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: rgba(255,255,255,1);
+        font-size: 40px;
+        line-height: 20px;
+        vertical-align: top;
+        cursor: pointer;
+        opacity: .75;
+      }
     }
   }
-}
 
-@keyframes hover {
-  0% {
-    transform: translateY(0);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(-130%);
-    opacity: 1;
-  }
-}
-.thanks {
-  display: flex;
-  flex-direction: column;
+  & .thanks {
+    display: flex;
+    flex-direction: column;
 
-  & img {
-    width: 100%;
-    max-width: 400px;
-  }
-  & aside {
-    max-width: 440px;
-    margin-left: -20px;
-    margin-right: -20px;
-    opacity: 1;
-    transform: translateY(-130%);
-    animation: hover 1s;
+    & img {
+      width: 100%;
+      max-width: 400px;
+    }
+    & aside {
+      @keyframes rise {
+        0% {
+          transform: translateY(0);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(-130%);
+          opacity: 1;
+        }
+      }
+      max-width: 440px;
+      margin-left: -20px;
+      margin-right: -20px;
+      opacity: 1;
+      transform: translateY(-130%);
+      animation: rise 1s;
+    }
   }
 }
 </style>

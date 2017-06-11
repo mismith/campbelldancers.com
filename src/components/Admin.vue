@@ -19,9 +19,9 @@
           <div>
             <article v-for="dancer of dancers" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
               <div :title="dancer.name"><strong>{{ dancer.name }}</strong></div>
-              <div v-show="dancer.birthday" :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM D, YYYY') }}</div>
-              <div :title="dancer.ability">{{ dancer.ability }}</div>
-              <div :title="dancer.medical">{{ dancer.medical }}</div>
+              <small v-show="dancer.birthday" :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM D, YYYY') }}</small>
+              <small :title="dancer.ability">{{ dancer.ability }}</small>
+              <small :title="dancer.medical">{{ dancer.medical }}</small>
             </article>
           </div>
         </div>
@@ -34,9 +34,9 @@
           <div>
             <article v-for="contact of contacts" @click="handleContactSelect($event, contact)" class="timeslot contact" :class="contact.props">
               <div :title="contact.name"><strong>{{ contact.name }}</strong></div>
-              <a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a>
-              <a :href="`tel:${contact.phone}`">{{ contact.phone }}</a>
-              <a :href="`tel:${contact.phone2}`">{{ contact.phone2 }}</a>
+              <small><a :href="`tel:${contact.phone}`">{{ contact.phone }}</a></small>
+              <small><a :href="`tel:${contact.phone2}`">{{ contact.phone2 }}</a></small>
+              <small><a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a></small>
             </article>
           </div>
         </div>
@@ -168,7 +168,7 @@ export default {
 };
 </script>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
 @import '../variables.css';
 
 #admin {
@@ -185,61 +185,74 @@ export default {
     width: 100%;
     max-width: none;
   }
-}
-.timeslot {
-  &.disabled {
-    cursor: auto;
-  }
-}
-.schedule-picker,
-.details {
-  flex-basis: 50%;
-}
-.schedule-picker {
-  flex-grow: 1;
-  height: 100%;
-  max-height: 400px;
-}
-.details {
-  display: flex;
-  justify-content: space-between;
 
-  & > * {
-    display: flex;
-    flex-direction: column;
-    width: calc(50% - 10px);
-    flex-shrink: 1;
-
-    & > header {
-      display: flex;
-      padding: 5px;
-
-      & > *:first-child {
-        margin-right: auto;
-      }
+  & .timeslot {
+    &.disabled {
+      cursor: auto;
     }
-    & > div {
+  }
+  & .schedule-picker,
+  & .details {
+    flex-basis: 50%;
+  }
+  & .schedule-picker {
+    flex-grow: 1;
+    height: 100%;
+    max-height: 400px;
+  }
+  & .details {
+    display: flex;
+    justify-content: space-between;
+
+    & > * {
       display: flex;
       flex-direction: column;
+      width: calc(50% - 1px);
       flex-shrink: 1;
-      overflow: auto;
+
+      @media (--medium-min) {
+        width: calc(50% - 10px);
+      }
+      & > header {
+        display: flex;
+        padding: 5px;
+
+        & > * {
+          flex-shrink: 1;
+
+          &:first-child {
+            @apply --ellipsis;
+            margin-right: auto;
+          }
+        }
+      }
+      & > div {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 1;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    }
+    & .timeslot {
+      margin: 1px 0;
     }
   }
-  & .timeslot {
-    padding: 5px;
-    margin: 1px 0;
-  }
-}
-.dancer,
-.contact {
-  display: flex;
-  width: 100%;
+  & .dancer,
+  & .contact {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
 
-  & > * {
-    flex-basis: 25%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    & > * {
+      @apply --ellipsis;
+      padding: 3px 5px;
+
+      @media (--medium-min) {
+        flex-basis: 50%;
+      }
+    }
   }
 }
 </style>

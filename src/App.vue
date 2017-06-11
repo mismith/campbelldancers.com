@@ -123,6 +123,9 @@ export default {
 .heading {
   @apply --heading;
 }
+.ellipsis {
+  @apply --ellipsis;
+}
 .call-to-action {
   margin-top: 40px;
 }
