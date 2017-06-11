@@ -17,7 +17,7 @@
             <h6>{{ dancers.length }}</h6>
           </header>
           <div>
-            <article v-for="dancer of dancers" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
+            <article v-for="dancer of dancers" :id="`dancer-${dancer[idKey]}`" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
               <div :title="dancer.name"><strong>{{ dancer.name }}</strong></div>
               <small v-show="dancer.birthday" :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM D, YYYY') }}</small>
               <small :title="dancer.ability">{{ dancer.ability }}</small>
@@ -32,10 +32,10 @@
             <h6>{{ contacts.length }}</h6>
           </header>
           <div>
-            <article v-for="contact of contacts" @click="handleContactSelect($event, contact)" class="timeslot contact" :class="contact.props">
+            <article v-for="contact of contacts" :id="`contact-${contact[idKey]}`" @click="handleContactSelect($event, contact)" class="timeslot contact" :class="contact.props">
               <div :title="contact.name"><strong>{{ contact.name }}</strong></div>
-              <small><a :href="`tel:${contact.phone}`">{{ contact.phone }}</a></small>
-              <small><a :href="`tel:${contact.phone2}`">{{ contact.phone2 }}</a></small>
+              <small><a :href="`tel:${contact.phone}`">{{ formatPhone(contact.phone) }}</a></small>
+              <small><a :href="`tel:${contact.phone2}`">{{ formatPhone(contact.phone2) }}</a></small>
               <small><a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a></small>
             </article>
           </div>
@@ -106,6 +106,8 @@ export default {
         item.props.active = item.props.active ||
           (this.selected.type === 'timeslot' && item['@timeslots'][this.selected.id]) ||
           (this.selected.type === 'contact' && (Object.keys((this.contacts.find(c => c[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
+
+        item.props.disabled = !item.$timeslots.length;
         return item;
       }).reverse();
     },
@@ -160,6 +162,10 @@ export default {
         type: 'contact',
         id: contact[idKey],
       });
+    },
+
+    formatPhone(phone) {
+      return (phone || '').replace(/[^0-9]/g, '').replace(/^(\d{3})(\d{3})(\d+$)/, '$1-$2-$3');
     },
   },
   components: {
