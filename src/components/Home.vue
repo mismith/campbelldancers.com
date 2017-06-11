@@ -266,7 +266,7 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 @import '../variables.css';
 
 #schedule {
@@ -278,13 +278,6 @@ export default {
     margin-top: 40px;
     margin-bottom: 20px;
 
-    & .timeslot {
-      cursor: auto;
-
-      &:hover {
-        background-color: rgba(var(--accent-rgb), .15);
-      }
-    }
     @media (--medium-min) {
       height: var(--small);
     }

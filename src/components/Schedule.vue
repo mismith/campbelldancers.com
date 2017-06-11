@@ -115,7 +115,7 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 .schedule {
   display: flex;
   width: 100%;

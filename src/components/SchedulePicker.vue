@@ -70,7 +70,7 @@ export default {
 };
 </script>
 
-<style lang="postcss">
+<style lang="postcss" scoped>
 @import '../variables.css';
 
 .schedule-picker {
@@ -125,34 +125,6 @@ export default {
         margin: 5px;
       }
     }
-  }
-}
-.timeslot {
-  background: rgba(var(--accent-rgb), .15);
-  padding: 0 3px;
-  border: 1px solid var(--accent) !important;
-  border-radius: 3px;
-  cursor: pointer;
-
-  & small {
-    font-size: 12px;
-  }
-  & div {
-    & small {
-      opacity: .5;
-    }
-  }
-  &:not(.disabled, .active) {
-    &:hover {
-      background-color: rgba(var(--accent-rgb), .333);
-    }
-  }
-  &.disabled {
-    opacity: .5;
-    cursor: not-allowed;
-  }
-  &.active {
-    background: rgba(var(--accent-rgb), .666);
   }
 }
 </style>

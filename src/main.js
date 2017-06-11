@@ -7,6 +7,7 @@ import router from './router';
 require('array-includes').shim();
 require('array.prototype.find').shim();
 
+// config
 Vue.config.productionTip = false;
 Vue.use(VueFire);
 

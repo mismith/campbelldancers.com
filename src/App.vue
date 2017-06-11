@@ -196,6 +196,7 @@ figure {
 }
 img {
   max-width: 100%;
+  height: auto;
 }
 
 label.selectable,
@@ -361,6 +362,34 @@ form {
   }
   & .table td:first-child {
     padding-top: 10px; /* @HACK */
+  }
+}
+.timeslot {
+  background: rgba(var(--accent-rgb), .15);
+  padding: 0 3px;
+  border: 1px solid var(--accent) !important;
+  border-radius: 3px;
+  cursor: pointer;
+
+  & small {
+    font-size: 12px;
+  }
+  & div {
+    & small {
+      opacity: .5;
+    }
+  }
+  &:not(.disabled, .active) {
+    &:hover {
+      background-color: rgba(var(--accent-rgb), .333);
+    }
+  }
+  &.disabled {
+    opacity: .5;
+    cursor: not-allowed;
+  }
+  &.active {
+    background: rgba(var(--accent-rgb), .666);
   }
 }
 
