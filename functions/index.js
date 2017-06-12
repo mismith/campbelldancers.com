@@ -66,20 +66,23 @@ if (DEBUG) return; // @DEBUG
   'Enrollments',
 ].forEach((collection) => {
   exports[`syncAdmin${collection}`] = functions.database.ref(`/${ENV}/data/users/{userId}/${collection.toLowerCase()}/{itemId}`).onWrite(debounce(10000, (e) => {
-    let data = e.data.val();
-    if (data) {
-      const userIds = {};
-      userIds[e.params.userId] = e.params.userId;
+    return db.child(`users/${e.params.userId}/${collection.toLowerCase()}/${e.params.itemId}`).once('value')
+      .then((snap) => {
+        let data = snap.val();
+        if (data) {
+          const userIds = {};
+          userIds[e.params.userId] = e.params.userId;
 
-      data = Object.assign({
-        '@users': userIds,
-      }, data);
-    }
-    return dba.child(`${collection.toLowerCase()}/${e.params.itemId}`).set(data);
+          data = Object.assign({
+            '@users': userIds,
+          }, data);
+        }
+        return dba.child(`${collection.toLowerCase()}/${e.params.itemId}`).set(data);
+      });
   }));
 });
 
-exports.sendEnrollmentSuccessEmail = functions.database.ref(`/${ENV}/data/users/{userId}/enrollments/{enrollmentId}/_submitted`).onWrite(debounce(10000, (e) => {
+exports.sendEnrollmentSuccessEmail = functions.database.ref(`/${ENV}/data/users/{userId}/enrollments/{enrollmentId}/_submitted`).onWrite((e) => {
   if (!e.data.val()) return;
   // get parent/enrollment
   return e.data.ref.parent.once('value')
@@ -148,4 +151,4 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(`/${ENV}/data/users/
       return sendEmail(config);
     })
     .catch((err) => console.error(err));
-}));
+});
