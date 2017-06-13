@@ -83,9 +83,11 @@ export default {
         };
         item.$dancers = this.dancersRaw
           .filter(d => Object.keys(item['@dancers']).includes(d[idKey]));
+
         item.props.active = this.selected.type === 'timeslot' && this.selected.id === item[idKey];
         item.props.active = item.props.active || (this.selected.type === 'dancer' && item['@dancers'][this.selected.id]);
         item.props.disabled = !item.$dancers.length;
+
         return item;
       });
     },
@@ -102,12 +104,14 @@ export default {
         };
         item.$timeslots = this.timeslotsRaw
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
+        item.$hasContacts = this.getUserRelations(item, 'contacts').length;
+
         item.props.active = this.selected.type === 'dancer' && this.selected.id === item[idKey];
         item.props.active = item.props.active ||
           (this.selected.type === 'timeslot' && item['@timeslots'][this.selected.id]) ||
           (this.selected.type === 'contact' && (Object.keys((this.contacts.find(c => c[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
+        item.props.disabled = !item.$timeslots.length || !item.$hasContacts;
 
-        item.props.disabled = !item.$timeslots.length;
         return item;
       }).reverse();
     },
@@ -121,8 +125,11 @@ export default {
           },
           ...$item,
         };
+        item.$hasDancers = this.getUserRelations(item, 'dancers').length;
+
         item.props.active = this.selected.type === 'contact' && this.selected.id === item[idKey];
         item.props.active = item.props.active || (this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
+        item.props.disabled = !item.$hasDancers;
         return item;
       }).reverse();
     },
@@ -138,34 +145,38 @@ export default {
   methods: {
     moment,
 
-    toggleSelected(item) {
-      if (this.selected && this.selected.type === item.type && this.selected.id === item.id) {
+    toggleSelected(type, item) {
+      if (this.selected && this.selected.type === type && this.selected.id === item[idKey]) {
         this.selected = {};
       } else {
-        this.selected = item;
+        this.selected = {
+          type,
+          id: item[idKey],
+        };
       }
     },
     handleTimeslotSelect(e, timeslot) {
-      this.toggleSelected({
-        type: 'timeslot',
-        id: timeslot[idKey],
-      });
+      this.toggleSelected('timeslot', timeslot);
     },
     handleDancerSelect(e, dancer) {
-      this.toggleSelected({
-        type: 'dancer',
-        id: dancer[idKey],
-      });
+      this.toggleSelected('dancer', dancer);
     },
     handleContactSelect(e, contact) {
-      this.toggleSelected({
-        type: 'contact',
-        id: contact[idKey],
-      });
+      this.toggleSelected('contact', contact);
     },
 
     formatPhone(phone) {
       return (phone || '').replace(/[^0-9]/g, '').replace(/^(\d{3})(\d{3})(\d+$)/, '$1-$2-$3');
+    },
+    getUserRelations(item, type) {
+      let relations = [];
+      Object.keys(item['@users'] || {}).forEach((userId) => {
+        relations = [
+          ...relations,
+          ...this[`${type}Raw`].filter(typeItem => Object.keys(typeItem['@users'] || {}).includes(userId)),
+        ];
+      });
+      return relations;
     },
   },
   components: {
