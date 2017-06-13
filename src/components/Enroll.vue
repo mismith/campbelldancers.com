@@ -212,7 +212,7 @@
 
 <script>
 /* eslint-disable no-underscore-dangle */
-import moment from 'moment';
+import moment from 'moment-mini';
 import Datepicker from './Datepicker';
 import {
   idKey,
@@ -323,8 +323,6 @@ export default {
     },
   },
   methods: {
-    console, // @DEBUG
-    moment,
     sync(path, value) {
       return sync(path.replace(/^~/i, db.child(`users/${this.user.uid}`).path), value);
     },

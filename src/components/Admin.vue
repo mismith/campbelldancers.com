@@ -46,7 +46,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 import {
   // firebase,
   idKey,
@@ -143,8 +142,6 @@ export default {
     },
   },
   methods: {
-    moment,
-
     toggleSelected(type, item) {
       if (this.selected && this.selected.type === type && this.selected.id === item[idKey]) {
         this.selected = {};

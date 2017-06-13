@@ -17,7 +17,7 @@
     "firebase": "^4.0.0",
     "firebaseui": "^2.0.0",
     "instafeed.js": "^1.4.1",
-    "moment": "^2.18.1",
+    "moment-mini": "^2.18.1",
     "postcss": "^6.0.1",
     "postcss-cssnext": "^2.11.0",
     "postcss-import": "^10.0.0",
