@@ -388,7 +388,8 @@ form {
     }
   }
   &.disabled {
-    opacity: .5;
+    // background-image: repeating-linear-gradient(-45deg, rgba(0,0,0,0), rgba(0,0,0,0) 10px, rgba(0,0,0,.05) 10px, rgba(0,0,0,.05) 20px);
+    opacity: .4;
     cursor: not-allowed;
   }
   &.active {
