@@ -112,7 +112,7 @@ export default {
         item.props.disabled = !item.$timeslots.length || !item.$hasContacts;
 
         return item;
-      }).reverse();
+      }).reverse().filter(item => item.name);
     },
     contacts() {
       return this.contactsRaw.map(($item) => {
@@ -130,7 +130,7 @@ export default {
         item.props.active = item.props.active || (this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
         item.props.disabled = !item.$hasDancers;
         return item;
-      }).reverse();
+      }).reverse().filter(item => item.name);
     },
     users() {
       return this.usersRaw.map(($item) => {
