@@ -8,8 +8,8 @@ export const config = {
   authDomain: 'campbell-dancers.firebaseapp.com',
   databaseURL: 'https://campbell-dancers.firebaseio.com',
   projectId: 'campbell-dancers',
-  //storageBucket: 'campbell-dancers.appspot.com',
-  //messagingSenderId: '396059565913',
+  // storageBucket: 'campbell-dancers.appspot.com',
+  // messagingSenderId: '396059565913',
 };
 export const idKey = '.key';
 export { firebase, firebaseui };
@@ -19,21 +19,6 @@ export const firebaseuiApp = new firebaseui.auth.AuthUI(firebase.auth());
 export const ENV = 'production';
 export const db = firebaseApp.database().ref(`${ENV}/data`);
 export const dba = firebaseApp.database().ref(`${ENV}/admin`);
-
-// export function cleanItem(item) {
-//   const cleanedItem = { ...item };
-
-//   delete cleanedItem[idKey];
-
-//   return cleanedItem;
-// }
-// export function prepareItem(item, id) {
-//   const preparedItem = { ...item };
-
-//   preparedItem[idKey] = id;
-
-//   return preparedItem;
-// }
 
 export function relate(a, b) {
   const A = {

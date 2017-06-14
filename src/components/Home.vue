@@ -254,7 +254,7 @@ export default {
         template: '<figure><a href="{{link}}"><img src="{{image}}" width="{{width}}" height="{{height}}" /></a><figcaption>{{caption}}</figcaption></figure>',
       }).run();
     } catch (err) {
-      console.error(err);
+      console.error(err); // eslint-disable-line no-console
     }
   },
   beforeDestroy() {
