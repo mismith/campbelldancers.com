@@ -2,7 +2,7 @@
   <form id="enroll" class="align-center" @submit.prevent="handleSubmit">
     <header>
       <ol class="breadcrumbs">
-        <li v-for="(step, i) in steps" v-if="step.name" @click.prevent="i < enrollment.stepIndex && setStepIndex(i)" :class="{breadcrumb: true, active: i === enrollment.stepIndex, disabled: i > enrollment.stepIndex}">
+        <li v-for="(step, i) in steps" :key="i" v-if="step.name" @click.prevent="i < enrollment.stepIndex && setStepIndex(i)" :class="{breadcrumb: true, active: i === enrollment.stepIndex, disabled: i > enrollment.stepIndex}">
           <span>{{ step.name }}</span>
         </li>
       </ol>
@@ -69,7 +69,7 @@
         <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(dancer, dancerIndex) of dancers" class="card bg-tartan">
+        <article v-for="(dancer, dancerIndex) of dancers" :key="dancerIndex" class="card bg-tartan">
           <table>
             <tbody>
               <tr>
@@ -146,7 +146,7 @@
         <p><small>We suggest you add at least 2 people—always better to be prepared!</small></p>
       </header>
       <div class="flex-rows">
-        <article v-for="(contact, contactIndex) of contacts" class="card bg-tartan">
+        <article v-for="(contact, contactIndex) of contacts" :key="contactIndex" class="card bg-tartan">
           <table>
             <tbody>
               <tr>

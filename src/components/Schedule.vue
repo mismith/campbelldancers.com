@@ -2,17 +2,19 @@
   <div class="schedule">
     <div class="times">
       <header>&nbsp;</header>
-      <header v-for="time in times" :class="`time time-${time.format('HHmm')}`">
+      <header v-for="time in times" :key="time.format('HHmm')" :class="`time time-${time.format('HHmm')}`">
         {{ time.format(timeLabelFormat) }}
       </header>
     </div>
-    <div v-for="day in days" :class="`day day-${day.format('d')}`">
+    <div v-for="day in days" :key="day" :class="`day day-${day.format('d')}`">
       <header>
         {{ day.format(dayLabelFormat) }}
       </header>
-      <div v-for="time in times" :class="`time time-${time.format('HHmm')}`">
+      <div v-for="time in times" :key="time.format('HHmm')" :class="`time time-${time.format('HHmm')}`">
         <article
           v-for="timeslot in filterTimeslots(day, time)"
+          :key="timeslot['.key']"
+          :id="`timeslot-${timeslot['.key']}`"
           @click="$emit('timeslot-click', $event, timeslot)"
           class="timeslot"
           :class="timeslot.props"

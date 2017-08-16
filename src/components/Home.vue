@@ -142,7 +142,7 @@
               <td>Locations</td>
               <td>
                 <ul>
-                  <li v-for="location in locations">
+                  <li v-for="location in locations" :key="location.name">
                     <em>{{ location.name }}</em><br />
                     <a :href="`https://www.google.ca/maps/place/${encodeURIComponent(location.address)}`" target="_blank">{{ location.address }}</a>
                   </li>
