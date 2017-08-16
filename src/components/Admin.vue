@@ -1,12 +1,5 @@
 <template>
   <section id="admin">
-    <div v-if="!user || !userRaw.admin" class="align-center">
-      <div v-if="!user">
-        <p>Please login to continue.</p>
-        <auth />
-      </div>
-      <aside v-if="user">Sorry, you need to be an admin.</aside>
-    </div>
     <div v-if="user && userRaw.admin">
       <schedule-picker :timeslots="adminTimeslots" content-key="$name" :show-footer="false" @select="handleTimeslotSelect" />
       <div class="details">
@@ -41,6 +34,13 @@
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="align-center">
+      <div v-if="!user">
+        <p>Please login to continue.</p>
+        <auth />
+      </div>
+      <aside v-else>Sorry, you need to be an admin.</aside>
     </div>
   </section>
 </template>
