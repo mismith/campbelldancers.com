@@ -129,6 +129,8 @@ export default {
         };
         item.$timeslots = this.timeslotsRaw
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
+        item.$users = this.usersRaw
+          .filter(u => Object.keys(item['@users']).includes(u[idKey]));
         item.$hasContacts = this.getUserRelations(item, 'contacts').length;
 
         item.props.active = this.selected.type === 'dancer' && this.selected.id === item[idKey];
@@ -150,6 +152,8 @@ export default {
           },
           ...$item,
         };
+        item.$users = this.usersRaw
+          .filter(u => Object.keys(item['@users']).includes(u[idKey]));
         item.$hasDancers = this.getUserRelations(item, 'dancers').length;
 
         item.props.active = this.selected.type === 'contact' && this.selected.id === item[idKey];

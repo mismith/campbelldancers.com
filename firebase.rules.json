@@ -2,8 +2,8 @@
   "rules": {
     "$environment": {
       "admin": {
-        ".read": "auth != null && root.child($environment).child('data').child('users').child(auth.uid).child('admin').val() == true",
-        ".write": "false"
+        ".read": "auth != null && root.child($environment).child('data').child('users').child(auth.uid).child('admin').val() === true",
+        ".write": false
       },
       "data": {
         "classes": {
@@ -26,6 +26,7 @@
           }
         },
         "users": {
+          ".read": "root.child($environment).child('data').child('users').child(auth.uid).child('admin').val() === true", // is ADMIN
           "$userId": {
             ".read": "auth != null && auth.uid === $userId", // is SELF
             ".write": "auth != null && auth.uid === $userId" // is SELF
