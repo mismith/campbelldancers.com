@@ -10,6 +10,7 @@
         time-interval="00:30"
         :timeslots="timeslots"
         @timeslot-click="handleTimeslotClick"
+        @timeslot-dblclick="handleTimeslotDblClick"
       />
       <schedule
         :content-key="contentKey"
@@ -19,6 +20,7 @@
         time-interval="00:30"
         :timeslots="timeslots"
         @timeslot-click="handleTimeslotClick"
+        @timeslot-dblclick="handleTimeslotDblClick"
       />
     </div>
     <footer v-if="showFooter">
@@ -62,6 +64,9 @@ export default {
   methods: {
     handleTimeslotClick(e, timeslot) {
       this.$emit('timeslot-click', e, timeslot);
+    },
+    handleTimeslotDblClick(e, timeslot) {
+      this.$emit('timeslot-dblclick', e, timeslot);
     },
   },
   components: {

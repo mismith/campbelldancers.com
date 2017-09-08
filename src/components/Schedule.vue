@@ -16,6 +16,7 @@
           :key="timeslot['.key']"
           :id="`timeslot-${timeslot['.key']}`"
           @click="$emit('timeslot-click', $event, timeslot)"
+          @dblclick="$emit('timeslot-dblclick', $event, timeslot)"
           class="timeslot"
           :class="timeslot.props"
           :style="{top: calculateDimension(moment(timeslot.startTime, 'HH:mm').valueOf(), time), height: calculateDimension(moment(timeslot.endTime, 'HH:mm').valueOf() - moment(timeslot.startTime, 'HH:mm').valueOf() + time.valueOf(), time)}"

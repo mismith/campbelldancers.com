@@ -6,6 +6,7 @@
         content-key="$name"
         :show-footer="false"
         @timeslot-click="handleTimeslotSelect"
+        @timeslot-dblclick="handleTimeslotEdit"
       />
       <div class="details">
         <div class="dancers">
@@ -20,6 +21,7 @@
               :key="dancer[idKey]"
               :id="`dancer-${dancer[idKey]}`"
               @click="handleDancerSelect($event, dancer)"
+              @dblclick="handleDancerEdit($event, dancer)"
               class="dancer timeslot"
               :class="dancer.props"
             >
@@ -42,6 +44,7 @@
               :key="contact[idKey]"
               :id="`contact-${contact[idKey]}`"
               @click="handleContactSelect($event, contact)"
+              @dblclick="handleContactEdit($event, contact)"
               class="timeslot contact"
               :class="contact.props"
             >
@@ -53,6 +56,9 @@
           </div>
         </div>
       </div>
+      <modal name="editing" height="80%">
+        <pre v-if="editing.type">{{ editingObject }}</pre>
+      </modal>
     </div>
     <div v-else class="align-center">
       <div v-if="!user">
@@ -85,6 +91,7 @@ export default {
     return {
       idKey,
       selected: {},
+      editing: {},
     };
   },
   firebase: {
@@ -159,6 +166,22 @@ export default {
         return item;
       });
     },
+
+    editingObject() {
+      if (this.editing && this.editing.type) {
+        let collection;
+        switch (this.editing.type) {
+          case 'timeslot':
+            collection = this.adminTimeslots;
+            break;
+          default:
+            collection = this[`${this.editing.type}s`];
+            break;
+        }
+        return collection.find(item => item[idKey] === this.editing.id);
+      }
+      return null;
+    },
   },
   methods: {
     toggleSelected(type, item) {
@@ -179,6 +202,28 @@ export default {
     },
     handleContactSelect(e, contact) {
       this.toggleSelected('contact', contact);
+    },
+
+    toggleEditing(type, item) {
+      if (this.editing && this.editing.type === type && this.editing.id === item[idKey]) {
+        this.editing = {};
+        this.$modal.hide('editing');
+      } else {
+        this.editing = {
+          type,
+          id: item[idKey],
+        };
+        this.$modal.show('editing');
+      }
+    },
+    handleTimeslotEdit(e, timeslot) {
+      this.toggleEditing('timeslot', timeslot);
+    },
+    handleDancerEdit(e, dancer) {
+      this.toggleEditing('dancer', dancer);
+    },
+    handleContactEdit(e, contact) {
+      this.toggleEditing('contact', contact);
     },
 
     formatPhone(phone) {
@@ -285,6 +330,15 @@ export default {
       @media (--medium-min) {
         flex-basis: 50%;
       }
+    }
+  }
+}
+.v--modal-overlay {
+  & .v--modal-box {
+    overflow: auto;
+
+    & pre {
+      margin: 20px;
     }
   }
 }
