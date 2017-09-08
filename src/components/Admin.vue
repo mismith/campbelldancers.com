@@ -1,7 +1,12 @@
 <template>
   <section id="admin">
     <div v-if="user && userRaw.admin">
-      <schedule-picker :timeslots="adminTimeslots" content-key="$name" :show-footer="false" @select="handleTimeslotSelect" />
+      <schedule-picker
+        :timeslots="adminTimeslots"
+        content-key="$name"
+        :show-footer="false"
+        @timeslot-click="handleTimeslotSelect"
+      />
       <div class="details">
         <div class="dancers">
           <header>
@@ -10,7 +15,14 @@
             <h6>{{ dancers.length }}</h6>
           </header>
           <div>
-            <article v-for="dancer of dancers" :key="dancer[idKey]" :id="`dancer-${dancer[idKey]}`" @click="handleDancerSelect($event, dancer)" class="dancer timeslot" :class="dancer.props">
+            <article
+              v-for="dancer of dancers"
+              :key="dancer[idKey]"
+              :id="`dancer-${dancer[idKey]}`"
+              @click="handleDancerSelect($event, dancer)"
+              class="dancer timeslot"
+              :class="dancer.props"
+            >
               <div :title="dancer.name"><strong>{{ dancer.name }}</strong></div>
               <small v-show="dancer.birthday" :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM D, YYYY') }}</small>
               <small :title="dancer.ability">{{ dancer.ability }}</small>
@@ -25,7 +37,14 @@
             <h6>{{ contacts.length }}</h6>
           </header>
           <div>
-            <article v-for="contact of contacts" :key="contact[idKey]" :id="`contact-${contact[idKey]}`" @click="handleContactSelect($event, contact)" class="timeslot contact" :class="contact.props">
+            <article
+              v-for="contact of contacts"
+              :key="contact[idKey]"
+              :id="`contact-${contact[idKey]}`"
+              @click="handleContactSelect($event, contact)"
+              class="timeslot contact"
+              :class="contact.props"
+            >
               <div :title="contact.name"><strong>{{ contact.name }}</strong></div>
               <small><a :href="`tel:${contact.phone}`">{{ formatPhone(contact.phone) }}</a></small>
               <small><a :href="`tel:${contact.phone2}`">{{ formatPhone(contact.phone2) }}</a></small>

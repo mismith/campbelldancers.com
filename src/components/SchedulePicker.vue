@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     handleTimeslotClick(e, timeslot) {
-      this.$emit('select', e, timeslot);
+      this.$emit('timeslot-click', e, timeslot);
     },
   },
   components: {
