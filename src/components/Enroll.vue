@@ -136,7 +136,7 @@
         </a>
       </footer>
       <aside v-if="schedulePickerDancerIndex !== null" @click.self="schedulePickerDancerIndex = null" class="schedule-picker-container align-left">
-        <schedule-picker content-key="$name" :timeslots="schedulePickerDancerTimeslots" @select="toggleTimeslot" @done="schedulePickerDancerIndex = null" />
+        <schedule-picker content-key="$name" :timeslots="schedulePickerDancerTimeslots" @timeslot-click="toggleTimeslot" @done="schedulePickerDancerIndex = null" />
       </aside>
     </div>
 
