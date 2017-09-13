@@ -339,7 +339,7 @@ export default {
 }
 .v--modal-overlay {
   & .v--modal-box {
-    overflow: auto;
+    overflow: auto !important;
 
     & pre {
       margin: 20px;
