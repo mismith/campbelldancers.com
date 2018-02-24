@@ -19,6 +19,7 @@
             <article
               v-for="dancer of dancers"
               :key="dancer[idKey]"
+              v-show="!selected.id || selected.type === 'dancer' || dancer.props.active"
               :id="`dancer-${dancer[idKey]}`"
               @click="handleDancerSelect($event, dancer)"
               @dblclick="handleDancerEdit($event, dancer)"
@@ -42,6 +43,7 @@
             <article
               v-for="contact of contacts"
               :key="contact[idKey]"
+              v-show="!selected.id || selected.type === 'contact' || contact.props.active"
               :id="`contact-${contact[idKey]}`"
               @click="handleContactSelect($event, contact)"
               @dblclick="handleContactEdit($event, contact)"
@@ -90,7 +92,10 @@ export default {
   data() {
     return {
       idKey,
-      selected: {},
+      selected: {
+        type: undefined,
+        id: undefined,
+      },
       editing: {},
     };
   },
@@ -190,7 +195,10 @@ export default {
   methods: {
     toggleSelected(type, item) {
       if (this.selected && this.selected.type === type && this.selected.id === item[idKey]) {
-        this.selected = {};
+        this.selected = {
+          type: null,
+          id: null,
+        };
       } else {
         this.selected = {
           type,
