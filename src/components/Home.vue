@@ -253,7 +253,7 @@ export default {
         userId: 'self',
         limit: 4,
         resolution: 'standard_resolution',
-        template: '<figure><a href="{{link}}"><img src="{{image}}" width="{{width}}" height="{{height}}" /></a><figcaption>{{caption}}</figcaption></figure>',
+        template: '<figure><a href="{{link}}" target="_blank"><img src="{{image}}" width="{{width}}" height="{{height}}" /></a><figcaption>{{caption}}</figcaption></figure>',
       }).run();
     } catch (err) {
       console.error(err); // eslint-disable-line no-console
