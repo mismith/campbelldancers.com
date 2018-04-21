@@ -29,7 +29,7 @@
 
     <footer id="footer" class="align-center">
       <header>
-        <div><router-link to="/">Campbell School of Highland Dance</router-link> &nbsp;&bull;&nbsp; 2016&ndash;2017</div>
+        <div><router-link to="/">Campbell School of Highland Dance</router-link> &nbsp;&bull;&nbsp; 2016&ndash;{{ year }}</div>
       </header>
     </footer>
   </div>
@@ -41,6 +41,7 @@ export default {
   data() {
     return {
       menuToggled: false,
+      year: (new Date()).getFullYear(),
     };
   },
 };
