@@ -203,6 +203,8 @@
       </header>
       <div id="instafeed" class="flex-cols"></div>
       <footer class="call-to-action align-center">
+        <a href="https://www.instagram.com/campbelldancers/" target="_blank" class="btn">More Photos</a><br />
+        <br />
         <router-link to="/enroll" class="btn">Enroll</router-link>
       </footer>
     </section>
