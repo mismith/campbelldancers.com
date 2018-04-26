@@ -55,7 +55,7 @@ export default {
         const item = {
           '@timeslots': {},
           props: {
-            active: false,
+            active: true,
             disabled: false,
           },
           ...$item,

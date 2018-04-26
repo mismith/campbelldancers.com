@@ -86,7 +86,7 @@
         <header class="align-center">
           <h3><a href="#schedule">Schedule</a></h3>
         </header>
-        <article v-for="season in seasons" :key="season[idKey]">
+        <article v-for="season in seasons.filter(s => s.props.active)" :key="season[idKey]">
           <header class="align-center">
             <h4>{{ season.name }}</h4>
           </header>
