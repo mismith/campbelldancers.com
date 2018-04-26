@@ -3,7 +3,7 @@
     <div>
       <schedule
         :content-key="contentKey"
-        start-time="16:00"
+        start-time="15:00"
         end-time="20:00"
         :start-day="1"
         :end-day="4"
@@ -14,7 +14,7 @@
       />
       <schedule
         :content-key="contentKey"
-        start-time="10:00"
+        start-time="9:00"
         end-time="14:00"
         :start-day="6"
         time-interval="00:30"

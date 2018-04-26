@@ -5,6 +5,7 @@ export default {
     locationsRaw: db.child('locations'),
     classesRaw: db.child('classes'),
     timeslotsRaw: db.child('timeslots'),
+    seasonsRaw: db.child('seasons'),
   },
   computed: {
     locations() {
@@ -27,8 +28,8 @@ export default {
     timeslots() {
       return this.timeslotsRaw.map(($item) => {
         const item = {
-          '@locations': {},
           '@classes': {},
+          '@locations': {},
           '@dancers': {},
           props: {
             active: false,
@@ -46,6 +47,21 @@ export default {
           return Math.max(0, capacity, classCapacity);
         }, 0);
         item.$name = `<div>${item.$classes.map(c => c.name).join(' / ')}</div><small>${item.$locations.map(l => l.nickname).join(' / ')}</small>`;
+        return item;
+      });
+    },
+    seasons() {
+      return this.seasonsRaw.map(($item) => {
+        const item = {
+          '@timeslots': {},
+          props: {
+            active: false,
+            disabled: false,
+          },
+          ...$item,
+        };
+        item.$timeslots = this.timeslots
+          .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
         return item;
       });
     },

@@ -85,9 +85,13 @@
       <div id="schedule">
         <header class="align-center">
           <h3><a href="#schedule">Schedule</a></h3>
-          <h4>Fall 2017</h4>
         </header>
-        <schedule-picker :timeslots="timeslots" content-key="$name" :show-footer="false" />
+        <article v-for="season in seasons" :key="season[idKey]">
+          <header class="align-center">
+            <h4>{{ season.name }}</h4>
+          </header>
+          <schedule-picker :timeslots="season.$timeslots" content-key="$name" :show-footer="false" />
+        </article>
       </div>
       <div id="prices" class="align-center">
         <header>
@@ -211,6 +215,7 @@
 
 <script>
 import Instafeed from 'instafeed.js';
+import { idKey } from '@/helpers/firebase';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import SchedulePicker from './SchedulePicker';
 
@@ -221,6 +226,7 @@ export default {
   ],
   data() {
     return {
+      idKey,
       menuToggled: false,
       scrollTop: 0,
     };
