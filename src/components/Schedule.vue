@@ -19,7 +19,7 @@
           @dblclick="$emit('timeslot-dblclick', $event, timeslot)"
           class="timeslot"
           :class="timeslot.props"
-          :style="{top: calculateDimension(moment(timeslot.startTime, 'HH:mm').valueOf(), time), height: calculateDimension(moment(timeslot.endTime, 'HH:mm').valueOf() - moment(timeslot.startTime, 'HH:mm').valueOf() + time.valueOf(), time)}"
+          :style="calculateStyle(day, time, timeslot)"
         >
           <small>{{ timeslot.startTime }} &ndash; {{ timeslot.endTime }}</small>
           <div v-html="timeslot[contentKey]"></div>
@@ -98,9 +98,11 @@ export default {
   methods: {
     moment,
     filterTimeslots(day, time) {
+      const timeEnd = moment(time).add(this.interval);
+
       return this.timeslots.filter((timeslot) => {
         if (timeslot.startDay === parseInt(day.format('d'), 10)) {
-          if (moment(timeslot.startTime, 'HH:mm').isBetween(time, moment(time).add(this.interval), null, '[)')) {
+          if (moment(timeslot.startTime, 'HH:mm').isBetween(time, timeEnd, null, '[)')) {
             return true;
           }
         }
@@ -113,6 +115,25 @@ export default {
       const end = time + this.interval.valueOf();
 
       return `${((mid - start) / (end - start)) * 100}%`;
+    },
+    calculateStyle(day, time, timeslot) {
+      const start = moment(timeslot.startTime, 'HH:mm');
+      const end = moment(timeslot.endTime, 'HH:mm');
+
+      const dayTimeslots = this.timeslots
+        .filter(t => t !== timeslot)
+        .filter(t => t.startDay === timeslot.startDay);
+      const dayLocations = dayTimeslots
+        .reduce((acc, t) => Object.assign(acc, t['@locations']), {});
+      const locationKeys = Object.keys(dayLocations).sort();
+      const locationIndex = locationKeys.indexOf(Object.keys(timeslot['@locations'])[0]);
+
+      return {
+        top: this.calculateDimension(start.valueOf(), time),
+        height: this.calculateDimension((end.valueOf() - start.valueOf()) + time.valueOf(), time),
+        width: `${100 / locationKeys.length}%`,
+        left: `${locationIndex * (100 / locationKeys.length)}%`,
+      };
     },
   },
 };
