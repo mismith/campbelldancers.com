@@ -31,11 +31,12 @@ export default {
           '@classes': {},
           '@locations': {},
           '@dancers': {},
+          ...$item,
           props: {
             active: false,
             disabled: false,
+            ...$item.props,
           },
-          ...$item,
         };
         item.$classes = this.classesRaw
           .filter(c => Object.keys(item['@classes']).includes(c[idKey]));
@@ -54,11 +55,12 @@ export default {
       return this.seasonsRaw.map(($item) => {
         const item = {
           '@timeslots': {},
+          ...$item,
           props: {
             active: true,
             disabled: false,
+            ...$item.props,
           },
-          ...$item,
         };
         item.$timeslots = this.timeslots
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
