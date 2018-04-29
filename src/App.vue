@@ -14,7 +14,6 @@
         </aside>
         <nav>
           <router-link to="/#about">About</router-link>
-          <router-link to="/#instructors">Instructors</router-link>
           <router-link to="/#classes">Classes</router-link>
           <router-link to="/#contact">Contact</router-link>
           <router-link to="/enroll" class="btn">Enroll</router-link>

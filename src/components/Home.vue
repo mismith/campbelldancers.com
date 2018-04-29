@@ -12,9 +12,6 @@
         <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
         <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
       </div>
-      <footer class="call-to-action align-center">
-        <router-link to="/enroll" class="btn">Enroll</router-link>
-      </footer>
     </section>
     <section id="instructors">
       <header>
