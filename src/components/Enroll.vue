@@ -290,7 +290,14 @@ export default {
       const dancer = this.dancers[this.schedulePickerDancerIndex];
       const age = moment().diff(dancer.birthday, 'years');
 
-      return this.timeslots.map((t) => {
+      return this.timeslots
+      .filter((t) => {
+        const timeslotSeasonIds = Object.keys(t['@seasons']);
+        return this.seasons
+          .filter(s => s.props.active && !s.props.disabled)
+          .some(s => timeslotSeasonIds.includes(s[idKey]));
+      })
+      .map((t) => {
         const timeslot = { ...t };
 
         if (timeslot['@dancers'][dancer[idKey]]) {
