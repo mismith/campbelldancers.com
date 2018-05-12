@@ -204,6 +204,7 @@ export default {
         flex-grow: 0;
 
         & .timeslot {
+          width: 100% !important;
           margin-bottom: 1px;
         }
       }
