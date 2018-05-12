@@ -66,7 +66,6 @@
     <div v-if="enrollment.stepIndex === 1">
       <header>
         <p>Who will be dancing with us?</p>
-        <p><small>For private lessons, we ask that you please pick the earliest slot available <br/>on that day—that way we won't have gaps between classes.</small></p>
       </header>
       <div class="flex-rows">
         <article v-for="(dancer, dancerIndex) of dancers" :key="dancerIndex" class="card bg-tartan">
