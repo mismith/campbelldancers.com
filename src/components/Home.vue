@@ -87,7 +87,18 @@
           <header class="align-center">
             <h4>{{ season.name }}</h4>
           </header>
-          <schedule-picker :timeslots="season.$timeslots" content-key="$name" :show-footer="false" />
+          <schedule-picker
+            :timeslots="season.$timeslots"
+            content-key="$name"
+            :show-footer="false"
+            @timeslot-click="handleTimeslotClick"
+          />
+          <modal :open.sync="activeTimeslot">
+            <div v-if="activeTimeslot" class="enroll-modal-content">
+              <div>Want to join for<br /><br /> <big v-html="activeTimeslot.$name"></big>?</div>
+              <router-link to="/enroll" class="btn">Enroll</router-link>
+            </div>
+          </modal>
         </article>
       </div>
       <div id="prices" class="align-center">
@@ -215,6 +226,7 @@ import Instafeed from 'instafeed.js';
 import { idKey } from '@/helpers/firebase';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import SchedulePicker from './SchedulePicker';
+import Modal from './Modal';
 
 export default {
   name: 'home',
@@ -226,6 +238,7 @@ export default {
       idKey,
       menuToggled: false,
       scrollTop: 0,
+      activeTimeslot: undefined,
     };
   },
   computed: {
@@ -241,6 +254,9 @@ export default {
       if (e.target.scrollingElement) {
         this.scrollTop = e.target.scrollingElement.scrollTop;
       }
+    },
+    handleTimeslotClick(e, timeslot) {
+      this.activeTimeslot = timeslot;
     },
   },
   mounted() {
@@ -265,6 +281,7 @@ export default {
   },
   components: {
     SchedulePicker,
+    Modal,
   },
 };
 </script>
@@ -284,6 +301,15 @@ export default {
     @media (--medium-min) {
       height: var(--small);
     }
+  }
+
+  & .enroll-modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    flex: auto;
+    text-align: center;
   }
 }
 
