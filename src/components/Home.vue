@@ -50,7 +50,23 @@
         </article>
         <br />
         <br />
-        <article id="kendra" class="right">
+        <article id="carol" class="right">
+          <figure>
+            <img src="/static/images/carol.jpg" alt="Carol McNaughton" width="200" height="277" />
+          </figure>
+          <div>
+            <header>
+              <h3><a href="#carol">Carol McNaughton</a></h3>
+              <h4>Instructor</h4>
+            </header>
+            <div>
+              <p>Carol stumbled upon highland dance at age 8, and has been dancing ever since. She has also trained in contemporary and ballet, and currently preforms with Erisa Dance. She has completed her SDTA members exam and has a minor in dance. Internationally, Carol has performed in Tattoos in Basel and Moscow, and has taught dance in the Philippines and Cambodia. Besides dancing, she is a registered social worker who currently works in education, advocacy, and peace. Carol strives to create a safe, supportive place for dancers to develop a love of movement.</p>
+            </div>
+          </div>
+        </article>
+        <br />
+        <br />
+        <article id="kendra">
           <figure>
             <img src="/static/images/kendra.jpg" alt="Kendra McNabb" width="200" height="200" />
           </figure>
