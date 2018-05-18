@@ -291,7 +291,7 @@ export default {
 
       return this.timeslots
       .filter((t) => {
-        const timeslotSeasonIds = Object.keys(t['@seasons']);
+        const timeslotSeasonIds = Object.keys(t['@seasons'] || {});
         return this.seasons
           .filter(s => s.props.active && !s.props.disabled)
           .some(s => timeslotSeasonIds.includes(s[idKey]));
@@ -308,7 +308,7 @@ export default {
 
           // disable if (any of the classes in this timeslot are) over capacity
           if (timeslot.$capacity > 0) {
-            timeslot.props.disabled = Object.keys(timeslot['@dancers']).length >= timeslot.$capacity;
+            timeslot.props.disabled = Object.keys(timeslot['@dancers'] || {}).length >= timeslot.$capacity;
           }
 
           // disable if dancer is out of (any of the classes') age range
