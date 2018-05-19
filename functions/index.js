@@ -26,34 +26,50 @@ function getUsersEnrolledDancers(userId) {
     db.child(`users/${userId}/dancers`).once('value'),
     db.child(`timeslots`).once('value'),
     db.child(`locations`).once('value'),
+    db.child(`seasons`).once('value'),
   ])
     .then((snapshots) => {
       const dancers = snapshots[0].val() || {};
       const timeslots = snapshots[1].val() || {};
       const locations = snapshots[2].val() || {};
+      const seasons = snapshots[3].val() || {};
 
-      const enrolledDancers = [];
-      Object.keys(dancers).forEach((dancerId) => {
+      const enrolledDancers = Object.keys(dancers).map((dancerId) => {
         const dancer = Object.assign({
           '@timeslots': {},
-          '$timeslots': [],
         }, dancers[dancerId]);
 
-        Object.keys(dancer['@timeslots']).forEach((timeslotId) => {
-          const timeslot = Object.assign({
-            '@locations': {},
-            $locations: [],
-          }, timeslots[timeslotId]);
+        dancer.$timeslots = Object.keys(dancer['@timeslots'])
+          .map((timeslotId) => {
+            const timeslot = Object.assign({
+              '@locations': {},
+              '@seasons': {},
+            }, timeslots[timeslotId]);
 
-          Object.keys(timeslot['@locations']).forEach((locationId) => {
-            const location = Object.assign({}, locations[locationId]);
+            timeslot.$locations = Object.keys(timeslot['@locations']).map((locationId) => {
+              const location = Object.assign({}, locations[locationId]);
 
-            timeslot.$locations.push(location);
+              return location;
+            });
+
+            timeslot.$seasons = Object.keys(timeslot['@seasons']).map((seasonId) => {
+              const props = Object.assign({
+                active: true,
+                disabled: false,
+              }, (seasons[seasonId] || {}).props);
+              const season = Object.assign({
+                props,
+              }, seasons[seasonId]);
+
+              return season;
+            });
+
+            return timeslot;
           });
-          dancer.$timeslots.push(timeslot);
-        });
-        enrolledDancers.push(dancer);
+
+        return dancer;
       });
+
       return enrolledDancers;
     });
 }
@@ -95,12 +111,19 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(`/${ENV}/data/users/
           dancers.forEach((dancer) => {
             let li = '<li>';
             li += `<strong>${getFirstName(dancer.name)}</strong>`;
-            dancer.$timeslots.forEach((timeslot) => {
-              li += `<br />${moment().day(timeslot.startDay).format('dddd')}, ${moment(timeslot.startTime, 'HH:mm').format('h:mm a')}`;
-              timeslot.$locations.forEach((location) => {
-                li += `, ${location.nickname}`;
+            dancer.$timeslots
+              // only include timeslots from current season
+              .filter((timeslot) => {
+                return timeslot.$seasons.some((season) => {
+                  return season.props.active && !season.props.disabled;
+                });
+              })
+              .forEach((timeslot) => {
+                li += `<br />${moment().day(timeslot.startDay).format('dddd')}, ${moment(timeslot.startTime, 'HH:mm').format('h:mm a')}`;
+                timeslot.$locations.forEach((location) => {
+                  li += `, ${location.nickname}`;
+                });
               });
-            });
             li += '</li>';
             ol += li;
           });
@@ -115,7 +138,7 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(`/${ENV}/data/users/
             body: `<p>We're looking forward to seeing you, ${getFirstName(enrollment.name)}.</p>
             <p>You've booked the following classes:</p>
             ${ol}
-            <p>Classes start the week of Sept 18, 2017. You will receive another email in August with your <a href="https://campbelldancers.com/#pricing" style="color: #000000">class costs</a> and exact details.</p>
+            <p>Classes start the week of Sept 17, 2017. You will receive another email in August with your <a href="https://campbelldancers.com/#pricing" style="color: #000000">class costs</a> and exact details.</p>
             <p>In the meantime, if you have any questions or feedback for us, please contact Elayna at <a href="tel:+14039980111" style="color: #000000">403-998-0111</a>, or simply <a href="mailto:elayna@campbelldancers.com" style="color: #000000">reply</a> to this email.</p>
             <p><strong>Can't wait to dance with you!</strong><br />Alexandra and Elayna</p>`,
             button: undefined, /*{
