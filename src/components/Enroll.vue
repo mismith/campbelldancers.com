@@ -109,7 +109,7 @@
                   <label title="Pick classes" class="selectable">
                     <input
                       @click="schedulePickerDancerIndex = dancerIndex"
-                      :value="dancer['@timeslots'] && Object.keys(dancer['@timeslots']).length ? `${Object.keys(dancer['@timeslots']).length} selected` : null"
+                      :value="dancer.$timeslots.length ? `${dancer.$timeslots.length} selected` : null"
                       placeholder="0 selected"
                       @focus="$event.target.blur()"
                       required />
@@ -266,10 +266,14 @@ export default {
     },
     dancers() {
       return this.dancersRaw.map(($item) => {
+        const timeslotIds = Object.keys($item['@timeslots'] || {});
         const item = {
           '@timeslots': {},
           '@contacts': {},
           ...$item,
+          $timeslots: this.timeslots
+            .filter(t => timeslotIds.includes(t[idKey]))
+            .filter(this.isTimeslotInActiveSeason),
         };
         return item;
       });
@@ -290,12 +294,7 @@ export default {
       const age = moment().diff(dancer.birthday, 'years');
 
       return this.timeslots
-      .filter((t) => {
-        const timeslotSeasonIds = Object.keys(t['@seasons'] || {});
-        return this.seasons
-          .filter(s => s.props.active && !s.props.disabled)
-          .some(s => timeslotSeasonIds.includes(s[idKey]));
-      })
+      .filter(this.isTimeslotInActiveSeason)
       .map((t) => {
         const timeslot = { ...t };
 
@@ -331,6 +330,13 @@ export default {
   methods: {
     sync(path, value) {
       return sync(path.replace(/^~/i, db.child(`users/${this.user.uid}`).path), value);
+    },
+
+    isTimeslotInActiveSeason(timeslot) {
+      const timeslotSeasonIds = Object.keys(timeslot['@seasons'] || {});
+      return this.seasons
+        .filter(season => season.props.active && !season.props.disabled)
+        .some(season => timeslotSeasonIds.includes(season[idKey]));
     },
 
     // schedule picker
