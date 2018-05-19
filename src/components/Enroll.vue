@@ -186,12 +186,13 @@
       </footer>
     </div>
 
+    <img src="/static/images/feet.jpg" role="presentation" class="img-preload" />
     <div v-if="enrollment.stepIndex === steps.length - 1">
       <header>
         <h2 class="heading">Enrolled</h2>
       </header>
       <div class="thanks">
-        <img src="/static/images/instructors.jpg" alt="Our instructors" />
+        <img src="/static/images/feet.jpg" role="presentation" />
         <aside class="card bg-tartan">
           <div>
             <p><strong>We're so glad you're joining us!</strong> ✨</p>
@@ -512,6 +513,14 @@ export default {
     max-width: 100%;
   }
 
+  & .img-preload {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   & .breadcrumbs {
     @apply --heading;
     display: flex;
@@ -617,6 +626,7 @@ export default {
   & .thanks {
     display: flex;
     flex-direction: column;
+    padding: 0 20px;
 
     & img {
       width: 100%;
@@ -629,7 +639,7 @@ export default {
           opacity: 0;
         }
         100% {
-          transform: translateY(-130%);
+          transform: translateY(-120%);
           opacity: 1;
         }
       }
@@ -637,7 +647,7 @@ export default {
       margin-left: -20px;
       margin-right: -20px;
       opacity: 1;
-      transform: translateY(-130%);
+      transform: translateY(-120%);
       animation: rise 1s;
     }
   }
