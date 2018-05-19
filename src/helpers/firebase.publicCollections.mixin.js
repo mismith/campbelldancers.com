@@ -13,6 +13,7 @@ export default {
         const item = {
           ...$item,
         };
+
         return item;
       });
     },
@@ -22,6 +23,7 @@ export default {
           '@timeslots': {},
           ...$item,
         };
+
         return item;
       });
     },
@@ -38,6 +40,7 @@ export default {
             ...$item.props,
           },
         };
+
         item.$classes = this.classesRaw
           .filter(c => Object.keys(item['@classes']).includes(c[idKey]));
         item.$locations = this.locationsRaw
@@ -48,6 +51,7 @@ export default {
           return Math.max(0, capacity, classCapacity);
         }, 0);
         item.$name = `<div>${item.$classes.map(c => c.name).join(' / ')}</div><small>${item.$locations.map(l => l.nickname).join(' / ')}</small>`;
+
         return item;
       });
     },
@@ -62,8 +66,10 @@ export default {
             ...$item.props,
           },
         };
+
         item.$timeslots = this.timeslots
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
+
         return item;
       });
     },

@@ -1,8 +1,20 @@
 <template>
   <section id="admin">
     <div v-if="user && userRaw.admin">
+      <header>
+        <label class="selectable">
+          <select v-model="activeSeasonId" required>
+            <option v-for="season in seasons" :key="season[idKey]" :value="season[idKey]">
+              {{ season.name }}
+            </option>
+          </select>
+        </label>
+      </header>
       <schedule-picker
-        :timeslots="adminTimeslots"
+        v-for="season in adminSeasons"
+        :key="season[idKey]"
+        v-show="season[idKey] === activeSeasonId"
+        :timeslots="season.$timeslots"
         content-key="$name"
         :show-footer="false"
         @timeslot-click="handleTimeslotSelect"
@@ -97,6 +109,7 @@ export default {
         id: undefined,
       },
       editing: {},
+      activeSeasonId: undefined,
     };
   },
   firebase: {
@@ -111,12 +124,25 @@ export default {
         const item = {
           ...$item,
         };
+
         item.$dancers = this.dancersRaw
           .filter(d => Object.keys(item['@dancers']).includes(d[idKey]));
 
         item.props.active = this.selected.type === 'timeslot' && this.selected.id === item[idKey];
         item.props.active = item.props.active || (this.selected.type === 'dancer' && item['@dancers'][this.selected.id]);
         item.props.disabled = !item.$dancers.length;
+
+        return item;
+      });
+    },
+    adminSeasons() {
+      return this.seasons.map(($item) => {
+        const item = {
+          ...$item,
+        };
+
+        item.$timeslots = this.adminTimeslots
+          .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
 
         return item;
       });
@@ -132,6 +158,7 @@ export default {
           },
           ...$item,
         };
+
         item.$timeslots = this.timeslotsRaw
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
         item.$users = this.usersRaw
@@ -157,6 +184,7 @@ export default {
           },
           ...$item,
         };
+
         item.$users = this.usersRaw
           .filter(u => Object.keys(item['@users']).includes(u[idKey]));
         item.$hasDancers = this.getUserRelations(item, 'dancers').length;
@@ -164,6 +192,7 @@ export default {
         item.props.active = this.selected.type === 'contact' && this.selected.id === item[idKey];
         item.props.active = item.props.active || (this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
         item.props.disabled = !item.$hasDancers;
+
         return item;
       }).reverse().filter(item => item.name);
     },
@@ -172,6 +201,7 @@ export default {
         const item = {
           ...$item,
         };
+
         return item;
       });
     },
@@ -252,6 +282,11 @@ export default {
       return relations;
     },
   },
+  created() {
+    this.$firebaseRefs.seasonsRaw.once('value').then((snap) => {
+      this.activeSeasonId = Object.keys(snap.val()).sort().slice(-1).pop();
+    });
+  },
   components: {
     SchedulePicker,
   },
@@ -262,18 +297,22 @@ export default {
 @import '../variables.css';
 
 #admin {
-  height: 100%;
-  flex-grow: 1;
-  flex-shrink: 1;
   padding: 20px;
 
   & > div {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    height: 100%;
     width: 100%;
     max-width: none;
+  }
+
+  & .selectable {
+    justify-content: center;
+    margin-bottom: 5px;
+
+    & select {
+      padding-right: 30px;
+    }
   }
 
   & .timeslot {
@@ -281,14 +320,10 @@ export default {
       cursor: auto;
     }
   }
-  & .schedule-picker,
-  & .details {
-    flex-basis: 50%;
-  }
-  & .schedule-picker {
-    flex-grow: 1;
-    height: 100%;
-    max-height: 400px;
+  @media (--medium-min) {
+    & .schedule-picker {
+      height: 400px;
+    }
   }
   & .details {
     display: flex;
