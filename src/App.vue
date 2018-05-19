@@ -337,6 +337,11 @@ table {
   display: inline-table;
   border: 0;
   
+  & th {
+    text-transform: uppercase;
+    font-weight: unset;
+  }
+  & th,
   & td {
     padding: 5px 0;
 

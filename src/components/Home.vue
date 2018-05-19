@@ -123,26 +123,35 @@
           <h4>Per dancer</h4>
         </header>
         <table class="table align-left">
+          <thead>
+            <tr>
+              <th style="width: 50%;">Classes per week</th>
+              <th style="width: 50%;">Cost per month</th>
+            </tr>
+          </thead>
           <tbody>
             <tr>
-              <td style="width: 50%;">1 class/week</td>
-              <td style="width: 50%;">$50/month</td>
+              <td>1 group</td>
+              <td>$55</td>
             </tr>
             <tr>
-              <td>2 classes/week</td>
-              <td>$90/month</td>
+              <td>2 group</td>
+              <td>$100</td>
             </tr>
             <tr>
-              <td>1 class/week + 1 private lesson/week</td>
-              <td>$125/month</td>
+              <td>1 group + 1 private</td>
+              <td>$140</td>
             </tr>
             <tr>
-              <td>2 classes/week + 1 private lesson/week</td>
-              <td>$150/month</td>
+              <td>2 group + 1 private</td>
+              <td>$165</td>
+            </tr>
+            <tr>
+              <td colspan="2"><hr style="margin: 10px auto;" /></td>
             </tr>
             <tr>
               <td>Individual privates</td>
-              <td>$25</td>
+              <td>$40</td>
             </tr>
           </tbody>
         </table>
