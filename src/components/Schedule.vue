@@ -178,7 +178,7 @@ export default {
     & .time {
       & .timeslot {
         width: 100%;
-        border: 1px solid rgba(0,0,0,.5);
+        border: 1px solid rgba(0, 0, 0, 0.5);
       }
     }
   }
@@ -219,7 +219,7 @@ export default {
 
       & .time {
         position: relative;
-        border-top: 1px solid rgba(0,0,0,.1);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
 
         & .timeslot {
           position: absolute;
@@ -231,7 +231,7 @@ export default {
         }
       }
       & + .day {
-        border-left: 1px solid rgba(0,0,0,0.1);
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
       }
     }
   }

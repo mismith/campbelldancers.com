@@ -56,7 +56,7 @@ export default {
     max-width: 90%;
     max-height: 90%;
     background-color: var(--lightest);
-    border: double 3px var(--accent);
+    border: double 3px var(--primary);
     overflow: auto;
   }
   & .close {

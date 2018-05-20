@@ -1,14 +1,12 @@
 :root {
-  --lightest:   #fff;
-  --light:      #c4c4c4;
-  --dark:       #222;
-  --accent:     #50c5d8;
-  --accent-rgb: 80, 197, 216;
+  --lightest: #fff;
+  --light: #c4c4c4;
+  --dark: #222;
+  --primary: #50c5d8;
+  --primary-rgb: 80, 197, 216;
 
-  --accent-light: #e5f6f9; /* #50c5d8 @ 15% opacity */
-
-  --small:      600px;
-  --medium:     800px;
+  --small: 600px;
+  --medium: 800px;
   @custom-media --small-min (width >= 600px);
   @custom-media --medium-min (width >= 800px);
   @custom-media --small-max (width < 600px);

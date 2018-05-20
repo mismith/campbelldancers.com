@@ -551,15 +551,15 @@ export default {
         width: 24px;
         height: 24px;
         letter-spacing: 0;
-        border: double 3px var(--accent);
+        border: double 3px var(--primary);
         border-radius: 50%;
         margin-right: 10px;
       }
       &.active {
-        color: var(--accent);
+        color: var(--primary);
 
         &:before {
-          background-color: var(--accent);
+          background-color: var(--primary);
           color: var(--lightest);
           border-color: var(--lightest);
         }
