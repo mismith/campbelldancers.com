@@ -22,6 +22,9 @@
         @timeslot-click="handleTimeslotClick"
         @timeslot-dblclick="handleTimeslotDblClick"
       />
+      <aside>
+        <span class="timeslot newbies">Classes suitable for new dancers</span>
+      </aside>
     </div>
     <footer v-if="showFooter">
       <div>
@@ -87,6 +90,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     flex-shrink: 1;
+    position: relative;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
 
@@ -107,6 +111,12 @@ export default {
           flex-basis: 22.5%;
           margin-left: 2.5%;
         }
+      }
+      & > aside {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 5px;
       }
     }
   }

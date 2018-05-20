@@ -401,6 +401,19 @@ form {
   &.active {
     background: rgba(var(--primary-rgb), .666);
   }
+
+  &.newbies {
+    background-color: rgba(var(--accent-rgb), .15);
+    border: 1px solid rgba(var(--accent-rgb), .5) !important;
+
+    &:not(.disabled, .active) {
+      &:hover {
+        background-color: rgba(var(--accent-rgb), .333);
+      }
+    }
+    &.active {
+      background: rgba(var(--accent-rgb), .666);
+    }
   }
 }
 

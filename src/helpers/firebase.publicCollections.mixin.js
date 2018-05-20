@@ -52,6 +52,8 @@ export default {
         }, 0);
         item.$name = `<div>${item.$classes.map(c => c.name).join(' / ')}</div><small>${item.$locations.map(l => l.nickname).join(' / ')}</small>`;
 
+        item.props.newbies = item.$classes.some(c => c.newbies);
+
         return item;
       });
     },
