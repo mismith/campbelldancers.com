@@ -323,6 +323,10 @@ export default {
     margin-top: 40px;
     margin-bottom: 20px;
 
+    & > div {
+      overflow: unset; /* prevent 1px overflow (from position: absolute?) */
+    }
+
     @media (--medium-min) {
       height: var(--small);
     }
