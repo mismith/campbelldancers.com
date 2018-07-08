@@ -195,7 +195,8 @@
         <img src="/static/images/instructors.jpg" alt="Our instructors" />
         <aside class="card bg-tartan">
           <div>
-            <p>We <strong>can't wait</strong> to dance together! ✨</p>
+            <p><strong>We're so glad you're joining us!</strong> ✨</p>
+            <p>(P.S. an email is on its way to you with more info)</p>
           </div>
         </aside>
       </div>
@@ -628,7 +629,7 @@ aside.card {
     opacity: 0;
   }
   100% {
-    transform: translateY(-150%);
+    transform: translateY(-130%);
     opacity: 1;
   }
 }
@@ -641,10 +642,11 @@ aside.card {
     max-width: 400px;
   }
   & aside {
+    max-width: 440px;
     margin-left: -20px;
     margin-right: -20px;
     opacity: 1;
-    transform: translateY(-150%);
+    transform: translateY(-130%);
     animation: hover 1s;
   }
 }
