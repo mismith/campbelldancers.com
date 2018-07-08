@@ -1,7 +1,17 @@
 <template>
   <section id="admin">
     <div v-if="user && userRaw.admin">
-      <header>
+      <schedule-picker
+        v-for="season in adminSeasons"
+        :key="season[idKey]"
+        v-if="season[idKey] === activeSeasonId"
+        :timeslots="season.$timeslots"
+        content-key="$name"
+        :show-footer="false"
+        @timeslot-click="handleTimeslotSelect"
+        @timeslot-dblclick="handleTimeslotEdit"
+      />
+      <div>
         <label class="selectable">
           <select v-model="activeSeasonId" required>
             <option v-for="season in seasons" :key="season[idKey]" :value="season[idKey]">
@@ -9,53 +19,49 @@
             </option>
           </select>
         </label>
-      </header>
-      <schedule-picker
-        v-for="season in adminSeasons"
-        :key="season[idKey]"
-        v-show="season[idKey] === activeSeasonId"
-        :timeslots="season.$timeslots"
-        content-key="$name"
-        :show-footer="false"
-        @timeslot-click="handleTimeslotSelect"
-        @timeslot-dblclick="handleTimeslotEdit"
-      />
+      </div>
       <div class="details">
-        <div class="dancers">
+        <article class="dancers">
           <header>
             <h6>Dancers</h6>
             <h6 v-if="selected.id" class="color-accent">{{ dancers.filter(d => d.props.active).length }}/</h6>
             <h6>{{ dancers.length }}</h6>
           </header>
-          <div>
-            <article
+          <ul>
+            <li
               v-for="dancer of dancers"
               :key="dancer[idKey]"
-              v-show="!selected.id || selected.type === 'dancer' || dancer.props.active"
               :id="`dancer-${dancer[idKey]}`"
               @click="handleDancerSelect($event, dancer)"
               @dblclick="handleDancerEdit($event, dancer)"
               class="dancer timeslot"
               :class="dancer.props"
             >
-              <div :title="dancer.name"><strong>{{ dancer.name }}</strong></div>
+              <header>
+                <div><strong>{{ dancer.name }}</strong></div>
+                <button
+                  v-if="selected.type === 'timeslot'"
+                  @click.stop="toggleDancerTimeslot(dancer, selected.id)"
+                >
+                  {{ dancer.props.active ? 'Remove from' : 'Add to' }} class
+                </button>
+              </header>
               <small v-show="dancer.birthday" :title="`${moment(dancer.birthday).fromNow(true)} old`">{{ moment(dancer.birthday).format('MMM D, YYYY') }}</small>
-              <small :title="dancer.ability">{{ dancer.ability }}</small>
-              <small :title="dancer.medical">{{ dancer.medical }}</small>
-            </article>
-          </div>
-        </div>
-        <div class="contacts">
+              <small v-show="dancer.ability">{{ dancer.ability }}</small>
+              <small v-show="dancer.medical">{{ dancer.medical }}</small>
+            </li>
+          </ul>
+        </article>
+        <article class="contacts">
           <header>
             <h6>Emergency Contacts</h6>
             <h6 v-if="selected.id" class="color-accent">{{ contacts.filter(c => c.props.active).length }}/</h6>
             <h6>{{ contacts.length }}</h6>
           </header>
-          <div>
-            <article
+          <ul>
+            <li
               v-for="contact of contacts"
               :key="contact[idKey]"
-              v-show="!selected.id || selected.type === 'contact' || contact.props.active"
               :id="`contact-${contact[idKey]}`"
               @click="handleContactSelect($event, contact)"
               @dblclick="handleContactEdit($event, contact)"
@@ -66,11 +72,32 @@
               <small><a :href="`tel:${contact.phone}`">{{ formatPhone(contact.phone) }}</a></small>
               <small><a :href="`tel:${contact.phone2}`">{{ formatPhone(contact.phone2) }}</a></small>
               <small><a :href="`mailto:${contact.email}`" :title="contact.email">{{ contact.email }}</a></small>
-            </article>
-          </div>
-        </div>
+            </li>
+          </ul>
+        </article>
       </div>
       <modal name="editing" height="80%">
+        <!--<article>
+          <header>
+            <h6>Dancers</h6>
+            <h6 class="color-accent">{{ editingObject.$dancers.length }}/</h6>
+            <h6>{{ dancers.length }}</h6>
+          </header>
+          <ul v-if="editing.type === 'timeslot'">
+            <li
+              v-for="dancer in dancers"
+              :key="dancer[idKey]"
+              @click="handleDancerSelect($event, dancer)"
+              class="dancer timeslot"
+              :class="{
+                active: editingObject['@dancers'][dancer[idKey]],
+                disabled: dancer.props.disabled,
+              }"
+            >
+              {{ dancer.name }}
+            </li>
+          </ul>
+        </article>-->
         <pre v-if="editing.type">{{ editingObject }}</pre>
       </modal>
     </div>
@@ -90,6 +117,8 @@ import {
   idKey,
   db,
   dba,
+  relate,
+  unrelate,
 } from '../helpers/firebase';
 import AuthedMixin from '../helpers/firebase.authed.mixin';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
@@ -281,6 +310,20 @@ export default {
       });
       return relations;
     },
+
+    toggleDancerTimeslot(dancer, timeslotId) {
+      const action = dancer['@timeslots'][timeslotId] ? unrelate : relate;
+
+      return Promise.all(Object.keys(dancer['@users']).map(userId => action({
+        path: db.child(`users/${userId}`).path,
+        collection: 'dancers',
+        id: dancer[idKey],
+      }, {
+        path: db.path,
+        collection: 'timeslots',
+        id: timeslotId,
+      })));
+    },
   },
   created() {
     this.$firebaseRefs.seasonsRaw.once('value').then((snap) => {
@@ -320,6 +363,38 @@ export default {
       cursor: auto;
     }
   }
+  & article {
+    & > header {
+      display: flex;
+      padding: 5px;
+
+      & > * {
+        flex-shrink: 1;
+
+        &:first-child {
+          @apply --ellipsis;
+          margin-right: auto;
+        }
+      }
+    }
+    & ul {
+      padding: 0;
+      margin: 0;
+
+      & > li {
+        margin: 1px 0;
+
+        & > header {
+          display: flex;
+          align-items: center;
+
+          & > *:first-child {
+            margin-right: auto;
+          }
+        }
+      }
+    }
+  }
   @media (--medium-min) {
     & .schedule-picker {
       height: 400px;
@@ -338,19 +413,6 @@ export default {
       @media (--medium-min) {
         width: calc(50% - 10px);
       }
-      & > header {
-        display: flex;
-        padding: 5px;
-
-        & > * {
-          flex-shrink: 1;
-
-          &:first-child {
-            @apply --ellipsis;
-            margin-right: auto;
-          }
-        }
-      }
       & > div {
         display: flex;
         flex-direction: column;
@@ -358,9 +420,6 @@ export default {
         overflow: auto;
         -webkit-overflow-scrolling: touch;
       }
-    }
-    & .timeslot {
-      margin: 1px 0;
     }
   }
   & .dancer,
@@ -371,7 +430,6 @@ export default {
     width: 100%;
 
     & > * {
-      @apply --ellipsis;
       padding: 3px 5px;
     }
   }
