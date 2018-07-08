@@ -179,6 +179,12 @@ export default {
       & .timeslot {
         width: 100%;
         border: 1px solid rgba(0, 0, 0, 0.5);
+
+        & small {
+          display: block;
+          font-size: 11px;
+          margin-top: 2px;
+        }
       }
     }
   }

@@ -373,6 +373,8 @@ form {
   }
 }
 .timeslot {
+  display: flex;
+  flex-direction: column;
   background: rgba(var(--primary-rgb), .15);
   padding: 0 3px;
   border: 1px solid var(--primary) !important;

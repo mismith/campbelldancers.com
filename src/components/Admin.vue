@@ -373,10 +373,6 @@ export default {
     & > * {
       @apply --ellipsis;
       padding: 3px 5px;
-
-      @media (--medium-min) {
-        flex-basis: 50%;
-      }
     }
   }
 }
