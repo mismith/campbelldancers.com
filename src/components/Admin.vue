@@ -23,13 +23,16 @@
       <div class="details">
         <article class="dancers">
           <header>
-            <h6>Dancers</h6>
+            <h6>
+              Dancers
+            </h6>
+            <a @click="showAll = !showAll" class="toggler">Show {{ showAll ? 'Only Enrolled' : 'All' }}</a>
             <h6 v-if="selected.id" class="color-accent">{{ dancers.filter(d => d.props.active).length }}/</h6>
             <h6>{{ dancers.length }}</h6>
           </header>
           <ul>
             <li
-              v-for="dancer of dancers"
+              v-for="dancer of dancers.filter(d => showAll || !d.props.disabled)"
               :key="dancer[idKey]"
               :id="`dancer-${dancer[idKey]}`"
               @click="handleDancerSelect($event, dancer)"
@@ -137,6 +140,7 @@ export default {
         type: undefined,
         id: undefined,
       },
+      showAll: true,
       editing: {},
       activeSeasonId: undefined,
     };
@@ -368,6 +372,13 @@ export default {
     }
   }
 
+  & .toggler {
+    font-size: xx-small;
+    margin-right: 30px;
+    margin-bottom: -2px;
+    cursor: pointer;
+  }
+
   & .timeslot {
     &.disabled {
       cursor: auto;
@@ -376,6 +387,7 @@ export default {
   & article {
     & > header {
       display: flex;
+      align-items: center;
       padding: 5px;
 
       & > * {
