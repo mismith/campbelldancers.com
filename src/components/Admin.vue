@@ -113,12 +113,11 @@
 
 <script>
 import {
-  // firebase,
   idKey,
   db,
-  dba,
   relate,
   unrelate,
+  toArray,
 } from '../helpers/firebase';
 import AuthedMixin from '../helpers/firebase.authed.mixin';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
@@ -142,12 +141,20 @@ export default {
     };
   },
   firebase: {
-    enrollmentsRaw: dba.child('enrollments'),
-    dancersRaw: dba.child('dancers'),
-    contactsRaw: dba.child('contacts'),
     usersRaw: db.child('users'),
+    timeslotsRaw: db.child('timeslots'),
   },
   computed: {
+    enrollmentsRaw() {
+      return this.users.reduce((enrollments, user) => enrollments.concat(user.$enrollments), []);
+    },
+    dancersRaw() {
+      return this.users.reduce((dancers, user) => dancers.concat(user.$dancers), []);
+    },
+    contactsRaw() {
+      return this.users.reduce((contacts, user) => contacts.concat(user.$contacts), []);
+    },
+
     adminTimeslots() {
       return this.timeslots.map(($item) => {
         const item = {
@@ -190,15 +197,12 @@ export default {
 
         item.$timeslots = this.timeslotsRaw
           .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
-        item.$users = this.usersRaw
-          .filter(u => Object.keys(item['@users']).includes(u[idKey]));
-        item.$hasContacts = this.getUserRelations(item, 'contacts').length;
 
         item.props.active = this.selected.type === 'dancer' && this.selected.id === item[idKey];
         item.props.active = item.props.active ||
           (this.selected.type === 'timeslot' && item['@timeslots'][this.selected.id]) ||
           (this.selected.type === 'contact' && (Object.keys((this.contacts.find(c => c[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
-        item.props.disabled = !item.$timeslots.length || !item.$hasContacts;
+        item.props.disabled = !item.$timeslots.length || !item.$contacts.length;
 
         return item;
       }).reverse().filter(item => item.name);
@@ -214,25 +218,28 @@ export default {
           ...$item,
         };
 
-        item.$users = this.usersRaw
-          .filter(u => Object.keys(item['@users']).includes(u[idKey]));
-        item.$hasDancers = this.getUserRelations(item, 'dancers').length;
-
         item.props.active = this.selected.type === 'contact' && this.selected.id === item[idKey];
         item.props.active = item.props.active || (this.selected.type === 'dancer' && (Object.keys((this.dancers.find(d => d[idKey] === this.selected.id) || {})['@users'] || {}) || []).includes(Object.keys(item['@users'])[0]));
-        item.props.disabled = !item.$hasDancers;
+        item.props.disabled = !item.$dancers.length;
 
         return item;
       }).reverse().filter(item => item.name);
     },
     users() {
       return this.usersRaw.map(($item) => {
+        const $enrollments = this.pluckUserCollection($item, 'enrolments');
+        const $dancers = this.pluckUserCollection($item, 'dancers');
+        const $contacts = this.pluckUserCollection($item, 'contacts');
         const item = {
           ...$item,
+          $enrollments: $enrollments.map(e => ({ ...e, $contacts, $dancers })),
+          $dancers: $dancers.map(d => ({ ...d, $contacts })),
+          $contacts: $contacts.map(c => ({ ...c, $dancers })),
         };
-
         return item;
-      });
+      })
+        // eslint-disable-next-line no-underscore-dangle
+        .sort((a, b) => this.moment(a._loggedin) - this.moment(b._loggedin));
     },
 
     editingObject() {
@@ -300,15 +307,17 @@ export default {
     formatPhone(phone) {
       return (phone || '').replace(/[^0-9]/g, '').replace(/^(\d{3})(\d{3})(\d+$)/, '$1-$2-$3');
     },
-    getUserRelations(item, type) {
-      let relations = [];
-      Object.keys(item['@users'] || {}).forEach((userId) => {
-        relations = [
-          ...relations,
-          ...this[`${type}Raw`].filter(typeItem => Object.keys(typeItem['@users'] || {}).includes(userId)),
-        ];
-      });
-      return relations;
+    pluckUserCollection(user, collection) {
+      const userId = user[idKey];
+      return toArray(user[collection]).map(item => ({
+        '@users': {
+          [userId]: userId,
+        },
+        $users: [
+          user,
+        ],
+        ...item,
+      }));
     },
 
     toggleDancerTimeslot(dancer, timeslotId) {

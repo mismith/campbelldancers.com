@@ -67,34 +67,6 @@ function getUsersEnrolledDancers(userId) {
     });
 }
 
-let queued = Promise.resolve();
-[
-  'Dancers',
-  'Contacts',
-  'Enrollments',
-].forEach((Collection) => {
-  const collection = Collection.toLowerCase();
-  const path = `/${ENV}/data/users/{userId}/${collection}/{itemId}`;
-  exports[`syncAdmin${Collection}`] = functions.database.ref(path)
-    .onWrite((change, ctx) => {
-      const userId = ctx.params.userId;
-      const itemId = ctx.params.itemId;
-
-      let data = change.after.val();
-      if (data) {
-        const userIds = {};
-        userIds[userId] = userId;
-
-        data = Object.assign({
-          '@users': userIds,
-        }, data);
-      }
-      queued = queued.then(dba.child(`${collection}/${itemId}`).set(data));
-
-      return queued;
-    });
-});
-
 const path = `/${ENV}/data/users/{userId}/enrollments/{enrollmentId}/_submitted`;
 exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
   .onWrite((change, ctx) => {

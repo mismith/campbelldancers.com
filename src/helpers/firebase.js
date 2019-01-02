@@ -50,3 +50,7 @@ export function unrelate(a, b) {
 export function sync(path, value) {
   return firebase.database().ref(path).set(value);
 }
+
+export function toArray(obj) {
+  return Object.entries(obj || {}).map(([k, v]) => ({ [idKey]: k, ...v }));
+}
