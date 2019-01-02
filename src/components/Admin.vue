@@ -12,7 +12,7 @@
         @timeslot-dblclick="handleTimeslotEdit"
       />
       <div>
-        <label class="selectable">
+        <label class="selectable" style="margin-top: 5px;">
           <select v-model="activeSeasonId" required>
             <option v-for="season in seasons" :key="season[idKey]" :value="season[idKey]">
               {{ season.name }}
