@@ -106,6 +106,7 @@
         <p>Please login to continue.</p>
         <auth />
       </div>
+      <div v-else-if="!user.id"><img src="/static/images/loading.svg" /></div>
       <aside v-else>Sorry, you need to be an admin.</aside>
     </div>
   </section>
