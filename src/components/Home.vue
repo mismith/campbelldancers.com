@@ -10,7 +10,7 @@
       <div class="align-justify">
         <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <strong>Calgary</strong>, Alberta, Canada, we combine the love of dancing with focused technical development and strength.</p>
         <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
-        <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, competition, and adults.</p>
+        <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, amd competition.</p>
       </div>
     </section>
     <section id="instructors">
