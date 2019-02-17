@@ -2,25 +2,18 @@
   <div class="schedule-picker">
     <div>
       <schedule
+        v-for="(block, index) in blocks"
+        :key="index"
         :content-key="contentKey"
-        start-time="15:00"
-        end-time="20:00"
-        :start-day="1"
-        :end-day="4"
-        time-interval="00:30"
+        :start-time="block.startTime"
+        :end-time="block.endTime"
+        :start-day="block.startDay"
+        :end-day="block.endDay"
+        :time-interval="block.timeInterval"
         :timeslots="timeslots"
         @timeslot-click="handleTimeslotClick"
         @timeslot-dblclick="handleTimeslotDblClick"
-      />
-      <schedule
-        :content-key="contentKey"
-        start-time="9:00"
-        end-time="14:30"
-        :start-day="6"
-        time-interval="00:30"
-        :timeslots="timeslots"
-        @timeslot-click="handleTimeslotClick"
-        @timeslot-dblclick="handleTimeslotDblClick"
+        :style="{ flex: (block.endDay || 0) - (block.startDay || 0) + 1 }"
       />
       <aside>
         <span class="timeslot newbies">Classes suitable for new dancers</span>
@@ -48,6 +41,9 @@ import Schedule from './Schedule';
 export default {
   name: 'schedule-picker',
   props: {
+    blocks: {
+      type: Array,
+    },
     timeslots: {
       type: Array,
     },
@@ -65,11 +61,14 @@ export default {
     },
   },
   methods: {
-    handleTimeslotClick(e, timeslot) {
-      this.$emit('timeslot-click', e, timeslot);
+    handleTimeslotClick(...args) {
+      this.$emit('timeslot-click', ...args);
     },
-    handleTimeslotDblClick(e, timeslot) {
-      this.$emit('timeslot-dblclick', e, timeslot);
+    handleTimeslotDblClick(...args) {
+      this.$emit('timeslot-dblclick', ...args);
+    },
+    handleTimeDblClick(...args) {
+      this.$emit('time-dblclick', ...args);
     },
   },
   components: {
@@ -105,10 +104,8 @@ export default {
       height: 100%;
 
       & .schedule {
-        flex-basis: 75%;
 
         & + .schedule {
-          flex-basis: 22.5%;
           margin-left: 2.5%;
         }
       }

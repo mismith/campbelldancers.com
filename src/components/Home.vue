@@ -104,6 +104,7 @@
             <h4>{{ season.name }}</h4>
           </header>
           <schedule-picker
+            :blocks="season.blocks"
             :timeslots="season.$timeslots"
             content-key="$name"
             :show-footer="false"

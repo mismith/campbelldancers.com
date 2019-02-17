@@ -134,8 +134,14 @@
           <big>&plus;</big> Add another dancer
         </a>
       </footer>
-      <aside v-if="schedulePickerDancerIndex !== null" @click.self="schedulePickerDancerIndex = null" class="schedule-picker-container align-left">
-        <schedule-picker content-key="$name" :timeslots="schedulePickerDancerTimeslots" @timeslot-click="toggleTimeslot" @done="schedulePickerDancerIndex = null" />
+      <aside v-if="schedulePickerDancerIndex !== null && activeSeason" @click.self="schedulePickerDancerIndex = null" class="schedule-picker-container align-left">
+        <schedule-picker
+          content-key="$name"
+          :blocks="activeSeason.blocks"
+          :timeslots="schedulePickerDancerTimeslots"
+          @timeslot-click="toggleTimeslot"
+          @done="schedulePickerDancerIndex = null"
+        />
       </aside>
     </div>
 
@@ -287,6 +293,10 @@ export default {
         };
         return item;
       });
+    },
+
+    activeSeason() {
+      return this.seasons.find(season => season.props.active && !season.props.disabled);
     },
 
     schedulePickerDancerTimeslots() {

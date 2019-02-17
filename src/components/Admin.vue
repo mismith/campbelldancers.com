@@ -5,6 +5,7 @@
         v-for="season in adminSeasons"
         :key="season[idKey]"
         v-if="season[idKey] === activeSeasonId"
+        :blocks="season.blocks"
         :timeslots="season.$timeslots"
         content-key="$name"
         :show-footer="false"
@@ -338,10 +339,9 @@ export default {
       })));
     },
   },
-  created() {
-    this.$firebaseRefs.seasonsRaw.once('value').then((snap) => {
-      this.activeSeasonId = Object.keys(snap.val()).sort().slice(-1).pop();
-    });
+  async created() {
+    await this.$firebaseRefs.seasonsRaw.once('value');
+    this.activeSeasonId = this.seasons.slice(-1).pop()[idKey];
   },
   components: {
     SchedulePicker,
