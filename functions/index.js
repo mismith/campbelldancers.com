@@ -4,7 +4,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
 const firebase = admin.initializeApp();
-const dba = firebase.database().ref(`${ENV}/admin`);
 const db = firebase.database().ref(`${ENV}/data`);
 
 const moment = require('moment');

@@ -333,7 +333,6 @@ export default {
         collection: 'dancers',
         id: dancer[idKey],
       }, {
-        path: db.path,
         collection: 'timeslots',
         id: timeslotId,
       })));

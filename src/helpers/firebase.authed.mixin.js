@@ -1,8 +1,5 @@
 import moment from 'moment-mini';
-import {
-  firebase,
-  db,
-} from '@/helpers/firebase';
+import { firebase, db } from '@/helpers/firebase';
 import Auth from '@/components/Auth';
 
 export default {

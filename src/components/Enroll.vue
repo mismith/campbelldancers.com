@@ -355,7 +355,6 @@ export default {
             collection: 'dancers',
             id: dancerId,
           }, {
-            path: db.path,
             collection: 'timeslots',
             id: timeslotId,
           });
@@ -366,7 +365,6 @@ export default {
             collection: 'dancers',
             id: dancerId,
           }, {
-            path: db.path,
             collection: 'timeslots',
             id: timeslotId,
           });
@@ -393,7 +391,6 @@ export default {
             collection: 'dancers',
             id: item[idKey],
           }, {
-            path: db.path,
             collection: 'timeslots',
             id: timeslotId,
           })))

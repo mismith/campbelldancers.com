@@ -18,16 +18,15 @@ export const firebaseuiApp = new firebaseui.auth.AuthUI(firebase.auth());
 
 export const ENV = process.env.NODE_ENV || 'production';
 export const db = firebaseApp.database().ref(`${ENV}/data`);
-export const dba = firebaseApp.database().ref(`${ENV}/admin`);
 
 export function relate(a, b) {
   const A = {
-    path: '',
+    path: db.path,
     value: a.id,
     ...a,
   };
   const B = {
-    path: '',
+    path: db.path,
     value: b.id,
     ...b,
   };
