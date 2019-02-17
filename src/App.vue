@@ -221,7 +221,7 @@ label.selectable,
   }
 }
 .input,
-input,
+input:not([type="checkbox"]),
 textarea,
 .btn,
 button,

@@ -11,8 +11,9 @@
         :show-footer="false"
         @timeslot-click="handleTimeslotSelect"
         @timeslot-dblclick="handleTimeslotEdit"
+        @time-dblclick="handleTimeslotAdd"
       />
-      <div>
+      <div class="schedule-selector">
         <label class="selectable" style="margin-top: 5px;">
           <select v-model="activeSeasonId" required>
             <option v-for="season in seasons" :key="season[idKey]" :value="season[idKey]">
@@ -81,28 +82,67 @@
         </article>
       </div>
       <modal name="editing" height="80%">
-        <!--<article>
-          <header>
-            <h6>Dancers</h6>
-            <h6 class="color-accent">{{ editingObject.$dancers.length }}/</h6>
-            <h6>{{ dancers.length }}</h6>
-          </header>
-          <ul v-if="editing.type === 'timeslot'">
-            <li
-              v-for="dancer in dancers"
-              :key="dancer[idKey]"
-              @click="handleDancerSelect($event, dancer)"
-              class="dancer timeslot"
-              :class="{
-                active: editingObject['@dancers'][dancer[idKey]],
-                disabled: dancer.props.disabled,
-              }"
-            >
-              {{ dancer.name }}
-            </li>
-          </ul>
-        </article>-->
-        <pre v-if="editing.type">{{ editingObject }}</pre>
+        <div class="two-inputs">
+          <form v-if="editing.type === 'timeslot' && editingObject" @submit.prevent="handleTimeslotUpdate">
+            <table>
+              <tbody>
+                <tr>
+                  <td>Day</td>
+                  <td>
+                    <label class="selectable">
+                      <select v-model="editingObject.startDay" required>
+                        <option value="0">Sunday</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                      </select>
+                    </label>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Start Time</td>
+                  <td>
+                    <input type="text" v-model="editingObject.startTime" required />
+                  </td>
+                </tr>
+                <tr>
+                  <td>End Time</td>
+                  <td>
+                    <input type="text" v-model="editingObject.endTime" required />
+                  </td>
+                </tr>
+                <tr>
+                  <td>Location</td>
+                  <td>
+                    <select v-model="editingObject['@@locations']" required multiple>
+                      <option v-for="location in locations" :key="location[idKey]" :value="location[idKey]">
+                        {{ location.nickname }}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Classes</td>
+                  <td>
+                    <select v-model="editingObject['@@classes']" required multiple>
+                      <option v-for="c in classes" :key="c[idKey]" :value="c[idKey]">
+                        {{ c.name }}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <button type="submit" class="btn">Save</button>
+            <button type="button" class="btn" @click="handleTimeslotRemove($event, editingObject)">
+              Delete
+            </button>
+          </form>
+          <pre v-if="editing.type">{{ editingObject }}</pre>
+        </div>
       </modal>
     </div>
     <div v-else class="align-center">
@@ -252,17 +292,26 @@ export default {
     },
 
     editingObject() {
-      if (this.editing && this.editing.type) {
-        let collection;
+      if (this.editing && this.editing.type && this.editing.id) {
         switch (this.editing.type) {
-          case 'timeslot':
-            collection = this.adminTimeslots;
+          case 'timeslot': {
+            const timeslot = this.adminTimeslots.find(item => item[idKey] === this.editing.id);
+            if (timeslot) {
+              return Object.entries(timeslot).reduce((acc, [k, v]) => {
+                if (/^@/.test(k)) {
+                  acc[`@${k}`] = Object.keys(v);
+                } else {
+                  acc[k] = v;
+                }
+                return acc;
+              }, {});
+            }
             break;
-          default:
-            collection = this[`${this.editing.type}s`];
-            break;
+          }
+          default: {
+            return this[`${this.editing.type}s`].find(item => item[idKey] === this.editing.id);
+          }
         }
-        return collection.find(item => item[idKey] === this.editing.id);
       }
       return null;
     },
@@ -291,26 +340,83 @@ export default {
       this.toggleSelected('contact', contact);
     },
 
-    toggleEditing(type, item) {
-      if (this.editing && this.editing.type === type && this.editing.id === item[idKey]) {
+    toggleEditing(type, id) {
+      if (this.editing && this.editing.type === type && this.editing.id === id) {
         this.editing = {};
         this.$modal.hide('editing');
       } else {
         this.editing = {
           type,
-          id: item[idKey],
+          id,
         };
         this.$modal.show('editing');
       }
     },
     handleTimeslotEdit(e, timeslot) {
-      this.toggleEditing('timeslot', timeslot);
+      this.toggleEditing('timeslot', timeslot[idKey]);
+    },
+    async handleTimeslotAdd(e, startDay, startTime, endTime) {
+      const timeslot = {
+        startDay: Number.parseInt(startDay.format('d'), 10),
+        startTime: startTime.format('HH:mm'),
+        endTime: endTime.format('HH:mm'),
+      };
+
+      const { key } = await this.$firebaseRefs.timeslotsRaw.push(timeslot);
+      timeslot[idKey] = key;
+
+      // link to season
+      await relate({
+        collection: 'seasons',
+        id: this.activeSeasonId,
+      }, {
+        collection: 'timeslots',
+        id: timeslot[idKey],
+      });
+
+      this.toggleEditing('timeslot', timeslot[idKey]);
+    },
+    async handleTimeslotUpdate() {
+      const changes = Object.entries(this.editingObject).reduce((acc, [k, v]) => {
+        if (/^@@/.test(k)) {
+          const ids = Array.isArray(v) ? v : [v];
+          acc[k.replace(/^@@/, '@')] = ids.reduce((relations, id) => {
+            relations[id] = id; // eslint-disable-line no-param-reassign
+            return relations;
+          }, {});
+        } else if (!/^[@$.]/.test(k) && k !== 'props') {
+          const val = /^\d+$/.test(v) ? Number.parseInt(v, 10) : v;
+          acc[k] = val;
+        }
+        return acc;
+      }, {});
+      console.log(changes);
+
+      await this.$firebaseRefs.timeslotsRaw.child(this.editing.id).update(changes);
+
+      this.toggleEditing('timeslot', this.editing.id);
+    },
+    async handleTimeslotRemove() {
+      if (window.confirm('Are you sure?')) {
+        const timeslotId = this.editing.id;
+
+        this.toggleEditing('timeslot', timeslotId);
+
+        await Promise.all([
+          this.$firebaseRefs.timeslotsRaw
+            .child(timeslotId)
+            .remove(),
+          this.$firebaseRefs.seasonsRaw
+            .child(this.activeSeasonId).child('@timeslots').child(timeslotId)
+            .remove(),
+        ]);
+      }
     },
     handleDancerEdit(e, dancer) {
-      this.toggleEditing('dancer', dancer);
+      this.toggleEditing('dancer', dancer[idKey]);
     },
     handleContactEdit(e, contact) {
-      this.toggleEditing('contact', contact);
+      this.toggleEditing('contact', contact[idKey]);
     },
 
     formatPhone(phone) {
@@ -365,7 +471,7 @@ export default {
     max-width: none;
   }
 
-  & .selectable {
+  & .schedule-selector .selectable {
     justify-content: center;
     margin-bottom: 5px;
 
@@ -462,7 +568,7 @@ export default {
   & .v--modal-box {
     overflow: auto !important;
 
-    & pre {
+    & > * {
       margin: 20px;
     }
   }

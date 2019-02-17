@@ -13,6 +13,7 @@
         :timeslots="timeslots"
         @timeslot-click="handleTimeslotClick"
         @timeslot-dblclick="handleTimeslotDblClick"
+        @time-dblclick="handleTimeDblClick"
         :style="{ flex: (block.endDay || 0) - (block.startDay || 0) + 1 }"
       />
       <aside>

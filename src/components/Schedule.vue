@@ -10,13 +10,18 @@
       <header>
         {{ day.format(dayLabelFormat) }}
       </header>
-      <div v-for="time in times" :key="time.format('HHmm')" :class="`time time-${time.format('HHmm')}`">
+      <div
+        v-for="time in times"
+        :key="time.format('HHmm')"
+        :class="`time time-${time.format('HHmm')}`"
+        @dblclick="$emit('time-dblclick', $event, day, time, moment(time).add(interval))"
+      >
         <article
           v-for="timeslot in filterTimeslots(day, time)"
           :key="timeslot['.key']"
           :id="`timeslot-${timeslot['.key']}`"
-          @click="$emit('timeslot-click', $event, timeslot)"
-          @dblclick="$emit('timeslot-dblclick', $event, timeslot)"
+          @click.stop="$emit('timeslot-click', $event, timeslot)"
+          @dblclick.stop="$emit('timeslot-dblclick', $event, timeslot)"
           class="timeslot"
           :class="timeslot.props"
           :style="calculateStyle(day, time, timeslot)"
