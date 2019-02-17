@@ -17,7 +17,23 @@
       <header>
         <h2><a href="#instructors">Instructors</a></h2>
       </header>
-      <div>
+      <div v-if="country === 'AU'">
+        <article id="aurian" class="right">
+          <figure>
+            <img src="/static/images/aurian.jpg" alt="Aurian Clarkson" width="200" height="274" />
+          </figure>
+          <div>
+            <header>
+              <h3><a href="#aurian">Aurian Clarkson</a></h3>
+              <h4>Director</h4>
+            </header>
+            <div>
+              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise, performance, and competition. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is also an engineer and management consultant by day and a mother to 2 fantastic little dancers.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div v-else>
         <article id="alexandra" class="right">
           <figure>
             <img src="/static/images/alexandra.jpg" alt="Alexandra Campbell" width="200" height="274" />
@@ -123,7 +139,43 @@
           <h3><a href="#prices">Prices</a></h3>
           <h4>Per dancer</h4>
         </header>
-        <table class="table align-left">
+        <table v-if="country === 'AU'" class="table align-center">
+          <thead>
+            <tr>
+              <th style="width: 33%;">Class time per week</th>
+              <th style="width: 33%;">Cost per term &nbsp;&nbsp;</th>
+              <th style="width: 33%;">Cost per casual class</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>30 mins</td>
+              <td>$60</td>
+              <td>$7.50</td>
+            </tr>
+            <tr>
+              <td>45 mins</td>
+              <td>$100</td>
+              <td>$12.50</td>
+            </tr>
+            <tr>
+              <td>60 mins</td>
+              <td>$120</td>
+              <td>$15</td>
+            </tr>
+            <tr>
+              <td>Private 60 mins</td>
+              <td>$250</td>
+              <td>$30</td>
+            </tr>
+            <tr>
+              <td>Sibling discount</td>
+              <td>25%</td>
+              <td>25%</td>
+            </tr>
+          </tbody>
+        </table>
+        <table v-else class="table">
           <thead>
             <tr>
               <th style="width: 50%;">Classes per week</th>
@@ -169,18 +221,21 @@
         <table class="table">
           <tbody>
             <tr>
-              <td>Email</tD>
-              <td><a href="mailto:hello@campbelldancers.com">hello@campbelldancers.com</a></td>
+              <td>Email</td>
+              <td><a :href="`mailto:${info.email}`">{{ info.email }}</a></td>
             </tr>
             <tr>
-              <td>Phone</tD>
-              <td><a href="tel:+14039980111">403-998-0111</a></td>
+              <td>Phone</td>
+              <td><a :href="`tel:+${info.phone.replace(/[^\d]/g, '')}`">{{ info.phone }}</a></td>
             </tr>
             <tr>
               <td>Locations</td>
               <td>
                 <ul>
-                  <li v-for="location in locations" :key="location.name">
+                  <li
+                    v-for="location in locations"
+                    :key="location.name"
+                  >
                     <em>{{ location.name }}</em><br />
                     <a :href="`https://www.google.ca/maps/place/${encodeURIComponent(location.address)}`" target="_blank">{{ location.address }}</a>
                   </li>
@@ -188,20 +243,23 @@
               </td>
             </tr>
             <tr>
-              <td>Links</tD>
+              <td>Links</td>
               <td>
                 <ul>
-                  <li><a href="https://www.facebook.com/campbelldancers/" target="_blank">CSHD on Facebook</a></li>
-                  <li><a href="https://www.instagram.com/campbelldancers/" target="_blank">CSHD on Instagram</a></li>
-                  <li><a href="http://www.chda.ab.ca/" target="_blank">Calgary Highland Dancing Association</a></li>
-                  <li><a href="http://www.ahda.ab.ca/" target="_blank">Alberta Highland Dancing Association</a></li>
+                  <li v-for="link in info.links" :key="link.url">
+                    <a :href="link.url" target="_blank">{{ link.name }}</a>
+                  </li>
                 </ul>
               </td>
             </tr>
           </tbody>
         </table>
 
-        <form method="post" action="//formspree.io/hello@campbelldancers.com" target="_blank">
+        <form
+          method="post"
+          :action="`//formspree.io/${info.email}`"
+          target="_blank"
+        >
           <input type="text" name="_gotcha" style="display: none;" />
           <input type="hidden" name="_subject" value="Contact Form on CSHD" />
           <table class="table">
@@ -241,7 +299,7 @@
       </header>
       <div id="instafeed" class="flex-cols"></div>
       <footer class="call-to-action align-center">
-        <a href="https://www.instagram.com/campbelldancers/" target="_blank" class="btn">More Photos</a>
+        <a :href="`https://www.instagram.com/${info.instagram}/`" target="_blank" class="btn">More Photos</a>
       </footer>
     </section>
   </div>
@@ -265,6 +323,51 @@ export default {
       menuToggled: false,
       scrollTop: 0,
       activeTimeslot: undefined,
+      info: this.country === 'AU' ? {
+        email: 'hello.oz@campbelldancers.com',
+        phone: '+61401054321',
+        instagram: 'campbelldancersoz',
+        links: [
+          {
+            name: 'CSHDAustralia on Facebook',
+            url: 'https://www.facebook.com/campbelldancersOZ/',
+          },
+          {
+            name: 'CSHDAustralia on Instagram',
+            url: 'https://www.instagram.com/campbelldancersoz/',
+          },
+          {
+            name: 'WAMRCHDI',
+            url: 'https://wamrchdi.webs.com/',
+          },
+          {
+            name: 'ABHDI',
+            url: 'https://www.abhdi.com/',
+          },
+        ],
+      } : {
+        email: 'hello@campbelldancers.com',
+        phone: '403-998-0111',
+        instagram: 'campbelldancers',
+        links: [
+          {
+            name: 'CSHD on Facebook',
+            url: 'https://www.facebook.com/campbelldancers/',
+          },
+          {
+            name: 'CSHD on Instagram',
+            url: 'https://www.instagram.com/campbelldancers/',
+          },
+          {
+            name: 'Calgary Highland Dancing Association',
+            url: 'http://www.chda.ab.ca/',
+          },
+          {
+            name: 'Alberta Highland Dancing Association',
+            url: 'http://www.ahda.ab.ca/',
+          },
+        ],
+      },
     };
   },
   computed: {
@@ -290,8 +393,8 @@ export default {
 
     try {
       new Instafeed({
-        clientId: 'c4d7db79bf68469ba1b71aebf43bc8df',
-        accessToken: '3519946526.c4d7db7.797de8ffa53b4185abc0e877ba80b847',
+        clientId: this.country === 'AU' ? '5f7be1e5e12e4e919e0db93dc70d6f31' : 'c4d7db79bf68469ba1b71aebf43bc8df',
+        accessToken: this.country === 'AU' ? '10328240745.5f7be1e.a8d9edd98ebb4ff89ba3914c1c63e174' : '3519946526.c4d7db7.797de8ffa53b4185abc0e877ba80b847',
         get: 'user',
         userId: 'self',
         limit: 4,

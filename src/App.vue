@@ -340,6 +340,7 @@ table {
   & th {
     text-transform: uppercase;
     font-weight: unset;
+    white-space: nowrap;
   }
   & th,
   & td {
@@ -350,6 +351,10 @@ table {
       text-align: right;
       font-weight: bold;
       padding-right: 10px;
+      white-space: nowrap;
+    }
+    &:last-child {
+      text-align: left;
     }
   }
   & ul {
@@ -394,7 +399,6 @@ form {
     opacity: .4;
     cursor: not-allowed;
   }
-
   &:not(.disabled, .active) {
     &:hover {
       background-color: rgba(var(--primary-rgb), .333);
