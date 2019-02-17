@@ -117,6 +117,7 @@
 </template>
 
 <script>
+import { countryFilter } from '@/main';
 import {
   idKey,
   db,
@@ -232,18 +233,20 @@ export default {
       }).reverse().filter(item => item.name);
     },
     users() {
-      return this.usersRaw.map(($item) => {
-        const $enrollments = this.pluckUserCollection($item, 'enrolments');
-        const $dancers = this.pluckUserCollection($item, 'dancers');
-        const $contacts = this.pluckUserCollection($item, 'contacts');
-        const item = {
-          ...$item,
-          $enrollments: $enrollments.map(e => ({ ...e, $contacts, $dancers })),
-          $dancers: $dancers.map(d => ({ ...d, $contacts })),
-          $contacts: $contacts.map(c => ({ ...c, $dancers })),
-        };
-        return item;
-      })
+      return this.usersRaw
+        .filter(countryFilter)
+        .map(($item) => {
+          const $enrollments = this.pluckUserCollection($item, 'enrollments');
+          const $dancers = this.pluckUserCollection($item, 'dancers');
+          const $contacts = this.pluckUserCollection($item, 'contacts');
+          const item = {
+            ...$item,
+            $enrollments: $enrollments.map(e => ({ ...e, $contacts, $dancers })),
+            $dancers: $dancers.map(d => ({ ...d, $contacts })),
+            $contacts: $contacts.map(c => ({ ...c, $dancers })),
+          };
+          return item;
+        })
         // eslint-disable-next-line no-underscore-dangle
         .sort((a, b) => this.moment(a._loggedin) - this.moment(b._loggedin));
     },

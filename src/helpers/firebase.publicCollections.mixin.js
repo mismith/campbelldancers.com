@@ -1,4 +1,5 @@
 import { idKey, db } from '@/helpers/firebase';
+import { countryFilter } from '@/main';
 
 export default {
   firebase: {
@@ -9,13 +10,15 @@ export default {
   },
   computed: {
     locations() {
-      return this.locationsRaw.map(($item) => {
-        const item = {
-          ...$item,
-        };
+      return this.locationsRaw
+        .map(($item) => {
+          const item = {
+            ...$item,
+          };
 
-        return item;
-      });
+          return item;
+        })
+        .filter(countryFilter);
     },
     classes() {
       return this.classesRaw.map(($item) => {
@@ -58,22 +61,24 @@ export default {
       });
     },
     seasons() {
-      return this.seasonsRaw.map(($item) => {
-        const item = {
-          '@timeslots': {},
-          ...$item,
-          props: {
-            active: true,
-            disabled: false,
-            ...$item.props,
-          },
-        };
+      return this.seasonsRaw
+        .map(($item) => {
+          const item = {
+            '@timeslots': {},
+            ...$item,
+            props: {
+              active: true,
+              disabled: false,
+              ...$item.props,
+            },
+          };
 
-        item.$timeslots = this.timeslots
-          .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
+          item.$timeslots = this.timeslots
+            .filter(t => Object.keys(item['@timeslots']).includes(t[idKey]));
 
-        return item;
-      });
+          return item;
+        })
+        .filter(countryFilter);
     },
   },
 };

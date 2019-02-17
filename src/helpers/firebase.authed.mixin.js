@@ -1,4 +1,5 @@
 import moment from 'moment-mini';
+import { country } from '@/main';
 import { firebase, db } from '@/helpers/firebase';
 import Auth from '@/components/Auth';
 
@@ -30,6 +31,7 @@ export default {
           _loggedin: moment().format(),
         };
         this.$firebaseRefs.userRaw.update(providerData);
+        this.$firebaseRefs.userRaw.child('@countries').update({ [country]: country });
 
         this.$emit('login');
       } else {
