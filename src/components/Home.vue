@@ -143,7 +143,7 @@
           <thead>
             <tr>
               <th style="width: 33%;">Class time per week</th>
-              <th style="width: 33%;">Cost per term &nbsp;&nbsp;</th>
+              <th style="width: 33%;">Cost per term</th>
               <th style="width: 33%;">Cost per casual class</th>
             </tr>
           </thead>

@@ -339,8 +339,12 @@ table {
   
   & th {
     text-transform: uppercase;
+    vertical-align: top;
     font-weight: unset;
-    white-space: nowrap;
+
+    @media (--small-min) {
+      white-space: nowrap;
+    }
   }
   & th,
   & td {
@@ -350,11 +354,12 @@ table {
       vertical-align: top;
       text-align: right;
       font-weight: bold;
-      padding-right: 10px;
-      white-space: nowrap;
     }
     &:last-child {
       text-align: left;
+    }
+    &:not(:last-child) {
+      padding-right: 10px;
     }
   }
   & ul {
