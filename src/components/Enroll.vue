@@ -17,7 +17,7 @@
       </div>
       <footer>
         <a class="btn-add" @click.prevent="loginAnonymously">
-          <big style="margin-top: -7px;">&raquo;</big> Skip <small>(and don't save info for next time)</small>
+          <big style="margin-top: -7px;">&raquo;</big> Enter Details Manually <small>(and don't save info for next time)</small>
         </a>
       </footer>
     </div>

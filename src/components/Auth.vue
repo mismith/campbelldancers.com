@@ -1,5 +1,5 @@
 <template>
-  <div id="firebaseui-auth-container"></div>
+  <div id="firebaseui-auth-container" />
 </template>
 
 <script>
@@ -7,24 +7,24 @@ import { firebase, firebaseuiApp } from '../helpers/firebase';
 
 export default {
   name: 'auth',
+  data() {
+    return {
+      loading: true,
+    };
+  },
   mounted() {
     firebaseuiApp.start('#firebaseui-auth-container', {
-      signInFlow: 'popup',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.FacebookAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
-        {
-          provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-          recaptchaParameters: {
-            size: 'invisible',
-          },
-        },
       ],
-      tosUrl: '/tos',
+      // tosUrl: '/tos',
+      // privacyPolicyUrl: '/privacy',
       callbacks: {
-        signInSuccess() {
-          return false;
+        signInSuccessWithAuthResult: () => false,
+        uiShown: () => {
+          this.loading = false;
         },
       },
     });
@@ -32,6 +32,22 @@ export default {
 };
 </script>
 
-<style>
+<style lang="postcss">
 @import '../../node_modules/firebaseui/dist/firebaseui.css';
+
+#firebaseui-auth-container {
+  min-width: 200px;
+
+  & .mdl-card {
+    box-shadow: none;
+  }
+  & .firebaseui-callback-indicator-container {
+    min-height: 200px;
+    background-image: url("/static/images/loading.svg");
+
+    & .mdl-progress {
+      display: none;
+    }
+  }
+}
 </style>
