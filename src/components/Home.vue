@@ -20,7 +20,7 @@
       <div v-if="country === 'AU'">
         <article id="aurian" class="right">
           <figure>
-            <img src="/static/images/aurian.jpg" alt="Aurian Clarkson" width="200" height="274" />
+            <img src="/static/images/aurian.jpg" alt="Aurian Clarkson" width="200" height="200" />
           </figure>
           <div>
             <header>
