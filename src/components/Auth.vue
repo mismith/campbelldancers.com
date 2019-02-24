@@ -43,7 +43,7 @@ export default {
   }
   & .firebaseui-callback-indicator-container {
     min-height: 200px;
-    background-image: url("/static/images/loading.svg");
+    background: url("/static/images/loading.svg") center center no-repeat;
 
     & .mdl-progress {
       display: none;
