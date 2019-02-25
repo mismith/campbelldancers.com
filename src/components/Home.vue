@@ -171,7 +171,7 @@
             </tr>
             <tr>
               <td>45 mins</td>
-              <td>$100</td>
+              <td>$90</td>
               <td>$12.50</td>
             </tr>
             <tr>
