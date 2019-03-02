@@ -390,14 +390,13 @@ export default {
         }
         return acc;
       }, {});
-      console.log(changes);
 
       await this.$firebaseRefs.timeslotsRaw.child(this.editing.id).update(changes);
 
       this.toggleEditing('timeslot', this.editing.id);
     },
     async handleTimeslotRemove() {
-      if (window.confirm('Are you sure?')) {
+      if (window.confirm('Are you sure?')) { // eslint-disable-line no-alert
         const timeslotId = this.editing.id;
 
         this.toggleEditing('timeslot', timeslotId);
