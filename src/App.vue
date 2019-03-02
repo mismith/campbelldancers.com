@@ -526,12 +526,13 @@ section,
       max-width: none;
       font-size: 12px;
 
-      & a {
+      & > * {
         margin: 5px 20px;
       }
       & .selectable {
         width: auto;
         font-size: 24px;
+        margin: auto;
 
         & select {
           padding-top: 4px;
@@ -576,7 +577,7 @@ section,
         transform-origin: 92.5% -10%;
         z-index: 998;
 
-        & a {
+        & > * {
           padding: 10px;
         }
       }
