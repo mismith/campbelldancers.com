@@ -195,6 +195,7 @@ export default {
   }
 
   @media (width <= 800px) {
+    flex: none !important;
     flex-wrap: wrap;
     height: auto;
 
@@ -206,7 +207,7 @@ export default {
       display: none;
     }
     & .day {
-      flex-basis: 50%;
+      flex-basis: 100%;
       padding-right: 1px;
       margin-bottom: 10px;
 
@@ -215,6 +216,7 @@ export default {
         flex-grow: 0;
 
         & .timeslot {
+          height: auto !important;
           width: 100% !important;
           margin-bottom: 1px;
         }
