@@ -8,10 +8,14 @@
         <h2><a href="#about">About</a></h2>
       </header>
       <div class="align-justify">
-        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <strong>Calgary</strong>, Alberta, Canada, we combine the love of dancing with focused technical development and strength.</p>
+        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>, we combine the love of dancing with focused technical development and strength.</p>
         <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
         <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, amd competition.</p>
       </div>
+      <footer v-if="country === 'AU'" class="call-to-action align-center">
+        <p>Are you located in <strong>🇨🇦Canada</strong>, not 🇦🇺Australia?</p>
+        <a href="https://campbelldancers.com/" class="btn">Visit Canadian Site</a>
+      </footer>
     </section>
     <section id="instructors">
       <header>
