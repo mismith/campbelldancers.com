@@ -17,6 +17,13 @@
           <router-link to="/#classes">Classes</router-link>
           <router-link to="/#contact">Contact</router-link>
           <router-link to="/enroll" class="btn">Enroll</router-link>
+
+          <label class="selectable">
+            <select v-model="country" @change="handleCountryChange">
+              <option value="CA">🇨🇦</option>
+              <option value="AU">🇦🇺</option>
+            </select>
+          </label>
         </nav>
         <footer>
           <button @click.stop="menuToggled = !menuToggled"><i>Menu</i></button>
@@ -42,6 +49,22 @@ export default {
       menuToggled: false,
       year: (new Date()).getFullYear(),
     };
+  },
+  methods: {
+    handleCountryChange() {
+      let href;
+      switch (this.country) {
+        case 'AU': {
+          href = 'https://oz.campbelldancers.com';
+          break;
+        }
+        default: {
+          href = 'https://campbelldancers.com';
+          break;
+        }
+      }
+      window.location.href = `${href}${this.$route.fullPath}`;
+    },
   },
 };
 </script>
@@ -208,6 +231,10 @@ label.selectable,
   align-items: center;
   width: 100%;
 
+  & select {
+    padding-right: 24px;
+  }
+
   &:after {
     content: '';
     width: 0;
@@ -216,7 +243,7 @@ label.selectable,
     border-top-color: var(--dark);
     border-top-width: 8px;
     border-bottom-width: 0;
-    margin-left: -1.25em;
+    margin-left: -18px;
     pointer-events: none;
   }
 }
@@ -501,6 +528,16 @@ section,
 
       & a {
         margin: 5px 20px;
+      }
+      & .selectable {
+        width: auto;
+        font-size: 24px;
+
+        & select {
+          padding-top: 4px;
+          padding-bottom: 0;
+          border: 0;
+        }
       }
     }
     & > footer {
