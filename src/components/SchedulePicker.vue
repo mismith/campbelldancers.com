@@ -16,15 +16,13 @@
         @time-dblclick="handleTimeDblClick"
         :style="{ flex: (block.endDay || 0) - (block.startDay || 0) + 1 }"
       />
-      <aside>
-        <span class="timeslot newbies">Classes suitable for new dancers</span>
-      </aside>
     </div>
     <footer v-if="showFooter">
       <div>
         <strong>{{ selected.length || 0 }} class{{ selected.length === 1 ? '' : 'es' }} selected</strong>
       </div>
       <aside>
+        <div class="timeslot newbies">Classes suitable for new dancers</div>
         <div class="timeslot disabled">Unavailable</div>
         <div class="timeslot">Available</div>
         <div class="timeslot active">Selected</div>
@@ -101,20 +99,14 @@ export default {
         }
       }
     }
+
     @media (--medium-min) {
       height: 100%;
 
       & .schedule {
-
         & + .schedule {
           margin-left: 2.5%;
         }
-      }
-      & > aside {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        padding: 5px;
       }
     }
   }
@@ -132,6 +124,8 @@ export default {
     & aside {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
+      max-width: 100%;
       margin: auto;
 
       & > * {

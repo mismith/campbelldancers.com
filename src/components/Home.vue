@@ -143,7 +143,6 @@
             :blocks="season.blocks"
             :timeslots="season.$timeslots"
             content-key="$name"
-            :show-footer="false"
             @timeslot-click="handleTimeslotClick"
           />
           <modal :open.sync="activeTimeslot">
@@ -449,6 +448,19 @@ export default {
 
     & > div {
       overflow: unset; /* prevent 1px overflow (from position: absolute?) */
+    }
+
+    & > footer {
+      padding: 15px;
+
+      & > div {
+        display: none;
+      }
+      & > aside {
+        & .timeslot:not(:first-child) {
+          display: none;
+        }
+      }
     }
 
     @media (--medium-min) {
