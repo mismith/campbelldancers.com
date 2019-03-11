@@ -32,7 +32,7 @@
               <h4>Director</h4>
             </header>
             <div>
-              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise, performance, and competition. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is also an engineer and management consultant by day and a mother to 2 fantastic little dancers.</p>
+              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise, performance, and competition. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic little dancers.</p>
             </div>
           </div>
         </article>
