@@ -8,13 +8,13 @@
         <h2><a href="#about">About</a></h2>
       </header>
       <div class="align-justify">
-        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>, we combine the love of dancing with focused technical development and strength<span v-if="country === 'AU'"> for students in Perth and surrounding areas</span>.</p>
+        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>, we combine the love of dancing with focused technical development and strength<span v-if="country === 'AU'"> for students in <strong>Perth and surrounding areas</strong></span>.</p>
         <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
         <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, amd competition.</p>
       </div>
-      <footer v-if="country === 'AU'" class="call-to-action align-center">
-        <p>Are you located in <strong>🇨🇦Canada</strong>, not 🇦🇺Australia?</p>
-        <a href="https://campbelldancers.com/" class="btn">Visit Canadian Site</a>
+      <footer class="call-to-action align-center">
+        <p>Are you located in <strong>{{ otherInfo.flag }}{{ otherInfo.name }}</strong>, not {{info.flag}}{{ info.name }}?</p>
+        <a :href="otherInfo.url" class="btn">Visit {{ otherInfo.nationality }} Site</a>
       </footer>
     </section>
     <section id="instructors">
@@ -327,6 +327,7 @@
 <script>
 import Instafeed from 'instafeed.js';
 import { idKey } from '@/helpers/firebase';
+import countries from '@/helpers/countries';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import SchedulePicker from './SchedulePicker';
 import Modal from './Modal';
@@ -342,57 +343,26 @@ export default {
       menuToggled: false,
       scrollTop: 0,
       activeTimeslot: undefined,
-      info: this.country === 'AU' ? {
-        email: 'hello.oz@campbelldancers.com',
-        phone: '+61401054321',
-        instagram: 'campbelldancersoz',
-        links: [
-          {
-            name: 'CSHDAustralia on Facebook',
-            url: 'https://www.facebook.com/campbelldancersOZ/',
-          },
-          {
-            name: 'CSHDAustralia on Instagram',
-            url: 'https://www.instagram.com/campbelldancersoz/',
-          },
-          {
-            name: 'WAMRCHDI',
-            url: 'https://wamrchdi.webs.com/',
-          },
-          {
-            name: 'ABHDI',
-            url: 'https://www.abhdi.com/',
-          },
-        ],
-      } : {
-        email: 'hello@campbelldancers.com',
-        phone: '403-998-0111',
-        instagram: 'campbelldancers',
-        links: [
-          {
-            name: 'CSHD on Facebook',
-            url: 'https://www.facebook.com/campbelldancers/',
-          },
-          {
-            name: 'CSHD on Instagram',
-            url: 'https://www.instagram.com/campbelldancers/',
-          },
-          {
-            name: 'Calgary Highland Dancing Association',
-            url: 'http://www.chda.ab.ca/',
-          },
-          {
-            name: 'Alberta Highland Dancing Association',
-            url: 'http://www.ahda.ab.ca/',
-          },
-        ],
-      },
+      countries,
     };
   },
   computed: {
     bannerOffset() {
       const height = this.$refs.banner ? this.$refs.banner.offsetHeight : 0;
       return this.scrollTop && height ? 1 - ((height - this.scrollTop) / height) : 0;
+    },
+
+    info() {
+      return this.countries[this.country];
+    },
+    otherCountry() {
+      if (this.country === 'CA') {
+        return 'AU';
+      }
+      return 'CA';
+    },
+    otherInfo() {
+      return this.countries[this.otherCountry];
     },
   },
   methods: {

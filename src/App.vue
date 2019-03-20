@@ -20,8 +20,7 @@
 
           <label class="selectable">
             <select v-model="country" @change="handleCountryChange">
-              <option value="CA">🇨🇦</option>
-              <option value="AU">🇦🇺</option>
+              <option v-for="(info, code) in countries" :key="code" :value="code">{{ info.flag }}</option>
             </select>
           </label>
         </nav>
@@ -42,28 +41,21 @@
 </template>
 
 <script>
+import countries from '@/helpers/countries';
+
 export default {
   name: 'app',
   data() {
     return {
       menuToggled: false,
       year: (new Date()).getFullYear(),
+      countries,
     };
   },
   methods: {
     handleCountryChange() {
-      let href;
-      switch (this.country) {
-        case 'AU': {
-          href = 'https://oz.campbelldancers.com';
-          break;
-        }
-        default: {
-          href = 'https://campbelldancers.com';
-          break;
-        }
-      }
-      window.location.href = `${href}${this.$route.fullPath}`;
+      const { url } = countries[this.country];
+      window.location.href = `${url}${this.$route.fullPath}`;
     },
   },
 };
