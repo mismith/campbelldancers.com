@@ -433,16 +433,16 @@ form {
   }
 
   &.newbies {
-    background-color: rgba(var(--accent-rgb), .15);
+    background-color: rgba(var(--accent-rgb), .5);
     border: 1px solid rgba(var(--accent-rgb), .5) !important;
 
     &:not(.disabled, .active) {
       &:hover {
-        background-color: rgba(var(--accent-rgb), .333);
+        background-color: rgba(var(--accent-rgb), .666);
       }
     }
     &.active {
-      background: rgba(var(--accent-rgb), .666);
+      background: rgba(var(--accent-rgb), .75);
     }
   }
 }
