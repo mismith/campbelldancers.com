@@ -198,25 +198,25 @@
           <thead>
             <tr>
               <th style="width: 50%;">Classes per week</th>
-              <th style="width: 50%;">Cost per month</th>
+              <th style="width: 50%;">Cost per <abbr title="5 months">semester</abbr></th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td>1 group</td>
-              <td>$55</td>
+              <td>$250</td>
             </tr>
             <tr>
               <td>2 group</td>
-              <td>$100</td>
+              <td>$450</td>
             </tr>
             <tr>
               <td>1 group + 1 private</td>
-              <td>$140</td>
+              <td>$630</td>
             </tr>
             <tr>
               <td>2 group + 1 private</td>
-              <td>$165</td>
+              <td>$740</td>
             </tr>
             <tr>
               <td colspan="2"><hr style="margin: 10px auto;" /></td>
