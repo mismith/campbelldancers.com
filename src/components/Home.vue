@@ -47,7 +47,7 @@
               <h4>Instructor</h4>
             </header>
             <div>
-              <p>Finley is a qualified highland teacher (UKA) and continues to dance at the highest level all over the world. She was 4th in the World and Best Scottish Junior Dancer in Cowal in 2016, and brings her love of dance to our students with a perfect balance of precision and fairy wings!  She’s got a wonderful sense of humour, is very playful with our younger faces and brings lots of experience to our developing dancers.  She was born in Banff in Scotland, and she is with us for a limited time in Australia.</p>
+              <p>Finley is a qualified highland teacher (UKA) and continues to dance at the highest level all over the world. She was 4th in the World and Best Scottish Junior Dancer in Cowal in 2016, and brings her love of dance to our students with a perfect balance of precision and fairy wings!  She's got a wonderful sense of humour, is very playful with our younger faces and brings lots of experience to our developing dancers.  She was born in Banff in Scotland, and she is with us for a limited time in Australia.</p>
             </div>
           </div>
         </article>
@@ -60,10 +60,10 @@
           <div>
             <header>
               <h3><a href="#alexandra">Alexandra Campbell</a></h3>
-              <h4>Co-Director</h4>
+              <h4>Director</h4>
             </header>
             <div>
-              <p>Alexandra has been dancing and teaching for almost 20 years, competing with enthusiasm for the large majority. She is a Member of the SDTA and ScotDance Canada. In her spare time, Alexandra is a geophysicist, mom of two, and owns Amora Creative, a business that brings your Pinterest boards to life. Alexandra has always been drawn to the athleticism and community that dance provides, and enjoys developing dancers to their full potential while encouraging the bonds that dance creates.</p>
+              <p>Alexandra has been dancing and teaching for more than 20 years, competing and performing with enthusiasm for the large majority. She's a member of SDTA and ScotDance Canada and performed in the Spasskaya Tower International Military Tattoo in Moscow, Russia. In her spare time, Alexandra is a geophysicist, a mom of two, and creates handmade choreography outfits for the studio. Alexandra has always been drawn to the athleticism, technical precision, and community that dance provides, and loves watching dancers discover their full potential.</p>
             </div>
           </div>
         </article>
@@ -76,42 +76,10 @@
           <div>
             <header>
               <h3><a href="#elayna">Elayna Campbell</a></h3>
-              <h4>Co-Director</h4>
+              <h4>Director</h4>
             </header>
             <div>
-              <p>Elayna began dancing at the age of 9 and enjoyed competing and performing before realizing her passion lay in teaching. She is currently a Member of both the SDTA and ScotDance Canada. She has danced at multiple international events including the Tattoos at Basel and Edinburgh. Complementing her love of dance, Elayna is also a passionate elementary school teacher with the Calgary Board of Education. Elayna uses her natural positivity and compassionate nature to help each dancer achieve their goals.</p>
-            </div>
-          </div>
-        </article>
-        <br />
-        <br />
-        <article id="carol" class="right">
-          <figure>
-            <img src="/static/images/carol.jpg" alt="Carol McNaughton" width="200" height="277" />
-          </figure>
-          <div>
-            <header>
-              <h3><a href="#carol">Carol McNaughton</a></h3>
-              <h4>Instructor</h4>
-            </header>
-            <div>
-              <p>Carol stumbled upon highland dance at age 8, and has been dancing ever since. She has also trained in contemporary and ballet, and currently preforms with Erisa Dance. She has completed her SDTA members exam and has a minor in dance. Internationally, Carol has performed in Tattoos in Basel and Moscow, and has taught dance in the Philippines and Cambodia. Besides dancing, she is a registered social worker who currently works in education, advocacy, and peace. Carol strives to create a safe, supportive place for dancers to develop a love of movement.</p>
-            </div>
-          </div>
-        </article>
-        <br />
-        <br />
-        <article id="kendra">
-          <figure>
-            <img src="/static/images/kendra.jpg" alt="Kendra McNabb" width="200" height="200" />
-          </figure>
-          <div>
-            <header>
-              <h3><a href="#kendra">Kendra McNabb</a></h3>
-              <h4>Junior Instructor</h4>
-            </header>
-            <div>
-              <p>Kendra has been performing and competing for the past 7 years. To date, she has danced for the JL Mackenzie Scholarship Award, completed Grade 5 of Highland Dance Theory, and is working towards earning her Associates. She has been assisting teaching for two years, and enjoys sharing her love of dance with kids of all ages!</p>
+              <p>Elayna's dance career began at age nine, and quickly became her main focus. She has now been competing, performing, and teaching for over 20 years, including dancing in the world-famous Basel and Edinburgh International Tattoos. She is currently a member of both SDTA and ScotDance Canada. Complementing her love of dance, Elayna is also a passionate elementary teacher with the Calgary Board of Education. Elayna uses her natural positivity and compassionate nature, balanced with high expectations, to help each dancer achieve their goals.</p>
             </div>
           </div>
         </article>
