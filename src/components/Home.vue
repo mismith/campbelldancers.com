@@ -288,6 +288,15 @@
         <a :href="`https://www.instagram.com/${info.instagram}/`" target="_blank" class="btn">More Photos</a>
       </footer>
     </section>
+    <section id="guides" class="bg-tartan align-center">
+      <header>
+        <h2><a href="#guides">Guides</a></h2>
+      </header>
+      <div>
+        <p>We've collected together some handy information to help dancers and parents navigate the world of Highland dancing&mdash;take a look if you are curious (or can't remember)!</p>
+        <p><a href="https://drive.google.com/open?id=1Ep1Jb9GeEBkH8OiXCu3v_DW_sel4RHbt" target="_blank" class="btn">View Guides</a></p>
+      </div>
+    </section>
   </div>
 </template>
 
