@@ -10,7 +10,7 @@
 
     <div v-if="enrollment.stepIndex === 0 && !user">
       <header>
-        <p>Save yourself some typing by linking an account below; if you do, <br />next time we'll have all your info stored and ready to go.</p>
+        <p>To save yourself some time, you can pull your info from an account below:</p>
       </header>
       <div class="flex-rows">
         <auth />

@@ -8,9 +8,8 @@
         <h2><a href="#about">About</a></h2>
       </header>
       <div class="align-justify">
-        <p>Welcome! We are a traditional <strong>Scottish Highland dancing studio</strong> for dancers of all ages, abilities, and motivations. Located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>, we combine the love of dancing with focused technical development and strength<span v-if="country === 'AU'"> for students in <strong>Perth and surrounding areas</strong></span>.</p>
-        <p>Our values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong> foster an environment where dancers—and their families—can thrive. We believe a strong sense of community encourages balanced and joyful performance.</p>
-        <p><strong>Enrollment</strong> is ongoing throughout the year with classes for new dancers, boys, choreography, recreation, amd competition.</p>
+        <p>We are a traditional and modern <strong>Scottish Highland dancing studio</strong> for competitive and recreational dancers. We are located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>.</p>
+        <p>CSHD values <strong>excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong>, which foster an environment where dancers and their families thrive. Our training program develops strong, confident, and joyful performers, focusing on technical excellence and a love of dance.</p>
       </div>
       <footer class="call-to-action align-center">
         <p>Are you located in <strong>{{ otherInfo.flag }}{{ otherInfo.name }}</strong>, not {{info.flag}}{{ info.name }}?</p>
