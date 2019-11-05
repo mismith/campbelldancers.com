@@ -7,7 +7,7 @@
     "firebase-admin": "^5.12.1",
     "firebase-functions": "^1.1.0",
     "gmail-send": "^1.2.10",
-    "moment": "^2.18.1"
+    "moment": "^2.19.3"
   },
   "private": true
 }
