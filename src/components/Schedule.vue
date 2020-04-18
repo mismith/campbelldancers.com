@@ -6,7 +6,7 @@
         {{ time.format(timeLabelFormat) }}
       </header>
     </div>
-    <div v-for="day in days" :key="day" :class="`day day-${day.format('d')}`">
+    <div v-for="day in days" :key="day.format('d')" :class="`day day-${day.format('d')}`">
       <header>
         {{ day.format(dayLabelFormat) }}
       </header>
@@ -137,7 +137,7 @@ export default {
         top: this.calculateDimension(start.valueOf(), time),
         height: this.calculateDimension((end.valueOf() - start.valueOf()) + time.valueOf(), time),
         width: `${100 / locationKeys.length}%`,
-        left: `${locationIndex * (100 / locationKeys.length)}%`,
+        left: `${locationIndex >= 0 ? locationIndex * (100 / locationKeys.length) : 0}%`,
       };
     },
   },
