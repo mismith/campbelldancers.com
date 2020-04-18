@@ -35,22 +35,6 @@
             </div>
           </div>
         </article>
-        <br />
-        <br />
-        <article id="finley">
-          <figure>
-            <img src="/static/images/finley.jpg" alt="Finley Duncan" width="200" height="200" />
-          </figure>
-          <div>
-            <header>
-              <h3><a href="#aurian">Finley Duncan</a></h3>
-              <h4>Instructor</h4>
-            </header>
-            <div>
-              <p>Finley is a qualified highland teacher (UKA) and continues to dance at the highest level all over the world. She was 4th in the World and Best Scottish Junior Dancer in Cowal in 2016, and brings her love of dance to our students with a perfect balance of precision and fairy wings!  She's got a wonderful sense of humour, is very playful with our younger faces and brings lots of experience to our developing dancers.  She was born in Banff in Scotland, and she is with us for a limited time in Australia.</p>
-            </div>
-          </div>
-        </article>
       </div>
       <div v-else>
         <article id="alexandra" class="right">
