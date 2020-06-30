@@ -105,12 +105,12 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
               subject: 'We received your enrollment  🎉 ',
 
               title: 'Thank you for enrolling with CSHD!',
-              teaser: 'Class times, start dates, costs, and more inside.',
+              teaser: 'Class times, costs, and more inside.',
               body: `
   <p>We're looking forward to seeing you, ${getFirstName(enrollment.name)}.</p>
   <p>You've booked the following classes:</p>
   ${ol}
-  <p>Classes start the week of Sept 16, 2019. You will receive another email before then with your <a href="https://campbelldancers.com/#pricing" style="color: #000000">class costs</a> and exact details.</p>
+  <p>Classes start in September. We'll be in touch before then with your <a href="https://campbelldancers.com/#pricing" style="color: #000000">class costs</a> and exact details.</p>
   <p>In the meantime, if you have any questions or feedback for us, please contact Elayna at <a href="tel:+14039980111" style="color: #000000">403-998-0111</a>, or simply <a href="mailto:elayna@campbelldancers.com" style="color: #000000">reply</a> to this email.</p>
   <p><strong>Can't wait to dance with you!</strong><br />Alexandra and Elayna</p>`,
               button: undefined, /*{
