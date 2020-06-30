@@ -267,9 +267,16 @@
       <header>
         <h2><a href="#photos">Photos</a></h2>
       </header>
-      <div id="instafeed" class="flex-cols"></div>
+      <div v-if="posts" id="instafeed" class="flex-cols">
+        <figure v-for="post in posts.slice(0, 4)" :key="post.url">
+          <a :href="post.url" target="_blank">
+            <img :src="post.image" />
+          </a>
+          <figcaption v-html="post.caption" />
+        </figure>
+      </div>
       <footer class="call-to-action align-center">
-        <a :href="`https://www.instagram.com/${info.instagram}/`" target="_blank" class="btn">More Photos</a>
+        <a :href="`https://www.instagram.com/${info.instagram}/`" target="_blank" class="btn">Visit Instagram</a>
       </footer>
     </section>
     <section id="guides" class="bg-tartan align-center">
@@ -285,7 +292,6 @@
 </template>
 
 <script>
-import Instafeed from 'instafeed.js';
 import { idKey } from '@/helpers/firebase';
 import countries from '@/helpers/countries';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
@@ -304,6 +310,7 @@ export default {
       scrollTop: 0,
       activeTimeslot: undefined,
       countries,
+      posts: undefined,
     };
   },
   computed: {
@@ -337,19 +344,27 @@ export default {
       this.activeTimeslot = timeslot;
     },
   },
-  mounted() {
+  async mounted() {
     window.addEventListener('scroll', this.handleScroll);
 
     try {
-      new Instafeed({
-        clientId: this.country === 'AU' ? '5f7be1e5e12e4e919e0db93dc70d6f31' : 'c4d7db79bf68469ba1b71aebf43bc8df',
-        accessToken: this.country === 'AU' ? '10328240745.5f7be1e.a8d9edd98ebb4ff89ba3914c1c63e174' : '3519946526.c4d7db7.797de8ffa53b4185abc0e877ba80b847',
-        get: 'user',
-        userId: 'self',
-        limit: 4,
-        resolution: 'standard_resolution',
-        template: '<figure><a href="{{link}}" target="_blank"><img src="{{image}}" width="{{width}}" height="{{height}}" /></a><figcaption>{{caption}}</figcaption></figure>',
-      }).run();
+      const res = await window.fetch('https://www.instagram.com/campbelldancers/?__a=1');
+      const json = await res.json();
+      this.posts = json.graphql.user.edge_owner_to_timeline_media.edges
+        .map(({ node }) => node)
+        .map(({
+          shortcode,
+          thumbnail_src,
+          edge_media_to_caption: {
+            edges: [{
+              node: { text },
+            }],
+          },
+        }) => ({
+          image: thumbnail_src,
+          caption: text,
+          url: `https://www.instagram.com/p/${shortcode}/`,
+        }));
     } catch (err) {
       console.error(err); // eslint-disable-line no-console
     }
@@ -460,8 +475,21 @@ export default {
       overflow: hidden;
     }
     & figcaption {
+      position: relative;
       font-size: 13px;
       margin-top: 10px;
+      max-height: 50px;
+      overflow: hidden;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: calc(50px - 1em);
+        left: 0;
+        right: 0;
+        height: 1em;
+        background-image: linear-gradient(to bottom, #FFFFFF00, #FFFFFFFF);
+      }
     }
   }
 }
