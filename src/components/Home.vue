@@ -343,31 +343,35 @@ export default {
     handleTimeslotClick(e, timeslot) {
       this.activeTimeslot = timeslot;
     },
+
+    async loadInstagram(account) {
+      try {
+        const res = await window.fetch(`https://www.instagram.com/${account}/?__a=1`);
+        const json = await res.json();
+        this.posts = json.graphql.user.edge_owner_to_timeline_media.edges
+          .map(({ node }) => node)
+          .map(({
+            shortcode,
+            thumbnail_src,
+            edge_media_to_caption: {
+              edges: [{
+                node: { text },
+              }],
+            },
+          }) => ({
+            image: thumbnail_src,
+            caption: text,
+            url: `https://www.instagram.com/p/${shortcode}/`,
+          }));
+      } catch (err) {
+        console.error(err); // eslint-disable-line no-console
+      }
+    },
   },
   async mounted() {
-    window.addEventListener('scroll', this.handleScroll);
+    this.loadInstagram(this.info.instagram);
 
-    try {
-      const res = await window.fetch('https://www.instagram.com/campbelldancers/?__a=1');
-      const json = await res.json();
-      this.posts = json.graphql.user.edge_owner_to_timeline_media.edges
-        .map(({ node }) => node)
-        .map(({
-          shortcode,
-          thumbnail_src,
-          edge_media_to_caption: {
-            edges: [{
-              node: { text },
-            }],
-          },
-        }) => ({
-          image: thumbnail_src,
-          caption: text,
-          url: `https://www.instagram.com/p/${shortcode}/`,
-        }));
-    } catch (err) {
-      console.error(err); // eslint-disable-line no-console
-    }
+    window.addEventListener('scroll', this.handleScroll);
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
