@@ -9,7 +9,7 @@
       </header>
       <div class="align-justify">
         <p>We are a traditional and modern <strong>Scottish Highland dancing studio</strong> for competitive and recreational dancers. We are located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>.</p>
-        <p>CSHD values <strong>excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong>, which foster an environment where dancers and their families thrive. Our training program develops strong, confident, and joyful performers, focusing on technical excellence and a love of dance.</p>
+        <p>CSHD values <span v-if="country === 'AU'"><strong>sustainability</strong>, <strong>community</strong>, and <strong>athleticism</strong></span><span v-else><strong>excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong></span>, which foster an environment where dancers and their families thrive. Our training program develops strong, confident, and joyful performers, focusing on technical excellence and a love of dance.</p>
       </div>
       <footer class="call-to-action align-center">
         <p>Are you located in <strong>{{ otherInfo.flag }}{{ otherInfo.name }}</strong>, not {{info.flag}}{{ info.name }}?</p>
@@ -31,7 +31,7 @@
               <h4>Director</h4>
             </header>
             <div>
-              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise, performance, and competition. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic little dancers.</p>
+              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise and performance. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic dancers.</p>
             </div>
           </div>
         </article>
@@ -77,8 +77,8 @@
         <h2><a href="#classes">Classes</a></h2>
       </header>
       <div class="align-justify">
-        <p>Our youngest dancers begin with <strong>learning about movement</strong> through play-based activities and instruction. The basics of <strong>highland technique</strong> are introduced in a fun, easy, low pressure environment. Our little leapers also begin to <strong>feel comfortable</strong> with being on stage through many opportunities to perform for small audiences.</p>
-        <p>Beginner dancers (all ages) develop a high level of technique while learning the <strong>five basic dances</strong> (Fling, Sword, Seann Truibhas, Lilt, Flora) through a combination of traditional technique, cross-training, and strength-based movement exercises. The basics of <strong>choreography and performing</strong> are introduced in low pressure settings, while competition is encouraged (but not mandatory!). Dance <strong>friendships and bonds</strong> are nurtured as we introduce our core values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong>.</p>
+        <p>Our youngest dancers begin with <strong>learning about movement</strong> through play-based activities and instruction. The basics of <strong>highland technique</strong> are introduced in a fun, easy, low pressure environment. Our little leapers <span v-if="country === 'AU'">can also</span> begin to <strong>feel comfortable</strong> with being on stage through <span v-if="country !== 'AU'">many</span> opportunities to perform for small audiences.</p>
+        <p>Beginner dancers (all ages) develop a high level of technique while learning the <strong>five basic dances</strong> (Fling, Sword, Seann Truibhas, Lilt, Flora) through a combination of traditional technique, cross-training, and strength-based movement exercises. The basics of <strong>choreography and performing</strong> are introduced in low pressure settings<span v-if="country === 'AU'"> and can be transferred to competition if that supports the individual dancer's personal goals</span><span v-else>, while competition is encouraged (but not mandatory!)</span>. Dance <strong>friendships and bonds</strong> are nurtured as we introduce our core values of <strong>athleticism</strong>, <strong>community</strong>, and <strong>mindfulness</strong>.</p>
         <p>As dancers progress, a high level of <strong>technique and precision</strong> become the main focus of classes, along with learning <strong>additional dances</strong>. Competition, cross-training, choreographies, performance, and strength-training all help build a <strong>well rounded, enthusiastic dancer</strong> who embodies our core values.</p>
         <p>Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!</p>
       </div>
