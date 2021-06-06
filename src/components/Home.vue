@@ -346,7 +346,7 @@ export default {
 
     async loadInstagram(account) {
       try {
-        const res = await window.fetch(`https://www.instagram.com/${account}/?__a=1`);
+        const res = await window.fetch(`https://cors-anywhere.herokuapp.com/https://www.instagram.com/${account}/?__a=1`);
         const json = await res.json();
         this.posts = json.graphql.user.edge_owner_to_timeline_media.edges
           .map(({ node }) => node)
