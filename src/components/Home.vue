@@ -155,19 +155,19 @@
           <tbody>
             <tr>
               <td>1 group</td>
-              <td>$250</td>
+              <td>$300</td>
             </tr>
             <tr>
               <td>2 group</td>
-              <td>$450</td>
+              <td>$550</td>
             </tr>
             <tr>
-              <td>1 group + 1 private</td>
-              <td>$630</td>
+              <td>Premier (4 group)</td>
+              <td>$900</td>
             </tr>
             <tr>
-              <td>2 group + 1 private</td>
-              <td>$740</td>
+              <td>Premier (4 group) + private</td>
+              <td>$1,225</td>
             </tr>
             <tr>
               <td colspan="2"><hr style="margin: 10px auto;" /></td>

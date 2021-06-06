@@ -355,7 +355,7 @@ table {
 .table {
   display: inline-table;
   border: 0;
-  
+
   & th {
     text-transform: uppercase;
     vertical-align: top;
@@ -373,6 +373,10 @@ table {
       vertical-align: top;
       text-align: right;
       font-weight: bold;
+
+      @media (--small-min) {
+        white-space: nowrap;
+      }
     }
     &:last-child {
       text-align: left;
