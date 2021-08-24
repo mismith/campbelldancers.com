@@ -1,6 +1,9 @@
 <template>
   <div id="privacy">
     <section>
+      <header>
+        <h2>Privacy Policy</h2>
+      </header>
       <div>
         <p><em>CSHD</em> uses enterprise-grade services and industry-standard security practices for storing and communicating all data. <strong><em>CSHD</em> does not share, sell, or advertise with user data in any capacity.</strong></p>
 
@@ -19,6 +22,14 @@
           <li>your name</li>
           <li>information about you and/or your dancer(s), such as birthdates and allergies/medical conditions</li>
         </ul>
+      </div>
+    </section>
+    <section class="bg-tartan">
+      <header>
+        <h2>Data Deletion</h2>
+      </header>
+      <div>
+        <p>If you have created an account and would like your data permanently deleted from all of our systems—for whatever reason—please <router-link to="/#contact"><strong>contact us</strong></router-link> to make this request.</p>
       </div>
     </section>
   </div>
