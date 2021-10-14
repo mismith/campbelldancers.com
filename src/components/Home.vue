@@ -293,7 +293,7 @@
 
 <script>
 import { idKey } from '@/helpers/firebase';
-import countries from '@/helpers/countries';
+import countries from '@/../functions/helpers/countries';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import SchedulePicker from './SchedulePicker';
 import Modal from './Modal';

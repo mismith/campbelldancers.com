@@ -1,11 +1,14 @@
-export default {
+module.exports = {
   AU: {
     name: 'Australia',
     flag: '🇦🇺',
     nationality: 'Australian',
     url: 'https://oz.campbelldancers.com',
     email: 'hello.oz@campbelldancers.com',
-    phone: '+61401054321',
+    emailSignature: 'Aurian',
+    phone: '0401 054 321',
+    phoneContact: 'me',
+    startMonth: 'March',
     instagram: 'campbelldancersoz',
     links: [
       {
@@ -32,7 +35,10 @@ export default {
     nationality: 'Canadian',
     url: 'https://campbelldancers.com',
     email: 'hello@campbelldancers.com',
+    emailSignature: 'Alexandra and Elayna',
     phone: '403-998-0111',
+    phoneContact: 'Elayna',
+    startMonth: 'September',
     instagram: 'campbelldancers',
     links: [
       {

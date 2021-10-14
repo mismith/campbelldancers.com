@@ -219,17 +219,18 @@
 <script>
 /* eslint-disable no-underscore-dangle */
 import moment from 'moment-mini';
-import Datepicker from './Datepicker';
+import { country } from '@/main';
 import {
   idKey,
   db,
   relate,
   unrelate,
   sync,
-} from '../helpers/firebase';
-import AuthedMixin from '../helpers/firebase.authed.mixin';
-import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
-import SchedulePicker from './SchedulePicker';
+} from '@/helpers/firebase';
+import AuthedMixin from '@/helpers/firebase.authed.mixin';
+import PublicCollectionsMixin from '@/helpers/firebase.publicCollections.mixin';
+import Datepicker from '@/components/Datepicker';
+import SchedulePicker from '@/components/SchedulePicker';
 
 export default {
   name: 'enroll',
@@ -467,6 +468,7 @@ export default {
               userAgent: window.navigator.userAgent,
               name: this.user.displayName,
               email: this.user.email,
+              country,
             }).key;
           } else {
             enrollmentId = enrollmentRaw[idKey];

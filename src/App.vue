@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import countries from '@/helpers/countries';
+import countries from '@/../functions/helpers/countries';
 
 export default {
   name: 'app',
@@ -495,7 +495,7 @@ section,
 
       & h1 {
         margin: 0 10px;
-        
+
         & a {
           display: flex;
 
@@ -586,7 +586,7 @@ section,
 
         & button {
           color: rgba(0,0,0,.5);
-          border: 0; 
+          border: 0;
 
           & i {
             display: flex;

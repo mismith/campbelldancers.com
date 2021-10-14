@@ -9,6 +9,7 @@ const db = firebase.database().ref(`${ENV}/data`);
 const moment = require('moment');
 const renderEmail = require('./helpers/renderEmail');
 const sendEmail = require('./helpers/sendEmail');
+const countries = require('./helpers/countries');
 
 function getFirstName(fullName) {
   return fullName.split(' ').slice(0, 1).join(' ');
@@ -100,6 +101,7 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
             });
             ol += '</ol>';
 
+            const country = countries[enrollment.country || 'CA'];
             const data = Object.assign({
               to: `${enrollment.name} <${enrollment.email}>`,
               subject: 'We received your enrollment  🎉 ',
@@ -110,9 +112,9 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
   <p>We're looking forward to seeing you, ${getFirstName(enrollment.name)}.</p>
   <p>You've booked the following classes:</p>
   ${ol}
-  <p>Classes start in September. We'll be in touch before then with your <a href="https://campbelldancers.com/#pricing" style="color: #000000">class costs</a> and exact details.</p>
-  <p>In the meantime, if you have any questions or feedback for us, please contact Elayna at <a href="tel:+14039980111" style="color: #000000">403-998-0111</a>, or simply <a href="mailto:elayna@campbelldancers.com" style="color: #000000">reply</a> to this email.</p>
-  <p><strong>Can't wait to dance with you!</strong><br />Alexandra and Elayna</p>`,
+  <p>${enrollment.country === 'AU' ? `We will be in touch to discuss your kiddo, <a href="${country.url}/#pricing" style="color: #000000">class costs</a>, and location details.` : `Classes start in ${country.startMonth}. We'll be in touch before then with your <a href="${country.url}/#pricing" style="color: #000000">class costs</a>, and exact details.`}</p>
+  <p>In the meantime, if you have any questions or feedback for us, please contact ${country.phoneContact} at <a href="tel:${country.phone.replace(/[^\d]/g, '')}" style="color: #000000">${country.phone}</a>, or simply <a href="mailto:${country.email}" style="color: #000000">reply</a> to this email.</p>
+  <p><strong>Can't wait to dance with you!</strong><br />${country.emailSignature}</p>`,
               button: undefined, /*{
                 text: 'Enroll',
                 url: 'https://campbelldancers.com/enroll',
@@ -124,14 +126,17 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
                 width: 500,
                 height: 400,
               },*/
-              
+
               enrollment,
               dancers,
             }, ctx.params);
             return renderEmail('enrollment-success', data)
               .then((email) => {
                 return Object.assign(
-                  {},
+                  {
+                    bcc: [country.email],
+                    from: `"Campbell School of Highland Dance" <${country.email}>`,
+                  },
                   data,
                   email,
                   {
@@ -142,7 +147,7 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
           })
       })
       .then((config) => {
-        console.log(config);
+        console.info(JSON.stringify(config));
         return sendEmail(config);
       })
       .catch((err) => console.error(err));
