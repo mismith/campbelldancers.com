@@ -112,7 +112,7 @@ exports.sendEnrollmentSuccessEmail = functions.database.ref(path)
   <p>We're looking forward to seeing you, ${getFirstName(enrollment.name)}.</p>
   <p>You've booked the following classes:</p>
   ${ol}
-  <p>${enrollment.country === 'AU' ? `We will be in touch to discuss your kiddo, <a href="${country.url}/#pricing" style="color: #000000">class costs</a>, and location details.` : `Classes start in ${country.startMonth}. We'll be in touch before then with your <a href="${country.url}/#pricing" style="color: #000000">class costs</a>, and exact details.`}</p>
+  <p>${enrollment.country === 'AU' ? `We will be in touch to discuss your kiddo, <a href="${country.url}/#prices" style="color: #000000">class costs</a>, and location details.` : `Classes start in ${country.startMonth}. We'll be in touch before then with your <a href="${country.url}/#prices" style="color: #000000">class costs</a>, and exact details.`}</p>
   <p>In the meantime, if you have any questions or feedback for us, please contact ${country.phoneContact} at <a href="tel:${country.phone.replace(/[^\d]/g, '')}" style="color: #000000">${country.phone}</a>, or simply <a href="mailto:${country.email}" style="color: #000000">reply</a> to this email.</p>
   <p><strong>Can't wait to dance with you!</strong><br />${country.emailSignature}</p>`,
               button: undefined, /*{
