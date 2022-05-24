@@ -28,7 +28,7 @@
           <div>
             <header>
               <h3><a href="#aurian">Aurian Clarkson</a></h3>
-              <h4>Director</h4>
+              <h4>Teacher</h4>
             </header>
             <div>
               <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise and performance. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic dancers.</p>
@@ -104,7 +104,7 @@
           </modal>
         </article>
       </div>
-      <div id="prices" class="align-center">
+      <div id="prices" v-if="country !== 'AU'" class="align-center">
         <header>
           <h3><a href="#prices">Prices</a></h3>
           <h4>Per dancer</h4>
