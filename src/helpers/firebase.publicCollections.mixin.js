@@ -14,6 +14,11 @@ export default {
         .map(($item) => {
           const item = {
             ...$item,
+            props: {
+              active: true,
+              disabled: false,
+              ...$item.props,
+            },
           };
 
           return item;

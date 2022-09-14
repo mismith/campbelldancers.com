@@ -203,7 +203,7 @@
               <td>
                 <ul>
                   <li
-                    v-for="location in locations"
+                    v-for="location in locations.filter(s => s.props.active)"
                     :key="location.name"
                   >
                     <em>{{ location.name }}</em><br />
