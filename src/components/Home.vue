@@ -23,7 +23,7 @@
         <p>Dancers develop a high level of technique through a combination of traditional exercises, cross-training, and strength training. Contemporary group <strong>choreography and performances</strong> quickly become a happy staple in their dance training. Competition is encouraged for returning dancers, to build confidence and comfort with performing. <strong>Friendships and bonds</strong> are nurtured through our core values of <span v-if="country === 'AU'">sustainability, community, and athleticism</span><span v-else>excellence, athleticism, and community</span>, helping to build well-rounded, enthusiastic dancers who feel <strong>supported</strong>, <strong>loved</strong>, and <strong>challenged</strong>.</p>
       </div>
       <footer class="call-to-action align-center">
-        <router-link to="/enroll" class="btn">Enroll</router-link>
+        <EnrollButton />
       </footer>
     </section>
     <section id="schedule" class="bg-tartan">
@@ -52,7 +52,7 @@
           <modal :open.sync="activeTimeslot">
             <div v-if="activeTimeslot" class="enroll-modal-content">
               <div>Want to join for<br /><br /> <big v-html="activeTimeslot.$name"></big>?</div>
-              <router-link to="/enroll" class="btn">Enroll</router-link>
+              <EnrollButton />
             </div>
           </modal>
         </article>
@@ -136,7 +136,7 @@
           <p><strong>Triwood Dancers Society</strong> (our parent council) also provides grants to dancers in need to help cover registration costs. For more info, contact <a href="mailto:triwooddancers@gmail.com" target="_blank">triwooddancers@gmail.com</a></p>
         </aside>
         <footer class="call-to-action align-center">
-          <router-link to="/enroll" class="btn">Enroll</router-link>
+          <EnrollButton />
         </footer>
       </div>
     </section>
@@ -310,6 +310,7 @@ import countries from '@/../functions/helpers/countries';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
 import SchedulePicker from './SchedulePicker';
 import Modal from './Modal';
+import EnrollButton from './EnrollButton';
 
 export default {
   name: 'home',
@@ -392,6 +393,7 @@ export default {
   components: {
     SchedulePicker,
     Modal,
+    EnrollButton,
   },
 };
 </script>

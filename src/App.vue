@@ -16,7 +16,7 @@
           <router-link to="/#about">About</router-link>
           <router-link to="/#schedule">Schedule</router-link>
           <router-link to="/#contact">Contact</router-link>
-          <router-link to="/enroll" class="btn">Enroll</router-link>
+          <EnrollButton />
 
           <label class="selectable">
             <select v-model="country" @change="handleCountryChange">
@@ -42,6 +42,7 @@
 
 <script>
 import countries from '@/../functions/helpers/countries';
+import EnrollButton from './components/EnrollButton';
 
 export default {
   name: 'app',
@@ -57,6 +58,9 @@ export default {
       const { url } = countries[this.country];
       window.location.href = `${url}${this.$route.fullPath}`;
     },
+  },
+  components: {
+    EnrollButton,
   },
 };
 </script>
