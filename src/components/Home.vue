@@ -3,89 +3,42 @@
     <section id="banner" ref="banner">
       <img src="/static/images/logo.svg" style="max-height: 60vh;" :style="{transformOrigin: 'center bottom', transform: `scale(${Math.max(0, Math.min(1 - bannerOffset, 1))})`}" />
     </section>
-    <section id="about" class="bg-tartan align-center">
-      <header>
-        <h2><a href="#about">About</a></h2>
-      </header>
+    <section class="bg-tartan align-center">
       <div class="align-justify">
-        <p>We are a traditional and modern <strong>Scottish Highland dancing studio</strong> for competitive and recreational dancers. We are located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>.</p>
-        <p>CSHD values <span v-if="country === 'AU'"><strong>sustainability</strong>, <strong>community</strong>, and <strong>athleticism</strong></span><span v-else><strong>excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong></span>, which foster an environment where dancers and their families thrive. Our training program develops strong, confident, and joyful performers, focusing on technical excellence and a love of dance.</p>
+        <p>We are a modern <strong>Scottish Highland dancing studio</strong> for competitive and recreational dancers located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>.</p>
+        <p v-if="country === 'AU'">CSHD values <span><strong>sustainability</strong>, <strong>community</strong>, and <strong>athleticism</strong></span>, which foster an environment where dancers and their families thrive. Our training program develops strong, confident, and joyful performers, focusing on technical excellence and a love of dance.</p>
+        <p v-else><strong>Excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong> are the core values that guide our instruction, creating a supportive and enthusiastic space where dancers and their families thrive. Our training develops strong, confident, and joyful performers, focusing on technical excellence and a life-long love of dance.</p>
       </div>
       <footer class="call-to-action align-center">
         <p>Are you located in <strong>{{ otherInfo.flag }}{{ otherInfo.name }}</strong>, not {{info.flag}}{{ info.name }}?</p>
         <a :href="otherInfo.url" class="btn">Visit {{ otherInfo.nationality }} Site</a>
       </footer>
     </section>
-    <section id="instructors">
+    <section id="about">
       <header>
-        <h2><a href="#instructors">Instructors</a></h2>
+        <h2><a href="#about">About</a></h2>
       </header>
-      <div v-if="country === 'AU'">
-        <article id="aurian" class="right">
-          <figure>
-            <img src="/static/images/aurian.jpg" alt="Aurian Clarkson" width="200" height="200" />
-          </figure>
-          <div>
-            <header>
-              <h3><a href="#aurian">Aurian Clarkson</a></h3>
-              <h4>Teacher</h4>
-            </header>
-            <div>
-              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise and performance. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic dancers.</p>
-            </div>
-          </div>
-        </article>
-      </div>
-      <div v-else>
-        <article id="alexandra" class="right">
-          <figure>
-            <img src="/static/images/alexandra.jpg" alt="Alexandra Campbell" width="200" height="274" />
-          </figure>
-          <div>
-            <header>
-              <h3><a href="#alexandra">Alexandra Campbell</a></h3>
-              <h4>Director</h4>
-            </header>
-            <div>
-              <p>Alexandra has been dancing and teaching for more than 20 years, competing and performing with enthusiasm for the large majority. She's a member of SDTA and ScotDance Canada and performed in the Spasskaya Tower International Military Tattoo in Moscow, Russia. In her spare time, Alexandra is a geophysicist, a mom of two, and creates handmade choreography outfits for the studio. Alexandra has always been drawn to the athleticism, technical precision, and community that dance provides, and loves watching dancers discover their full potential.</p>
-            </div>
-          </div>
-        </article>
-        <br />
-        <br />
-        <article id="elayna">
-          <figure>
-            <img src="/static/images/elayna.jpg" alt="Elayna Campbell" width="200" height="274" />
-          </figure>
-          <div>
-            <header>
-              <h3><a href="#elayna">Elayna Campbell</a></h3>
-              <h4>Director</h4>
-            </header>
-            <div>
-              <p>Elayna's dance career began at age nine, and quickly became her main focus. She has now been competing, performing, and teaching for over 20 years, including dancing in the world-famous Basel and Edinburgh International Tattoos. She is currently a member of both SDTA and ScotDance Canada. Complementing her love of dance, Elayna is also a passionate elementary teacher with the Calgary Board of Education. Elayna uses her natural positivity and compassionate nature, balanced with high expectations, to help each dancer achieve their goals.</p>
-            </div>
-          </div>
-        </article>
+      <div class="align-justify">
+        <p>Our youngest dancers <strong>learn about movement</strong> through play-based activities and technical instruction. The basics of <strong>highland technique</strong> are introduced in a fun, easy, low pressure environment. Our little leapers <span v-if="country === 'AU'">can also</span> begin to <strong>develop stage presence</strong> through opportunities to perform for small audiences.</p>
+        <p>Dancers develop a high level of technique through a combination of traditional exercises, cross-training, and strength training. Contemporary group <strong>choreography and performances</strong> quickly become a happy staple in their dance training. Competition is encouraged for returning dancers, to build confidence and comfort with performing. <strong>Friendships and bonds</strong> are nurtured through our core values of <span v-if="country === 'AU'">sustainability, community, and athleticism</span><span v-else>excellence, athleticism, and community</span>, helping to build well-rounded, enthusiastic dancers who feel <strong>supported</strong>, <strong>loved</strong>, and <strong>challenged</strong>.</p>
       </div>
       <footer class="call-to-action align-center">
         <router-link to="/enroll" class="btn">Enroll</router-link>
       </footer>
     </section>
-    <section id="classes">
-      <header>
-        <h2><a href="#classes">Classes</a></h2>
+    <section id="schedule" class="bg-tartan">
+      <header class="align-center">
+        <h2><a href="#schedule">Schedule</a></h2>
       </header>
-      <div class="align-justify">
-        <p>Our youngest dancers begin with <strong>learning about movement</strong> through play-based activities and instruction. The basics of <strong>highland technique</strong> are introduced in a fun, easy, low pressure environment. Our little leapers <span v-if="country === 'AU'">can also</span> begin to <strong>feel comfortable</strong> with being on stage through <span v-if="country !== 'AU'">many</span> opportunities to perform for small audiences.</p>
-        <p>Beginner dancers (all ages) develop a high level of technique while learning the <strong>five basic dances</strong> (Fling, Sword, Seann Truibhas, Lilt, Flora) through a combination of traditional technique, cross-training, and strength-based movement exercises. The basics of <strong>choreography and performing</strong> are introduced in low pressure settings<span v-if="country === 'AU'"> and can be transferred to competition if that supports the individual dancer's personal goals</span><span v-else>, while competition is encouraged (but not mandatory!)</span>. Dance <strong>friendships and bonds</strong> are nurtured as we introduce our core values of <span v-if="country === 'AU'"><strong>sustainability</strong>, <strong>community</strong>, and <strong>athleticism</strong></span><span v-else><strong>excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong></span>.</p>
-        <p>As dancers progress, a high level of <strong>technique and precision</strong> become the main focus of classes, along with learning <strong>additional dances</strong>. Competition, cross-training, choreographies, performance, and strength-training all help build a <strong>well rounded, enthusiastic dancer</strong> who embodies our core values.</p>
+      <div>
+        <p>
+          New dancers: 4.5 years old + up *<br />
+          Experienced dancers: any age<br />
+          <small>* Must be in kindergarten or older. Regretfully, we are currently unable to accept adult beginners.</small>
+        </p>
         <p>Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!</p>
       </div>
-      <div id="schedule">
-        <header class="align-center">
-          <h3><a href="#schedule">Schedule</a></h3>
-        </header>
+      <div id="calendar">
         <article v-for="season in seasons.filter(s => s.props.active)" :key="season[idKey]">
           <header class="align-center">
             <h4>{{ season.name }}</h4>
@@ -178,10 +131,70 @@
             </tr>
           </tbody>
         </table>
+        <aside>
+          <p>A proud partner of <strong>KidSport Society of Calgary</strong>, which provides grants to cover registration costs. <a href="https://kidsportcanada.ca/alberta/calgary/" target="_blank">Apply online</a></p>
+          <p><strong>Triwood Dancers Society</strong> (our parent council) also provides grants to dancers in need to help cover registration costs. For more info, contact <a href="mailto:triwooddancers@gmail.com" target="_blank">triwooddancers@gmail.com</a></p>
+        </aside>
         <footer class="call-to-action align-center">
           <router-link to="/enroll" class="btn">Enroll</router-link>
         </footer>
       </div>
+    </section>
+    <section id="instructors">
+      <header>
+        <h2><a href="#instructors">Instructors</a></h2>
+      </header>
+      <div v-if="country === 'AU'">
+        <article id="aurian" class="right">
+          <figure>
+            <img src="/static/images/aurian.jpg" alt="Aurian Clarkson" width="200" height="200" />
+          </figure>
+          <div>
+            <header>
+              <h3><a href="#aurian">Aurian Clarkson</a></h3>
+              <h4>Teacher</h4>
+            </header>
+            <div>
+              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise and performance. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic dancers.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div v-else>
+        <article id="alexandra" class="right">
+          <figure>
+            <img src="/static/images/alexandra.jpg" alt="Alexandra Campbell" width="200" height="274" />
+          </figure>
+          <div>
+            <header>
+              <h3><a href="#alexandra">Alexandra Campbell</a></h3>
+              <h4>Director</h4>
+            </header>
+            <div>
+              <p>Alexandra has been dancing and teaching for more than 30 years, competing and performing with enthusiasm for the large majority. She's a member of SDTA and ScotDance Canada and performed in the Spasskaya Tower International Military Tattoo in Moscow, Russia. In her spare time, Alexandra is a geophysicist, a mom of two, and creates handmade choreography outfits for the studio. Alexandra’s natural competitiveness, coupled with a high energy teaching style, brings out the athleticism, technical precision, and joy of excellence in her dancers. Alexandra also deeply values the community that dance provides, and loves watching dancers discover their full potential because of the friendships that form in classes.</p>
+            </div>
+          </div>
+        </article>
+        <br />
+        <br />
+        <article id="elayna">
+          <figure>
+            <img src="/static/images/elayna.jpg" alt="Elayna Campbell" width="200" height="274" />
+          </figure>
+          <div>
+            <header>
+              <h3><a href="#elayna">Elayna Campbell</a></h3>
+              <h4>Director</h4>
+            </header>
+            <div>
+              <p>Elayna's dance career began at age nine, and quickly became her main focus. She has now been competing, performing, and teaching for over 25 years, including dancing in the world-famous Basel and Edinburgh International Tattoos. She is currently a member of both SDTA and ScotDance Canada. Complementing her love of dance, Elayna is also a passionate elementary teacher with the Calgary Board of Education. Elayna uses her natural positivity and compassionate nature, balanced with high expectations, to help each dancer achieve their goals.</p>
+            </div>
+          </div>
+        </article>
+      </div>
+      <footer class="call-to-action align-center">
+        <router-link to="/#contact" class="btn">Contact Us</router-link>
+      </footer>
     </section>
     <section id="contact" class="bg-tartan">
       <header>
@@ -386,12 +399,14 @@ export default {
 <style lang="postcss">
 @import '../variables.css';
 
-#schedule {
+#calendar {
   width: 100%;
   max-width: 1000px;
+  background: #fff;
   margin-top: 20px;
 
   & .schedule-picker {
+    padding: 10px;
     margin-top: 40px;
     margin-bottom: 20px;
 
@@ -424,6 +439,14 @@ export default {
     align-items: center;
     flex: auto;
     text-align: center;
+  }
+}
+
+#prices {
+  margin-top: 40px;
+
+  & aside {
+    margin: 40px 0;
   }
 }
 
@@ -495,6 +518,12 @@ export default {
         background-image: linear-gradient(to bottom, #FFFFFF00, #FFFFFFFF);
       }
     }
+  }
+}
+
+p {
+  & a:not(.btn) {
+    text-decoration: underline;
   }
 }
 </style>
