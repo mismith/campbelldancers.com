@@ -11,8 +11,8 @@
     "lint": "eslint --ext .js,.vue src",
     "stats:generate": "webpack --profile --json --config ./build/webpack.prod.conf.js > ./build/webpack.stats.json",
     "stats:serve": "webpack-bundle-analyzer ./build/webpack.stats.json ./dist",
-    "stats": "yarn run stats:generate && yarn run stats:serve",
-    "deploy": "yarn run build && firebase deploy"
+    "stats": "npm run stats:generate && npm run stats:serve",
+    "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
     "array-includes": "^3.0.3",
@@ -77,8 +77,8 @@
     "webpack-merge": "^4.1.0"
   },
   "engines": {
-    "node": ">= 4.0.0",
-    "npm": ">= 3.0.0"
+    "node": "18",
+    "npm": "9"
   },
   "browserslist": [
     "> 1%",
