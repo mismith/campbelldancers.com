@@ -115,11 +115,11 @@
               <td>$550</td>
             </tr>
             <tr>
-              <td>Premier (4 group)</td>
+              <td>Premier</td>
               <td>$900</td>
             </tr>
             <tr>
-              <td>Premier (4 group) + private</td>
+              <td>Premier + private</td>
               <td>$1,225</td>
             </tr>
             <tr>
