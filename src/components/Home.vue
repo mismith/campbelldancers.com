@@ -108,18 +108,14 @@
           <tbody>
             <tr>
               <td>1 group</td>
-              <td>$300</td>
+              <td>$450</td>
             </tr>
             <tr>
               <td>2 group</td>
-              <td>$550</td>
-            </tr>
-            <tr>
-              <td>Premier</td>
               <td>$900</td>
             </tr>
             <tr>
-              <td>Premier + private</td>
+              <td>2 group + private</td>
               <td>$1,225</td>
             </tr>
             <tr>
@@ -127,7 +123,7 @@
             </tr>
             <tr>
               <td>Individual privates</td>
-              <td>$40</td>
+              <td>$40-$60</td>
             </tr>
           </tbody>
         </table>
