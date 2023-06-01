@@ -39,23 +39,26 @@
         <p>Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!</p>
       </div>
       <div id="calendar">
-        <article v-for="season in seasons.filter(s => s.props.active)" :key="season[idKey]">
-          <header class="align-center">
-            <h4>{{ season.name }}</h4>
-          </header>
-          <schedule-picker
-            :blocks="season.blocks"
-            :timeslots="season.$timeslots"
-            content-key="$name"
-            @timeslot-click="handleTimeslotClick"
-          />
-          <modal :open.sync="activeTimeslot">
-            <div v-if="activeTimeslot" class="enroll-modal-content">
-              <div>Want to join for<br /><br /> <big v-html="activeTimeslot.$name"></big>?</div>
-              <EnrollButton />
-            </div>
-          </modal>
-        </article>
+        <template v-if="country === 'AU'">
+          <article v-for="season in seasons.filter(s => s.props.active)" :key="season[idKey]">
+            <header class="align-center">
+              <h4>{{ season.name }}</h4>
+            </header>
+            <schedule-picker
+              :blocks="season.blocks"
+              :timeslots="season.$timeslots"
+              content-key="$name"
+              @timeslot-click="handleTimeslotClick"
+            />
+            <modal :open.sync="activeTimeslot">
+              <div v-if="activeTimeslot" class="enroll-modal-content">
+                <div>Want to join for<br /><br /> <big v-html="activeTimeslot.$name"></big>?</div>
+                <EnrollButton />
+              </div>
+            </modal>
+          </article>
+        </template>
+        <iframe v-else src="https://dancestudio-pro.com/apps/api_classes_resp.php?id=zaqlxajd29jd26406473a542ef09jasdklj21dx6406473a542f2&s=113821"></iframe>
       </div>
       <div id="prices" v-if="country !== 'AU'" class="align-center">
         <header>
@@ -437,6 +440,13 @@ export default {
     align-items: center;
     flex: auto;
     text-align: center;
+  }
+
+  & iframe {
+    display: block;
+    width: 100%;
+    height: 600px;
+    border: solid 8px #ebf8fa;
   }
 }
 
