@@ -14,7 +14,7 @@
         </aside>
         <nav>
           <router-link to="/#about">About</router-link>
-          <router-link to="/#schedule">Schedule</router-link>
+          <router-link to="/#schedule">Registration</router-link>
           <router-link to="/#contact">Contact</router-link>
           <EnrollButton />
 

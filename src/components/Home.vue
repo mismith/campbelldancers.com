@@ -28,15 +28,22 @@
     </section>
     <section id="schedule" class="bg-tartan">
       <header class="align-center">
-        <h2><a href="#schedule">Schedule</a></h2>
+        <h2><a href="#schedule">Registration</a></h2>
       </header>
-      <div>
+      <div class="align-center">
+        <p><strong>Now accepting new dancers in the following classes:</strong></p>
+        <p>Dancers 4-6 Years - Mondays - 3:45-4:30pm</p>
+        <p>Dancers 7 Years &amp; Older - Wednesdays - 4:30-5:15pm</p>
+        <br />
         <p>
           New dancers: 4.5 years old + up *<br />
           Experienced dancers: any age<br />
           <small>* Must be in kindergarten or older. Regretfully, we are currently unable to accept adult beginners.</small>
         </p>
         <p>Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!</p>
+        <footer class="call-to-action align-center">
+          <EnrollButton />
+        </footer>
       </div>
       <div id="calendar">
         <template v-if="country === 'AU'">
@@ -58,7 +65,6 @@
             </modal>
           </article>
         </template>
-        <iframe v-else src="https://dancestudio-pro.com/apps/api_classes_resp.php?id=zaqlxajd29jd26406473a542ef09jasdklj21dx6406473a542f2&s=113821"></iframe>
       </div>
       <div id="prices" v-if="country !== 'AU'" class="align-center">
         <header>
@@ -135,7 +141,7 @@
           <p><strong>Triwood Dancers Society</strong> (our parent council) also provides grants to dancers in need to help cover registration costs. For more info, contact <a href="mailto:triwooddancers@gmail.com" target="_blank">triwooddancers@gmail.com</a></p>
         </aside>
         <footer class="call-to-action align-center">
-          <EnrollButton />
+          <router-link to="/#contact" class="btn">Contact Us</router-link>
         </footer>
       </div>
     </section>
