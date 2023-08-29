@@ -3,6 +3,13 @@
     <section id="banner" ref="banner">
       <img src="/static/images/logo.svg" style="max-height: 60vh;" :style="{transformOrigin: 'center bottom', transform: `scale(${Math.max(0, Math.min(1 - bannerOffset, 1))})`}" />
     </section>
+    <VueperSlides autoplay>
+      <VueperSlide
+        v-for="image in images"
+        :key="image"
+        :image="image"
+      />
+    </VueperSlides>
     <section class="bg-tartan align-center">
       <div class="align-justify">
         <p>We are a modern <strong>Scottish Highland dancing studio</strong> for competitive and recreational dancers located in <span v-if="country === 'AU'"><strong>Alfred Cove</strong>, Western Australia</span><span v-else><strong>Calgary</strong>, Alberta, Canada</span>.</p>
@@ -316,6 +323,8 @@
 </template>
 
 <script>
+import { VueperSlides, VueperSlide } from 'vueperslides';
+import 'vueperslides/dist/vueperslides.css';
 import { idKey } from '@/helpers/firebase';
 import countries from '@/../functions/helpers/countries';
 import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
@@ -336,6 +345,8 @@ export default {
       activeTimeslot: undefined,
       countries,
       posts: undefined,
+      // eslint-disable-next-line
+      images: require.context('@/images/carousel', true, /\.jpe?g$/).keys().map(key => require(`@/images/carousel/${key.replace('./', '')}`)),
     };
   },
   computed: {
@@ -405,6 +416,8 @@ export default {
     SchedulePicker,
     Modal,
     EnrollButton,
+    VueperSlides,
+    VueperSlide,
   },
 };
 </script>

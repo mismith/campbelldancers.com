@@ -24,7 +24,8 @@
     "vue-js-modal": "^1.2.10",
     "vue-router": "^2.3.1",
     "vuefire": "^1.4.3",
-    "vuejs-datepicker": "^0.7.12"
+    "vuejs-datepicker": "^0.7.12",
+    "vueperslides": "^2.16.0"
   },
   "devDependencies": {
     "autoprefixer": "^6.7.2",
@@ -69,7 +70,7 @@
     "url-loader": "^0.5.8",
     "vue-loader": "^11.3.4",
     "vue-style-loader": "^2.0.5",
-    "vue-template-compiler": "^2.2.6",
+    "vue-template-compiler": "^2.7.14",
     "webpack": "^2.3.3",
     "webpack-bundle-analyzer": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
