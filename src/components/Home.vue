@@ -32,15 +32,21 @@
       </header>
       <div class="align-center">
         <p><strong>Now accepting new dancers in the following classes:</strong></p>
-        <p>Dancers 4-6 Years - Mondays - 3:45-4:30pm</p>
-        <p>Dancers 7 Years &amp; Older - Wednesdays - 4:30-5:15pm</p>
+        <template v-if="country === 'AU'">
+          <p>Mondays - 3:30-4:10pm</p>
+          <p>Mondays - 4:15-4:55pm</p>
+        </template>
+        <template v-else>
+          <p>Dancers 4-6 Years - Mondays - 3:45-4:30pm</p>
+          <p>Dancers 7 Years &amp; Older - Wednesdays - 4:30-5:15pm</p>
+        </template>
         <br />
-        <p>
-          New dancers: 4.5 years old + up *<br />
-          Experienced dancers: any age<br />
-          <small>* Must be in kindergarten or older. Regretfully, we are currently unable to accept adult beginners.</small>
+        <p v-if="country === 'AU'">
+          For expressions of interest for other days, please <router-link to="/#contact">contact us</router-link>.
         </p>
-        <p>Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!</p>
+        <p>
+          Classes are loosely grouped by both age and ability; if you are unsure which class is appropriate, please <router-link to="/#contact">contact us</router-link>!
+        </p>
         <footer class="call-to-action align-center">
           <EnrollButton />
         </footer>
