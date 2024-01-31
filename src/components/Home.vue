@@ -160,7 +160,7 @@
     </section>
     <section id="instructors">
       <header>
-        <h2><a href="#instructors">Instructors</a></h2>
+        <h2><a href="#instructors">Instructor{{ country === 'AU' ? '' : 's' }}</a></h2>
       </header>
       <div v-if="country === 'AU'">
         <article id="aurian" class="right">
@@ -173,7 +173,7 @@
               <h4>Teacher</h4>
             </header>
             <div>
-              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise and performance. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 2 fantastic dancers.</p>
+              <p>Aurian comes from a family of dancers and rejoined highland as an adult when her loungeroom hosted the beginning of the parent dance school to CSHD in Perth. She loves dance, movement, and the community that is built around practise and performance. Aurian genuinely enjoys instilling the love of dance in our community of dancers and helping them to use their classes and practise to build life skills and resilience. She is a member of the BATD, an engineer, a management consultant by day, and a mother to 3 fantastic dancers.</p>
             </div>
           </div>
         </article>
