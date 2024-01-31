@@ -15,16 +15,8 @@
     "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
-    "array-includes": "^3.0.3",
-    "array.prototype.find": "^2.0.4",
-    "firebase": "^5.8.3",
-    "firebaseui": "^3.5.2",
-    "moment-mini": "^2.18.1",
     "vue": "^2.2.6",
-    "vue-js-modal": "^1.2.10",
     "vue-router": "^2.3.1",
-    "vuefire": "^1.4.3",
-    "vuejs-datepicker": "^0.7.12",
     "vueperslides": "^2.16.0"
   },
   "devDependencies": {

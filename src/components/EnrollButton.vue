@@ -1,6 +1,5 @@
 <template>
-  <router-link v-if="country === 'AU'" to="/enroll" class="btn">Enroll</router-link>
-  <a v-else href="https://dancestudio-pro.com/online/campbelldancers" target="_blank" class="btn">Enroll</a>
+  <a :href="country === 'AU' ? 'https://google.com/form/f/abc123' : 'https://dancestudio-pro.com/online/campbelldancers'" target="_blank" class="btn">Enroll</a>
 </template>
 
 <script>

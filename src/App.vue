@@ -128,17 +128,6 @@ export default {
     margin: 5px;
   }
 }
-.two-inputs {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -5px;
-
-  & > * {
-    width: auto;
-    flex-grow: 1;
-    margin: 5px;
-  }
-}
 .heading {
   @apply --heading;
 }
@@ -221,8 +210,7 @@ img {
   height: auto;
 }
 
-label.selectable,
-.vdp-datepicker > div:first-child {
+label.selectable {
   display: inline-flex;
   align-items: center;
   width: 100%;
@@ -281,77 +269,6 @@ textarea {
     }
   }
 }
-.btn-close {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  color: inherit;
-  line-height: 1em;
-  font-size: 36px;
-  letter-spacing: 0;
-  padding: 0;
-  border: 0;
-  margin: -2px 5px;
-  opacity: .75;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-  }
-}
-.btn-add {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 10px;
-  opacity: .75;
-  cursor: pointer;
-
-  & big {
-    font-size: 40px;
-    line-height: 1;
-    margin: -3px 20px 0 0;
-  }
-  & small {
-    width: 100%;
-    font-size: 10px;
-    text-align: center;
-    margin: 3px auto;
-  }
-  &:hover {
-    opacity: 1;
-    text-decoration: none;
-  }
-  &:active {
-    color: var(--primary);
-  }
-}
-.btn-left {
-  &:before {
-    content: '';
-    width: 0;
-    height: 0;
-    display: inline-block;
-    border: 5px solid transparent;
-    border-right: 10px solid currentColor;
-    margin-right: 15px;
-    margin-left: -5px;
-  }
-}
-.btn-right {
-  &:after {
-    content: '';
-    width: 0;
-    height: 0;
-    display: inline-block;
-    border: 5px solid transparent;
-    border-left: 10px solid currentColor;
-    margin-left: 10px;
-    margin-right: -5px;
-  }
-}
 
 table {
   flex-shrink: 1;
@@ -407,51 +324,6 @@ form {
   }
   & .table td:first-child {
     padding-top: 10px; /* @HACK */
-  }
-}
-.timeslot {
-  display: flex;
-  flex-direction: column;
-  background: rgba(var(--primary-rgb), .15);
-  padding: 0 3px;
-  border: 1px solid var(--primary) !important;
-  border-radius: 3px;
-  cursor: pointer;
-
-  & small {
-    font-size: 12px;
-  }
-  & div {
-    & small {
-      opacity: .5;
-    }
-  }
-
-  &.disabled {
-    opacity: .4;
-    cursor: not-allowed;
-  }
-  &:not(.disabled, .active) {
-    &:hover {
-      background-color: rgba(var(--primary-rgb), .333);
-    }
-  }
-  &.active {
-    background: rgba(var(--primary-rgb), .666);
-  }
-
-  &.newbies {
-    background-color: rgba(var(--accent-rgb), .5);
-    border: 1px solid rgba(var(--accent-rgb), .5) !important;
-
-    &:not(.disabled, .active) {
-      &:hover {
-        background-color: rgba(var(--accent-rgb), .666);
-      }
-    }
-    &.active {
-      background: rgba(var(--accent-rgb), .75);
-    }
   }
 }
 

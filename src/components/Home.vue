@@ -58,27 +58,6 @@
           <EnrollButton />
         </footer>
       </div>
-      <div id="calendar">
-        <template v-if="country === 'AU'">
-          <article v-for="season in seasons.filter(s => s.props.active)" :key="season[idKey]">
-            <header class="align-center">
-              <h4>{{ season.name }}</h4>
-            </header>
-            <schedule-picker
-              :blocks="season.blocks"
-              :timeslots="season.$timeslots"
-              content-key="$name"
-              @timeslot-click="handleTimeslotClick"
-            />
-            <modal :open.sync="activeTimeslot">
-              <div v-if="activeTimeslot" class="enroll-modal-content">
-                <div>Want to join for<br /><br /> <big v-html="activeTimeslot.$name"></big>?</div>
-                <EnrollButton />
-              </div>
-            </modal>
-          </article>
-        </template>
-      </div>
       <div id="prices" v-if="country !== 'AU'" class="align-center">
         <header>
           <h3><a href="#prices">Prices</a></h3>
@@ -234,7 +213,7 @@
               <td>
                 <ul>
                   <li
-                    v-for="location in locations.filter(s => s.props.active)"
+                    v-for="location in locations"
                     :key="location.name"
                   >
                     <em>{{ location.name }}</em><br />
@@ -298,14 +277,6 @@
       <header>
         <h2><a href="#photos">Photos</a></h2>
       </header>
-      <div v-if="posts" id="instafeed" class="flex-cols">
-        <figure v-for="post in posts.slice(0, 4)" :key="post.url">
-          <a :href="post.url" target="_blank">
-            <img :src="post.image" />
-          </a>
-          <figcaption v-html="post.caption" />
-        </figure>
-      </div>
       <footer class="call-to-action align-center">
         <a :href="`https://www.instagram.com/${info.instagram}/`" target="_blank" class="btn">Visit Instagram</a>
       </footer>
@@ -325,26 +296,16 @@
 <script>
 import { VueperSlides, VueperSlide } from 'vueperslides';
 import 'vueperslides/dist/vueperslides.css';
-import { idKey } from '@/helpers/firebase';
 import countries from '@/../functions/helpers/countries';
-import PublicCollectionsMixin from '../helpers/firebase.publicCollections.mixin';
-import SchedulePicker from './SchedulePicker';
-import Modal from './Modal';
 import EnrollButton from './EnrollButton';
 
 export default {
   name: 'home',
-  mixins: [
-    PublicCollectionsMixin,
-  ],
   data() {
     return {
-      idKey,
       menuToggled: false,
       scrollTop: 0,
-      activeTimeslot: undefined,
       countries,
-      posts: undefined,
       // eslint-disable-next-line
       images: require.context('@/images/carousel', true, /\.jpe?g$/).keys().map(key => require(`@/images/carousel/${key.replace('./', '')}`)),
     };
@@ -367,6 +328,26 @@ export default {
     otherInfo() {
       return this.countries[this.otherCountry];
     },
+
+    locations() {
+      return [
+        {
+          country: 'CA',
+          name: '19 Street Studio',
+          address: '3803 19 St NW\nCalgary, AB T2L 2B3',
+        },
+        {
+          country: 'CA',
+          name: 'Triwood Community Center',
+          address: '2244 Chicoutimi Dr NW\nCalgary, AB T2L 0W1',
+        },
+        {
+          country: 'AU',
+          name: 'Attadale',
+          address: 'Western Australia',
+        },
+      ].filter(location => location.country === this.country);
+    },
   },
   methods: {
     encodeURIComponent: window.encodeURIComponent,
@@ -376,45 +357,14 @@ export default {
         this.scrollTop = e.target.scrollingElement.scrollTop;
       }
     },
-    handleTimeslotClick(e, timeslot) {
-      this.activeTimeslot = timeslot;
-    },
-
-    async loadInstagram(account) {
-      try {
-        const res = await window.fetch(`https://cors-anywhere.herokuapp.com/https://www.instagram.com/${account}/?__a=1`);
-        const json = await res.json();
-        this.posts = json.graphql.user.edge_owner_to_timeline_media.edges
-          .map(({ node }) => node)
-          .map(({
-            shortcode,
-            thumbnail_src,
-            edge_media_to_caption: {
-              edges: [{
-                node: { text },
-              }],
-            },
-          }) => ({
-            image: thumbnail_src,
-            caption: text,
-            url: `https://www.instagram.com/p/${shortcode}/`,
-          }));
-      } catch (err) {
-        console.error(err); // eslint-disable-line no-console
-      }
-    },
   },
   async mounted() {
-    this.loadInstagram(this.info.instagram);
-
     window.addEventListener('scroll', this.handleScroll);
   },
   beforeDestroy() {
     window.removeEventListener('scroll', this.handleScroll);
   },
   components: {
-    SchedulePicker,
-    Modal,
     EnrollButton,
     VueperSlides,
     VueperSlide,
@@ -424,56 +374,6 @@ export default {
 
 <style lang="postcss">
 @import '../variables.css';
-
-#calendar {
-  width: 100%;
-  max-width: 1000px;
-  background: #fff;
-  margin-top: 20px;
-
-  & .schedule-picker {
-    padding: 10px;
-    margin-top: 40px;
-    margin-bottom: 20px;
-
-    & > div {
-      overflow: unset; /* prevent 1px overflow (from position: absolute?) */
-    }
-
-    & > footer {
-      padding: 15px;
-
-      & > div {
-        display: none;
-      }
-      & > aside {
-        & .timeslot:not(:first-child) {
-          display: none;
-        }
-      }
-    }
-
-    @media (--medium-min) {
-      height: var(--small);
-    }
-  }
-
-  & .enroll-modal-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    flex: auto;
-    text-align: center;
-  }
-
-  & iframe {
-    display: block;
-    width: 100%;
-    height: 600px;
-    border: solid 8px #ebf8fa;
-  }
-}
 
 #prices {
   margin-top: 40px;
@@ -515,41 +415,6 @@ export default {
   & li {
     & a {
       white-space: pre-wrap;
-    }
-  }
-}
-
-#instafeed {
-  & > * {
-    flex-shrink: 1;
-
-    & img {
-      width: 100%;
-      height: auto;
-      vertical-align: middle;
-    }
-    & a {
-      display: inline-block;
-      border: solid 1px var(--light);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    & figcaption {
-      position: relative;
-      font-size: 13px;
-      margin-top: 10px;
-      max-height: 50px;
-      overflow: hidden;
-
-      &::after {
-        content: "";
-        position: absolute;
-        top: calc(50px - 1em);
-        left: 0;
-        right: 0;
-        height: 1em;
-        background-image: linear-gradient(to bottom, #FFFFFF00, #FFFFFFFF);
-      }
     }
   }
 }
