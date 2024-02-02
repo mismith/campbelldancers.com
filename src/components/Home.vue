@@ -17,7 +17,7 @@
         <p v-else><strong>Excellence</strong>, <strong>athleticism</strong>, and <strong>community</strong> are the core values that guide our instruction, creating a supportive and enthusiastic space where dancers and their families thrive. Our training develops strong, confident, and joyful performers, focusing on technical excellence and a life-long love of dance.</p>
       </div>
       <footer class="call-to-action align-center">
-        <p>Are you located in <strong>{{ otherInfo.flag }}{{ otherInfo.name }}</strong>, not {{info.flag}}{{ info.name }}?</p>
+        <p>Are you located in <strong>{{ otherInfo.flag }} {{ otherInfo.name }}</strong>, not {{info.flag}} {{ info.name }}?</p>
         <a :href="otherInfo.url" class="btn">Visit {{ otherInfo.nationality }} Site</a>
       </footer>
     </section>
