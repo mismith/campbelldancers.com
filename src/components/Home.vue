@@ -100,31 +100,10 @@
           </tbody>
         </table>
         <table v-else class="table">
-          <thead>
-            <tr>
-              <th style="width: 50%;">Classes per week</th>
-              <th style="width: 50%;">Cost per <abbr title="5 months">semester</abbr></th>
-            </tr>
-          </thead>
           <tbody>
             <tr>
-              <td>1 group</td>
-              <td>$450</td>
-            </tr>
-            <tr>
-              <td>2 group</td>
-              <td>$900</td>
-            </tr>
-            <tr>
-              <td>2 group + private</td>
-              <td>$1,225</td>
-            </tr>
-            <tr>
-              <td colspan="2"><hr style="margin: 10px auto;" /></td>
-            </tr>
-            <tr>
-              <td>Individual privates</td>
-              <td>$40-$60</td>
+              <td>Classes start at</td>
+              <td>$100/month</td>
             </tr>
           </tbody>
         </table>
